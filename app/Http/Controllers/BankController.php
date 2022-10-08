@@ -1,13 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Bank;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 
 class BankController extends Controller
 {
+
+    public static function Routes() {
+        Route::get('bank', [BankController::class, 'index'])->name('bank.index');
+    }
     /**
      * Display a listing of the resource.
      *

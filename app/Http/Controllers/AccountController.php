@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Jobs\SendMail;
 use App\Models\Address;
 use App\Models\User;
@@ -10,12 +9,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
 class AccountController extends Controller
 {
+    public static function Routes()
+    {
+        Route::get('account', [AccountController::class, 'index'])->name('account.index');
+    }
     /**
      * Display a listing of the resource.
      *

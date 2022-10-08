@@ -29,24 +29,25 @@
                         <!-- Logo -->
                         <div class="card-header pt-2 pb-2 text-center bg-primary">
                             <a href="">
-                                <span><img src="{{ asset('assets/images/bvy.png') }}" alt="LOGO" height="60"></span>
+                                <span><img src="{{ asset('assets/images/bvy.png') }}" alt="LOGO"
+                                        height="60"></span>
                             </a>
                         </div>
 
                         <div class="card-body p-4">
-                            @if(session()->has('error'))
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                                {{ session()->get('error') }}
-                            </div>
+                            @if (session()->has('error'))
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                    {{ session()->get('error') }}
+                                </div>
                             @endif
-                            @if(session()->has('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                                {{ session()->get('success') }}
-                            </div>
+                            @if (session()->has('success'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                    {{ session()->get('success') }}
+                                </div>
                             @endif
                             <div class="text-center w-75 m-auto">
                                 <h4 class="text-dark-50 text-center pb-0 fw-bold">@lang('login.signin')</h4>
@@ -58,8 +59,8 @@
                                 @csrf
                                 <div class="mb-3">
                                     <label for="username" class="form-label">@lang('login.username')</label>
-                                    <input class="form-control" type="text" id="username" name="username" required=""
-                                        placeholder="@lang('login.enterusername')" value="{{ old('username') }}">
+                                    <input class="form-control" type="text" id="username" name="username"
+                                        required="" placeholder="@lang('login.enterusername')" value="{{ old('username') }}">
                                 </div>
 
                                 <div class="mb-3">
@@ -89,12 +90,14 @@
 
                                 <div class="row mb-3">
                                     <div class="col-sm-6 text-center">
-                                        <a href="/locale/en"><img src="{{ asset('assets/images/flags/en.svg') }}" alt="user-image" class="me-1" height="12"> <span
-                                            class="align-middle">@lang('login.english')</span></a>
+                                        <a href="/locale/en"><img src="{{ asset('assets/images/flags/en.svg') }}"
+                                                alt="user-image" class="me-1" height="12"> <span
+                                                class="align-middle">@lang('login.english')</span></a>
                                     </div>
                                     <div class="col-sm-6 text-center">
-                                        <a href="/locale/vn"><img src="{{ asset('assets/images/flags/vn.svg') }}" alt="user-image" class="me-1" height="12"> <span
-                                            class="align-middle">@lang('login.vietnam')</span></a>
+                                        <a href="/locale/vn"><img src="{{ asset('assets/images/flags/vn.svg') }}"
+                                                alt="user-image" class="me-1" height="12"> <span
+                                                class="align-middle">@lang('login.vietnam')</span></a>
                                     </div>
                                 </div>
 
@@ -105,7 +108,9 @@
 
                     <div class="row mt-3">
                         <div class="col-12 text-center">
-                            <p class="text-muted"><a href="{{ route('forgot-password') }}"
+                            {{-- <p class="text-muted"><a href="{{ route('forgot-password') }}"
+                                    class="text-muted ms-1"><b>@lang('login.forgot')?</b></a></p> --}}
+                            <p class="text-muted"><a href="#"
                                     class="text-muted ms-1"><b>@lang('login.forgot')?</b></a></p>
                         </div> <!-- end col -->
                     </div>
