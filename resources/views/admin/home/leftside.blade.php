@@ -56,25 +56,37 @@
                         <li>
                             <a href="{{ route('warehouse.index') }}">Quản lý kho vật tư</a>
                         </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="side-nav-item">
-                <a data-bs-toggle="collapse" href="#sidebarCategory" aria-expanded="false"
-                    aria-controls="sidebarCategory" class="side-nav-link">
-                    <i class="uil-store"></i>
-                    <span> Loại vật tư </span>
-                    <span class="menu-arrow"></span>
-                </a>
-                <div class="collapse" id="sidebarCategory">
-                    <ul class="side-nav-second-level">
                         <li>
-                            <a href="{{ route('category.index') }}">Quản lý loại vật tư</a>
+                            <a href="#">Quản lý nhập/xuất</a>
+                        </li>
+                        <li>
+                            <a href="#">Quản lý điều chuyển</a>
+                        </li>
+                        <li>
+                            <a href="#">Quản lý tồn kho</a>
+                        </li>
+                        <li>
+                            <a href="#">Quản lý điều chỉnh vật tư</a>
                         </li>
                     </ul>
                 </div>
             </li>
 
+            <li class="side-nav-item">
+                <a data-bs-toggle="collapse" href="#sideStatistic" aria-expanded="false"
+                    aria-controls="sideStatistic" class="side-nav-link">
+                    <i class="uil-store"></i>
+                    <span> Thống kê </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="sideStatistic">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a href="#">Thống kê thiết bị</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
 
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#sideGroup" aria-expanded="false"
@@ -86,14 +98,21 @@
                 <div class="collapse" id="sideGroup">
                     <ul class="side-nav-second-level">
                         <li>
+                            <a href="{{route('category.index')}}">Danh mục loại vật tư</a>
+                        </li>
+                        <li>
                             <a href="{{ route('item.index') }}">Danh mục vật tư</a>
                         </li>
                         <li>
                             <a href="{{ route('unit.index') }}">Đơn vị tính</a>
                         </li>
                         <li>
+                            <a href="#">Danh mục nhà cung cấp</a>
+                        </li>
+                        <li>
                             <a href="{{ route('account.index') }}">Tài khoản</a>
                         </li>
+
                     </ul>
                 </div>
             </li>
