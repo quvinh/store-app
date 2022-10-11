@@ -24,7 +24,7 @@ class AuthController extends Controller
             $user = Auth::user();
             Cookie::queue('user_name', Auth::user()->name, 0.05);
             Log::alert('[LOGIN] #ID:' . $user->id . ' ' . $user->username . ' - ' . $user->name);
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard.index');
         } else {
             return redirect()->back()->withInput($request->input())->withErrors(['message' => 'Tên đăng nhập hoặc mật khẩu không đúng']);
         }

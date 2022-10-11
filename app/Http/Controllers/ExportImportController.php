@@ -1,12 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\ExImport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class ExportImportController extends Controller
 {
+
+    public static function Routes(){
+        Route::get('eximport', [ExportImportController::class, 'index' ])->name('eximport.index');
+    }
     /**
      * Display a listing of the resource.
      *

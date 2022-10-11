@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,9 +8,14 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 
 class InvoiceController extends Controller
 {
+    public static function Routes()
+    {
+        Route::get('invoice', [InvoiceController::class, 'index'])->name('invoice.index');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -144,7 +148,7 @@ class InvoiceController extends Controller
             'invoice_type' => $request->invoice_type,
             'invoice_detail' => $request->invoice_detail,
             'invoice_image' => $image,
-            'invoice_status' => $request->invoice_status == 'on', 
+            'invoice_status' => $request->invoice_status == 'on',
         ]);
         Log::info('[' . $request->getMethod() . '] (' . Auth::user()->username . ')' . Auth::user()->name . ' >> Cập nhật mẫu hóa đơn #' . $invoice->id . $invoice->invoice_type . '-' . $invoice->invoice_name);
         return redirect()->back()->with('success', 'Cập nhật thành công');
