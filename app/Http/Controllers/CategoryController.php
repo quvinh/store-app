@@ -1,14 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
     public static function Routes()
     {
         Route::get('category', [CategoryController::class, 'index'])->name('category.index');
+        Route::post('category', [CategoryController::class, 'store'])->name('category.store');
+        Route::get('category/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
+        Route::get('category/destroy/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
+        Route::put('category/update/{id}', [CategoryController::class, 'update'])->name('category.update');
     }
     /**
      * Display a listing of the resource.
@@ -17,7 +26,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('admin.components.category.mancategory');
+        $categories = Category::all();
+        return view('admin.components.category.mancategory', compact('categories'));
     }
 
     /**
@@ -38,7 +48,21 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'category_name' => 'required|unique:categories',
+            'category_code' => 'required|unique:categories',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+        Category::create([
+            'category_name' => $request->category_name,
+            'category_code' => $request->category_code,
+            'category_status' => $request->category_status == 'on' ? '1' : '0',
+            'category_note' => $request->category_note,
+        ]);
+        Log::info('[' . $request->getMethod() . '] (' . Auth::user()->username . ')' . Auth::user()->name . ' >> Tạo mới loại vật tư "' . $request->category_name . '"');
+        return redirect()->back()->with('success', 'Tạo mới loại vật tư thành công');
     }
 
     /**
@@ -60,7 +84,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = Category::find($id);
+        return view('admin.components.category.editcategory', compact('category'));
     }
 
     /**
@@ -72,7 +97,21 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'category_name' => 'required',
+            'category_code' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+        Category::find($id)->update([
+            'category_name' => $request->category_name,
+            'category_code' => $request->category_code,
+            'category_status' => $request->category_status == 'on' ? '1' : '0',
+            'category_note' => $request->category_note,
+        ]);
+        return redirect()->route('category.index')->with('success', 'Cập nhật loại vật tư thành công');
     }
 
     /**
@@ -83,6 +122,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Category::find($id)->delete();
+        return redirect()->route('category.index')->with('success', 'Xóa loại vật tư thành công');
     }
 }
