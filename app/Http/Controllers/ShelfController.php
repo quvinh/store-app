@@ -13,11 +13,11 @@ class ShelfController extends Controller
 {
     public static function Routes() {
         // Route::get('shelf', [ShelfController::class, 'index' ])->name('shelf.index');
-        Route::get('warehouse/{id}', [ShelfController::class, 'shelfList'])->name('shelf.shelf-list');
-        Route::post('warehouse/{warehouse_id}/add-shelf', [ShelfController::class, 'addShelf'])->name('shelf.add-shelf');
-        Route::get('edit-shelf/{id}', [ShelfController::class, 'edit'])->name('shelf.edit');
-        Route::put('update-shelf/{id}', [ShelfController::class, 'update'])->name('shelf.update');
-        Route::delete('delete-shelf/{id}', [ShelfController::class, 'destroy'])->name('shelf.destroy');
+        Route::get('warehouse/{id}', [ShelfController::class, 'shelfList'])->name('shelf.list');
+        Route::post('warehouse/{warehouse_id}/shelf/add', [ShelfController::class, 'addShelf'])->name('shelf.add');
+        Route::get('shelf/edit/{id}', [ShelfController::class, 'edit'])->name('shelf.edit');
+        Route::put('shelf/update/{id}', [ShelfController::class, 'update'])->name('shelf.update');
+        Route::delete('shelf/delete/{id}', [ShelfController::class, 'destroy'])->name('shelf.destroy');
         // Route::get('shelf/{id}', [ShelfController::class, 'shelfDetail'])->name('shelf.shelf-detail');
     }
     /**
@@ -105,10 +105,11 @@ class ShelfController extends Controller
 
         $warehouse_id = DB::table('warehouse_details')
         ->join('shelves', 'id', '=', 'shelf_id')
+        ->where('shelves.id', $id)
         ->select('warehouse_id')
         ->pluck('warehouse_id');
 
-        return redirect()->route('shelf.shelf-list',$warehouse_id[0])->with('success', 'cập nhật thành công');
+        return redirect()->route('shelf.list',$warehouse_id[0])->with('success', 'cập nhật thành công');
     }
 
     /**
@@ -140,7 +141,6 @@ class ShelfController extends Controller
             'shelf_code' => 'required|unique:shelves',
             'shelf_status' => 'required',
             'shelf_position'=>'required',
-            'shelf_note'=> 'required',
         ]);
 
         if($validator->fails()){

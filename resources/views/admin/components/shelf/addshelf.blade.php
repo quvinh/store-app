@@ -1,4 +1,4 @@
-<form class="needs-validation" novalidate action="{{ route('shelf.add-shelf', $warehouse->id) }}" method="POST"
+<form class="needs-validation" novalidate action="{{ route('shelf.add', $warehouse->id) }}" method="POST"
     enctype="multipart/form-data">
     @csrf
     <div class="mb-3">

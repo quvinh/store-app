@@ -74,7 +74,7 @@
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $category->category_code }}</td>
                                         <td>{{ $category->category_name }}</td>
-                                        <td>{{ $category->category_street }}</td>
+                                        <td>{{ $category->category_note }}</td>
                                         <td>
                                             @if ($category->category_status == '1')
                                                 <span class="badge bg-success">Active</span>

@@ -43,14 +43,9 @@
                 <td class="table-action">
                     <a href="{{ route('shelf.edit', $shelf->id) }}" class="action-icon">
                         <i class="mdi mdi-square-edit-outline"></i></a>
-
                     <a href="#" class="action-icon"> <i class="mdi mdi-eye"></i></a>
-                    <form action="{{ route('shelf.destroy', $shelf->id) }}" method="POST">
-                        @method('delete')
-                        @csrf
-                        <button value="Delete" type="submit" class="action-icon"
-                            style="border:0ch; background-color:white"><i class="mdi mdi-delete"></i></button>
-                    </form>
+                    <a href="{{ route('shelf.destroy', $shelf->id) }}" class="action-icon">
+                        <i class="mdi mdi-delete"></i></a>
                 </td>
             </tr>
         @endforeach
