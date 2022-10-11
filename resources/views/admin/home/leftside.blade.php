@@ -73,8 +73,8 @@
             </li>
 
             <li class="side-nav-item">
-                <a data-bs-toggle="collapse" href="#sideStatistic" aria-expanded="false"
-                    aria-controls="sideStatistic" class="side-nav-link">
+                <a data-bs-toggle="collapse" href="#sideStatistic" aria-expanded="false" aria-controls="sideStatistic"
+                    class="side-nav-link">
                     <i class="uil-store"></i>
                     <span> Thống kê </span>
                     <span class="menu-arrow"></span>
@@ -89,8 +89,8 @@
             </li>
 
             <li class="side-nav-item">
-                <a data-bs-toggle="collapse" href="#sideGroup" aria-expanded="false"
-                    aria-controls="sideGroup" class="side-nav-link">
+                <a data-bs-toggle="collapse" href="#sideGroup" aria-expanded="false" aria-controls="sideGroup"
+                    class="side-nav-link">
                     <i class="uil-store"></i>
                     <span> Danh mục </span>
                     <span class="menu-arrow"></span>
@@ -98,7 +98,7 @@
                 <div class="collapse" id="sideGroup">
                     <ul class="side-nav-second-level">
                         <li>
-                            <a href="{{route('category.index')}}">Danh mục loại vật tư</a>
+                            <a href="{{ route('category.index') }}">Danh mục loại vật tư</a>
                         </li>
                         <li>
                             <a href="{{ route('item.index') }}">Danh mục vật tư</a>
@@ -113,6 +113,27 @@
                             <a href="{{ route('account.index') }}">Tài khoản</a>
                         </li>
 
+                    </ul>
+                </div>
+            </li>
+            <li class="side-nav-item">
+                <a data-bs-toggle="collapse" href="#sidebarSystem" aria-expanded="false" aria-controls="sidebarSystem"
+                    class="side-nav-link">
+                    <i class="uil-spin"></i>
+                    <span> @lang('leftside.system.system') </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="sidebarSystem">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a href="#">@lang('leftside.system.role')</a>
+                        </li>
+                        <li>
+                            <a href="#">@lang('leftside.system.invoice')</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('/log-viewer') }}" target="_blank" rel="noopener noreferrer">Logs</a>
+                        </li>
                     </ul>
                 </div>
             </li>
