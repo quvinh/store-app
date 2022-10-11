@@ -4,12 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
+    public static function Routes() {
+        Route::group(['prefix' => 'role'], function() {
+            Route::get('/', [RoleController::class, 'index'])->name('role.index');
+            Route::post('/add', [RoleController::class, 'store'])->name('role.store');
+            Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('role.edit');
+            Route::put('/update/{id}', [RoleController::class, 'update'])->name('role.update');
+            Route::get('/delete/{id}', [RoleController::class, 'destroy'])->name('role.delete');
+        });
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,11 +27,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $side['header'] = 'system';
-        $side['sub'] = 'role';
-        $roles = Role::all();
-        // dd(Role::findById(1));
-        return view('admin.components.role.manrole', compact('side', 'roles'));
+        $roles = Role::orderByDesc('id')->get();
+        return view('admin.components.role.manrole', compact('roles'));
     }
 
     /**
@@ -43,14 +50,14 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'role' => 'required',
+            'name' => 'required|unique:roles'
         ]);
 
         if($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
 
-        $role = Role::create(['name' => $request->role, 'guard_name' => 'web']);
+        $role = Role::create(['name' => $request->name, 'guard_name' => 'web']);
         $role->givePermissionTo(Permission::where([
             ['name', 'not like', 'acc%'],
             ['name', 'not like', 'sys%'],

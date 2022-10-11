@@ -95,7 +95,7 @@
                                             @endif
                                         </td>
                                         <td class="table-action">
-                                            <a href="{{ route('shelf.shelf-list',$warehouse->id) }}"
+                                            <a href="{{ route('shelf.warehouse-details',$warehouse->id) }}"
                                                 class="action-icon"> <i class="mdi mdi-eye"></i></a>
                                             <a href="{{ route('warehouse.edit', $warehouse->id) }}" class="action-icon">
                                                 <i class="mdi mdi-square-edit-outline"></i></a>
@@ -134,4 +134,5 @@
     <!-- demo app -->
     <script src="{{ asset('assets/js/pages/demo.datatable-init.js') }}"></script>
     <!-- end demo js-->
+
 @endsection

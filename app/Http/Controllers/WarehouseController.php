@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
@@ -13,11 +15,13 @@ class WarehouseController extends Controller
 {
     public static function Routes()
     {
-        Route::get('warehouse', [WarehouseController::class, 'index'])->name('warehouse.index');
-        Route::post('warehouse', [WarehouseController::class, 'store']) ->name('warehouse.store');
-        Route::get('warehouse/edit/{id}', [WarehouseController::class, 'edit'])->name('warehouse.edit');
-        Route::get('warehouse/destroy/{id}', [WarehouseController::class, 'destroy']) ->name('warehouse.destroy');
-        Route::put('warehouse/update/{id}', [WarehouseController::class, 'update'])->name('warehouse.update');
+        Route::group(['prefix' => 'warehouse'], function () {
+            Route::get('/', [WarehouseController::class, 'warehouseById'])->name('warehouse.warehouse-by-id');
+            Route::post('/', [WarehouseController::class, 'store'])->name('warehouse.store');
+            Route::get('/edit/{id}', [WarehouseController::class, 'edit'])->name('warehouse.edit');
+            Route::get('/destroy/{id}', [WarehouseController::class, 'destroy'])->name('warehouse.destroy');
+            Route::put('/update/{id}', [WarehouseController::class, 'update'])->name('warehouse.update');
+        });
     }
     /**
      * Display a listing of the resource.
@@ -27,7 +31,7 @@ class WarehouseController extends Controller
     public function index()
     {
         $warehouses = Warehouse::all();
-        return view('admin.components.warehouse.manwarehouse', compact( 'warehouses'));
+        return view('admin.components.warehouse.manwarehouse', compact('warehouses'));
     }
 
     /**
@@ -78,16 +82,15 @@ class WarehouseController extends Controller
                 }
                 $file->move('images/warehouse/', $name);
                 $image = 'images/warehouse/' . $name;
-
             }
         }
-        $data=[
-                'warehouse_status' => $request->warehouse_status == 'on' ? '1' : '0',
-                'warehouse_note' => $request->warehouse_note,
-                'warehouse_image' => $image,
-                'warehouse_contact' => $contact,
-                'country_id' => '1',
-                'city_id' => '1',
+        $data = [
+            'warehouse_status' => $request->warehouse_status == 'on' ? '1' : '0',
+            'warehouse_note' => $request->warehouse_note,
+            'warehouse_image' => $image,
+            'warehouse_contact' => $contact,
+            'country_id' => '1',
+            'city_id' => '1',
         ];
 
         Warehouse::create(array_merge(
@@ -118,7 +121,7 @@ class WarehouseController extends Controller
     public function edit($id)
     {
         $warehouse = Warehouse::find($id);
-        return view('admin.components.warehouse.editwarehouse', compact( 'warehouse'));
+        return view('admin.components.warehouse.editwarehouse', compact('warehouse'));
     }
 
     /**
@@ -132,8 +135,8 @@ class WarehouseController extends Controller
     {
         $warehouse = Warehouse::find($id);
         $validator = Validator::make($request->all(), [
-            'warehouse_name' => 'required|unique:warehouses,warehouse_name,'.$id,
-            'warehouse_code' => 'required|unique:warehouses,warehouse_code,'.$id,
+            'warehouse_name' => 'required|unique:warehouses,warehouse_name,' . $id,
+            'warehouse_code' => 'required|unique:warehouses,warehouse_code,' . $id,
             'warehouse_contact' => 'required',
             'warehouse_street' => 'required',
             // 'country_id' => 'required',
@@ -184,5 +187,17 @@ class WarehouseController extends Controller
         $warehouse = Warehouse::find($id);
         $warehouse->delete();
         return redirect()->back()->with('success', 'xoa thành công');
+    }
+
+    public function warehouseById()
+    {
+
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
+            ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
+            ->select('warehouses.*')
+            ->where('user_id', '=', Auth::user()->id)
+            ->get();
+        return view('admin.components.warehouse.manwarehouse', compact('warehouses'));
     }
 }

@@ -1,3 +1,4 @@
+
 <div class="row mb-2">
     <div class="col-sm-4">
         <a data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
@@ -14,8 +15,8 @@
 <div>
     <hr>
 </div>
-<table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
-    {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
+{{-- <table id="scroll-vertical-datatable" class="table dt-responsive nowrap"> --}}
+    <table id="basic-datatable" class="table dt-responsive nowrap w-100">
     <thead>
         <tr>
             <th>STT</th>
@@ -44,13 +45,7 @@
                     <a href="{{ route('shelf.edit', $shelf->id) }}" class="action-icon">
                         <i class="mdi mdi-square-edit-outline"></i></a>
 
-                    <a href="#" class="action-icon"> <i class="mdi mdi-eye"></i></a>
-                    <form action="{{ route('shelf.destroy', $shelf->id) }}" method="POST">
-                        @method('delete')
-                        @csrf
-                        <button value="Delete" type="submit" class="action-icon"
-                            style="border:0ch; background-color:white"><i class="mdi mdi-delete"></i></button>
-                    </form>
+                    <a href="{{ route('shelf.destroy', $shelf->id) }}" class="action-icon"><i class="mdi mdi-delete"></i></a>
                 </td>
             </tr>
         @endforeach

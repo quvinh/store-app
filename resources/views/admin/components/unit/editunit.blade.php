@@ -37,49 +37,36 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-sm-4">
-                                <a data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false"
-                                    aria-controls="collapseExample" class="btn btn-danger mb-2 collapsed">
-                                    Tạo mới đơn vị tính
-                                </a>
+                        <form class="needs-validation" novalidate action="{{ route('unit.update',$unit->id) }}" method="POST"
+                            enctype="multipart/form-data">
+                            @method('PUT')
+                            @csrf
+                            <div class="mb-3">
+                                <div class="col s12 m6 l6">
+                                    <div class="row mb-2">
+                                        <div class="col s6">
+                                            <label class="form-label" for="unit_name">Tên đơn vị tính:</label>
+                                            <input type="text" class="form-control" id="unit_name"
+                                                placeholder="Tên đơn vị tính" required="" name="unit_name"
+                                                value="{{ $unit->unit_name }}">
+                                            <div class="invalid-feedback">
+                                                Vui lòng nhập mã loại vật tư.
+                                            </div>
+                                        </div>
+                                        <div class="col s6">
+                                            <label class="form-label" for="unit_amount">Đơn vị:</label>
+                                            <input type="text" class="form-control" id="unit_amount"
+                                                placeholder="Tên loại vật tư" required="" name="unit_amount"
+                                                value="{{ $unit->unit_amount }}">
+                                            <div class="invalid-feedback">
+                                                Vui lòng nhập đơn vị.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="collapse" id="collapseExample">
-                            <div class="tab-pane show active" id="custom-styles-preview">
-                                @include('admin.components.unit.addunit')
-                            </div>
-                        </div>
-                        <div>
-                            <hr>
-                        </div>
-                        <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
-                            <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Tên đơn vị tính</th>
-                                    <th>đơn vị</th>
-                                    <th style="width:10%">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($unit as $key => $item)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>{{ $item->unit_name }}</td>
-                                        <td>{{ $item->unit_amount }}</td>
-                                        <td>
-
-                                            <a href="{{ route('unit.edit', $item->id) }}" class="action-icon"><i
-                                                    class="mdi mdi-square-edit-outline"></i></a>
-
-                                            <a href="{{ route('unit.destroy', $item->id) }}" class="action-icon"><i
-                                                    class="mdi mdi-delete"></i></a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                            <button class="btn btn-success mb-2 me-1" type="submit">Lưu</button>
+                        </form>
                     </div>
                 </div>
             </div>
