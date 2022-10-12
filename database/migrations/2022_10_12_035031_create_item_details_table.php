@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateShelfDetailsTable extends Migration
+class CreateItemDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateShelfDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('shelf_details', function (Blueprint $table) {
-            // $table->id();
+        Schema::create('item_details', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('item_id');
+            $table->bigInteger('warehouse_id');
+            $table->bigInteger('supplier_id');
             // $table->timestamps();
-            $table->bigInteger('shelf_id');
-            $table->bigInteger('itemdetail_id');
-            $table->float('item_quantity');
         });
     }
 
@@ -29,6 +29,6 @@ class CreateShelfDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shelf_details');
+        Schema::dropIfExists('item_details');
     }
 }

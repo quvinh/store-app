@@ -4,14 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Item extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'item_code',
+        'item_barcode',
         'item_name',
+        'item_unit',
         'item_importprice',
         'item_exportprice',
         'item_quantity',
@@ -25,7 +28,8 @@ class Item extends Model
         'item_status',
         'item_note',
         'category_id',
-        'warehouse_id',
-        'supplier_id',
+        'item_date',
+        'item_max',
+        'item_min',
     ];
 }

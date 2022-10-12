@@ -16,11 +16,12 @@ class CreateItemsTable extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->string('item_code');
-            $table->char('item_barcode', 20);
+            $table->char('item_barcode', 20)->nullable();
             $table->string('item_name');
-            $table->float('item_importprice');
-            $table->float('item_exportprice');
-            $table->float('item_quantity');
+            $table->string('item_unit');
+            $table->float('item_importprice')->nullable();
+            $table->float('item_exportprice')->nullable();
+            $table->float('item_quantity')->default(0);
             $table->float('item_error')->default(0);
             $table->text('item_images')->nullable();
             $table->float('item_weight')->nullable();
@@ -28,11 +29,12 @@ class CreateItemsTable extends Migration
             $table->float('item_long')->nullable();
             $table->float('item_width')->nullable();
             $table->float('item_height')->nullable();
-            $table->tinyInteger('item_status');
+            $table->tinyInteger('item_status')->default(0);
             $table->text('item_note')->nullable();
             $table->bigInteger('category_id');
-            $table->bigInteger('warehouse_id');
-            $table->bigInteger('supplier_id');
+            $table->dateTime('item_date')->nullable(); // Ngay het han
+            $table->bigInteger('item_max')->default(1000000); // Dinh muc toi da
+            $table->integer('item_min')->default(0); // Dinh muc toi thieu
             $table->timestamps();
             $table->softDeletes();
         });
