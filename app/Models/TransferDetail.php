@@ -11,7 +11,7 @@ class TransferDetail extends Model
 
     protected $fillable = [
         'transfer_id',
-        'item_id',
+        'itemdetail_id',
         'item_quantity',
         'shelf_from',
         'floor_from',
