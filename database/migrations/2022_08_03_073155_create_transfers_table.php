@@ -20,9 +20,6 @@ class CreateTransfersTable extends Migration
             $table->text('transfer_note')->nullable();
             $table->bigInteger('warehouse_from');
             $table->bigInteger('warehouse_to');
-            $table->bigInteger('shelf_id')->nullable();
-            $table->integer('num_floor')->nullable();
-            $table->integer('num_cell')->nullable();
             $table->bigInteger('created_by');
             $table->timestamps();
             $table->softDeletes();

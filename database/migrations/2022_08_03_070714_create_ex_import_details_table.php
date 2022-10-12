@@ -14,7 +14,7 @@ class CreateExImportDetailsTable extends Migration
     public function up()
     {
         Schema::create('ex_import_details', function (Blueprint $table) {
-            // $table->id();
+            $table->id();
             // $table->timestamps();
             $table->bigInteger('exim_id');
             $table->bigInteger('itemdetail_id');
