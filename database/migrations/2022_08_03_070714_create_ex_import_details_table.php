@@ -14,15 +14,18 @@ class CreateExImportDetailsTable extends Migration
     public function up()
     {
         Schema::create('ex_import_details', function (Blueprint $table) {
-            // $table->id();
+            $table->id();
             // $table->timestamps();
             $table->bigInteger('exim_id');
-            $table->bigInteger('item_id');
+            $table->bigInteger('itemdetail_id');
             $table->float('item_quantity');
             $table->float('item_price');
             $table->float('item_total');
             $table->float('item_vat');
             $table->bigInteger('supplier_id');
+            $table->bigInteger('shelf_to')->nullable();
+            $table->integer('floor_to')->nullable();
+            $table->integer('cell_to')->nullable();
         });
     }
 

@@ -112,14 +112,23 @@
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#sideSystem" aria-expanded="false" aria-controls="sideSystem"
                     class="side-nav-link">
-                    <i class="uil-store"></i>
-                    <span> Hệ thống </span>
+                    <i class="uil-spin"></i>
+                    <span> @lang('leftside.system.system') </span>
                     <span class="menu-arrow"></span>
                 </a>
                 <div class="collapse" id="sideSystem">
                     <ul class="side-nav-second-level">
                         <li>
                             <a href="{{ route('account.index') }}">Tài khoản</a>
+                        </li>
+                        <li>
+                            <a href="#">@lang('leftside.system.role')</a>
+                        </li>
+                        <li>
+                            <a href="#">@lang('leftside.system.invoice')</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('/log-viewer') }}" target="_blank" rel="noopener noreferrer">Logs</a>
                         </li>
                     </ul>
                 </div>

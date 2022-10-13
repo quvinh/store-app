@@ -11,8 +11,14 @@ class TransferDetail extends Model
 
     protected $fillable = [
         'transfer_id',
-        'item_id',
+        'itemdetail_id',
         'item_quantity',
+        'shelf_from',
+        'floor_from',
+        'cell_from',
+        'shelf_to',
+        'floor_to',
+        'cell_to',
     ];
 
     public $timestamps = false;

@@ -46,27 +46,21 @@
                             @csrf
                             <table class="table dt-responsive nowrap">
                                 {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
-                                <thead>
-                                    <tr>
-                                        <th>Phụ tùng/ Vật tư</th>
-                                        <th>Nhà cung cấp</th>
-                                        <th>Loại phụ tùng/ vật tư</th>
-                                        <th>Đơn vị tính</th>
-                                        <th>Số lượng</th>
-                                        <th>Đơn giá</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
                                 <tbody id="list-import">
-                                    <tr>
+                                    <tr id="tr1">
                                         <td>
                                             <div>
-                                                <input id="item" class="form-control" name="item">
+                                                <label for="item">Phụ tùng/ Vật tư</label>
+                                                <input id="item1" class="form-control auto" name="item">
+                                                <br>
+                                                <label for="barcode">Mã sản phẩm</label>
+                                                <input type="text" id="barcode1" class="form-control" name="barcode">
                                             </div>
                                         </td>
 
                                         <td>
-                                            <select data-toggle="select2" title="Supplier" id="supplier" name="supplier">
+                                            <label for="supplier">Nhà cung cấp</label>
+                                            <select data-toggle="select2" title="Supplier" id="supplier1" name="supplier">
                                                 <option value=""></option>
                                                 @foreach ($suppliers as $supplier)
                                                     <option value="{{ $supplier->id }}">
@@ -74,10 +68,21 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <br>
+                                            <label for="warehouse">Kho</label>
+                                            <select data-toggle="select2" title="warehouse" id="warehouse1" name="warehouse">
+                                                <option value=""></option>
+                                                @foreach ($warehouses as $warehouse)
+                                                    <option value="{{ $warehouse->id }}">
+                                                        {{ $warehouse->warehouse_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </td>
 
                                         <td>
-                                            <select data-toggle="select2" title="Category" id="category" name="category">
+                                            <label for="category">Loại vật tư</label>
+                                            <select data-toggle="select2" title="Category" id="category1" name="category">
                                                 <option value=""></option>
                                                 @foreach ($categories as $category)
                                                     <option value="{{ $category->id }}">
@@ -85,10 +90,22 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <br>
+                                            <label for="shelf">Kệ</label>
+                                            <select data-toggle="select2" title="shelf" id="shelf1" name="shelf">
+                                                <option value=""></option>
+                                                @foreach ($shelves as $shelf)
+                                                    <option value="{{ $shelf->id }}">
+                                                        {{ $shelf->shelf_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </td>
 
                                         <td>
-                                            <select data-toggle="select2" title="Supplier" id="unit" name="unit">
+                                            <label for="unit">Đơn vị tính</label>
+                                            <select data-toggle="select2" title="Unit" id="unit1" name="unit">
+                                                <option value=""></option>
                                                 @foreach ($units as $unit)
                                                     <option value="{{ $unit->id }}">
                                                         {{ $unit->unit_name }}
@@ -96,11 +113,21 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="number" min="1" id="quantity" name="quantity"
-                                                value="" class="form-control"></td>
-                                        <td><input type="number" value="0" class="form-control"id="price"
-                                                name="price"></td>
-                                        <td><button class="btn btn-danger">Hủy</button></td>
+                                        <td>
+                                            <label for="quantity">Số lượng</label>
+                                            <input type="number" min="1" id="quantity1" name="quantity"
+                                                value="" class="form-control">
+                                        </td>
+                                        <td>
+                                            <label for="price">Giá nhập</label>
+                                            <input type="number" value="0" class="form-control" id="price1"
+                                                name="price">
+                                        </td>
+                                        <td>
+                                            {{-- <label for="cancel">Action</label> --}}
+                                            <br>
+                                            <button class="btn btn-danger" id="cancel1">Hủy</button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
