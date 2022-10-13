@@ -72,7 +72,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Vật tư</h5>
-                        @include('admin.components.shelf.shelfdetail')
+                        {{-- @include('admin.components.shelf.shelfdetail') --}}
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Loại vật tư
+    Category
 @endsection
 
 @section('css')
@@ -18,7 +18,9 @@
 @endsection
 
 @section('content')
+    <!-- Start Content-->
     <div class="container-fluid">
+        <!-- start page title -->
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
@@ -26,13 +28,14 @@
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
                             <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Loại vật tư</li>
+                            <li class="breadcrumb-item active">Danh mục loại vật tư</li>
                         </ol>
                     </div>
                     <h4 class="page-title">Danh mục loại vật tư</h4>
                 </div>
             </div>
         </div>
+        <!-- end page title -->
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -54,37 +57,47 @@
                             <hr>
                         </div>
                         <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
+                            {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
                                 <tr>
                                     <th>STT</th>
                                     <th>Mã loại vật tư</th>
-                                    <th>Tên loại vật tư</th>
+                                    <th>Tên</th>
                                     <th>Ghi chú</th>
-                                    <th>Thao tác</th>
+                                    <th>Trạng thái</th>
+                                    <th style="width: 10%">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($categories as $key => $categories)
+                                @foreach ($categories as $key => $category)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $categories->category_code }}</td>
-                                        <td>{{ $categories->category_name }}</td>
-                                        <td>{{ $categories->category_note }}</td>
+                                        <td>{{ $category->category_code }}</td>
+                                        <td>{{ $category->category_name }}</td>
+                                        <td>{{ $category->category_street }}</td>
                                         <td>
-                                            <a href="{{ route('category.edit', $categories->id) }}" class="action-icon"><i
-                                                    class="mdi mdi-square-edit-outline"></i></a>
-                                            <a href="{{ route('category.destroy', $categories->id) }}"
-                                                class="action-icon"><i class="mdi mdi-delete"></i></a>
+                                            @if ($category->category_status == '1')
+                                                <span class="badge bg-success">Active</span>
+                                            @else
+                                                <span class="badge bg-danger">Deactive</span>
+                                            @endif
+                                        </td>
+                                        <td class="table-action">
+                                            <a href="{{ route('category.edit', $category->id) }}" class="action-icon">
+                                                <i class="mdi mdi-square-edit-outline"></i></a>
+                                            <a href="{{ route('category.destroy', $category->id) }}" class="action-icon">
+                                                <i class="mdi mdi-delete"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
-                </div>
-            </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
         </div>
-    </div>
+        <!-- end row -->
+    </div> <!-- container -->
 @endsection
 
 @section('script')
@@ -97,13 +110,14 @@
     <script src="{{ asset('assets/js/vendor/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.buttons.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/buttons.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/buttons.print.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.select.min.js') }}"></script>
-    <script src="{{ asset('assets/js/vendor/buttons.html5.min.js') }}"></script>
-
+    <!-- third party js ends -->
 
     <!-- demo app -->
     <script src="{{ asset('assets/js/pages/demo.datatable-init.js') }}"></script>
-    {{-- <script src="{{ asset('assets/js/pages/demo.datatable-init-2.js') }}"></script> --}}
     <!-- end demo js-->
 @endsection

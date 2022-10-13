@@ -25,11 +25,11 @@
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Phân quyền</li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Projects</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">Phân quyền</h4>
+                    <h4 class="page-title">Projects</h4>
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
                 </div>
             @endforeach
         @endif
-        <form action="{{ route('role.update', $role->id) }}" method="post" novalidate>
+        <form action="{{ route('admin.role.update', $role->id) }}" method="post">
             @csrf
             @method('put')
             <div class="row">
@@ -57,7 +57,7 @@
                         <div class="card-body">
                             <div class="row mb-2">
                                 <div class="col-sm-4">
-                                    <a href="{{ route('role.index') }}" class="btn btn-info" type="button"><i class="mdi mdi-menu-open me-2"></i> Back
+                                    <a href="{{ route('admin.role') }}" class="btn btn-info" type="button"><i class="mdi mdi-menu-open me-2"></i> Back
                                         to list</a>
                                 </div>
                                 <div class="col-sm-8">
@@ -91,7 +91,7 @@
                                 <tbody>
                                     @forelse ($groups as $key => $value)
                                         <tr>
-                                            <td>{{ $value }}</td>
+                                            <td><b class="text-primary">{{ $value }}</b></td>
                                             <td>
                                                 <div class="form-check form-checkbox-info mb-2">
                                                     <input type="checkbox" class="form-check-input text-center"
@@ -102,8 +102,7 @@
                                                 <div class="form-check mb-2" id="{{ $key . '_check' }}">
                                                     <input type="checkbox" class="form-check-input text-center"
                                                         id="{{ $key . '.view' }}" name="{{ $key . '[]' }}"
-                                                        {{ in_array($key . '.view', $permission->pluck('name')->toArray()) ? 'checked' : '' }}
-                                                        {{ in_array($key, ['not']) ? 'hidden' : '' }}>
+                                                        {{ in_array($key . '.view', $permission->pluck('name')->toArray()) ? 'checked' : '' }}>
                                                 </div>
                                             </td>
                                             <td>
@@ -111,8 +110,7 @@
                                                     id="{{ $key . '_check' }}">
                                                     <input type="checkbox" class="form-check-input text-center"
                                                         id="{{ $key . '.add' }}" name="{{ $key . '[]' }}"
-                                                        {{ in_array($key . '.add', $permission->pluck('name')->toArray()) ? 'checked' : '' }}
-                                                        {{ in_array($key, ['pat', 'log']) ? 'hidden' : '' }}>
+                                                        {{ in_array($key . '.add', $permission->pluck('name')->toArray()) ? 'checked' : '' }}>
                                                 </div>
                                             </td>
                                             <td>
@@ -120,8 +118,7 @@
                                                     id="{{ $key . '_check' }}">
                                                     <input type="checkbox" class="form-check-input text-center"
                                                         id="{{ $key . '.edit' }}" name="{{ $key . '[]' }}"
-                                                        {{ in_array($key . '.edit', $permission->pluck('name')->toArray()) ? 'checked' : '' }}
-                                                        {{ in_array($key, ['log']) ? 'hidden' : '' }}>
+                                                        {{ in_array($key . '.edit', $permission->pluck('name')->toArray()) ? 'checked' : '' }}>
                                                 </div>
                                             </td>
                                             <td>
@@ -129,8 +126,7 @@
                                                     id="{{ $key . '_check' }}">
                                                     <input type="checkbox" class="form-check-input text-center"
                                                         id="{{ $key . '.delete' }}" name="{{ $key . '[]' }}"
-                                                        {{ in_array($key . '.delete', $permission->pluck('name')->toArray()) ? 'checked' : '' }}
-                                                        {{ in_array($key, ['log']) ? 'hidden' : '' }}>
+                                                        {{ in_array($key . '.delete', $permission->pluck('name')->toArray()) ? 'checked' : '' }}>
                                                 </div>
                                             </td>
                                         </tr>

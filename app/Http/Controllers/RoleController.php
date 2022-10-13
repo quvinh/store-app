@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
@@ -11,13 +12,14 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
-    public static function Routes() {
+    public static function Routes()
+    {
         Route::group(['prefix' => 'role'], function() {
-            Route::get('/', [RoleController::class, 'index'])->name('role.index');
-            Route::post('/add', [RoleController::class, 'store'])->name('role.store');
-            Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('role.edit');
-            Route::put('/update/{id}', [RoleController::class, 'update'])->name('role.update');
-            Route::get('/delete/{id}', [RoleController::class, 'destroy'])->name('role.delete');
+            Route::get('/', [RoleController::class, 'index'])->name('admin.role');
+            Route::post('/add', [RoleController::class, 'store'])->name('admin.role.add');
+            Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('admin.role.edit');
+            Route::put('/update/{id}', [RoleController::class, 'update'])->name('admin.role.update');
+            Route::get('/delete/{id}', [RoleController::class, 'destroy'])->name('admin.role.delete');
         });
     }
     /**
@@ -50,7 +52,7 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:roles'
+            'name' => 'required|unique:roles',
         ]);
 
         if($validator->fails()) {
@@ -68,7 +70,7 @@ class RoleController extends Controller
             ['name', '<>', 'she.edit'],
         ])->get());
 
-        return redirect()->back()->with('success', 'Lưu nhóm thành công');
+        return redirect()->back()->with(['success' => 'Added successfully']);
     }
 
     /**
@@ -90,24 +92,25 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $side['header'] = 'system';
-        $side['sub'] = 'role';
         $groups = array(
-            'ite' => 'Vật tư',
-            'war' => 'Kho vật tư',
-            'she' => 'Giá/kệ',
-            'cat' => 'Danh mục',
-            'eim' => 'Xuất Nhập kho',
-            'tra' => 'Chuyển kho',
-            'inv' => 'Kiểm kho',
-            'acc' => 'Tài khoản',
-            'sys' => 'Hệ thống',
-            'rep' => 'Báo cáo',
-            'log' => 'Logs hệ thống',
+            'pat' => Lang::get('components/role.patient'),
+            'gro' => Lang::get('components/role.group'),
+            'sta' => Lang::get('components/role.station'),
+            'typ' => Lang::get('components/role.type'),
+            'inv' => Lang::get('components/role.invoice'),
+            'not' => Lang::get('components/role.notify'),
+            'acc' => Lang::get('components/role.account'),
+            'print' => Lang::get('components/role.print'),
+            'price' => Lang::get('components/role.price'),
+            'exc' => Lang::get('components/role.excel'),
+            'doc' => Lang::get('components/role.doctor'),
+            'sam' => Lang::get('components/role.sample'),
+            'rep' => Lang::get('components/role.report'),
+            'log' => Lang::get('components/role.log'),
         );
         $role = Role::findById($id);
         $permission = $role->getAllPermissions();
-        return view('admin.components.role.editrole', compact('side', 'role', 'groups', 'permission'));
+        return view('admin.components.role.editrole', compact('groups', 'role', 'permission'));
     }
 
     /**
@@ -128,14 +131,22 @@ class RoleController extends Controller
             return redirect()->back()->withErrors($validator);
         }
 
-        $permission = explode(',', $request->permission);
+        // $permission = explode(',', $request->permission);
+        $permission = array();
+        $permissions = Permission::all('name')->pluck('name');
+        $data = explode(',', $request->permission);
+        foreach($data as $value) {
+            if(in_array($value, $permissions->toArray())) {
+                array_push($permission, $value);
+            }
+        }
         $role = Role::findById($id);
         $role->update([
             'name' => $request->role,
         ]);
         $role->syncPermissions();
         $role->givePermissionTo($permission);
-        return redirect()->back()->with('success', 'Cập nhật thành công');
+        return redirect()->back()->with(['success' => 'Updated successfully']);
     }
 
     /**
@@ -149,10 +160,10 @@ class RoleController extends Controller
         $role = Role::findById($id);
         $userCount = User::role($role->name)->count();
         if($userCount>0) {
-            return redirect()->back()->with('error', 'Một vài tài khoản đang theo nhóm này, không thể xóa');
+            return redirect()->back()->with(['error' => 'Một vài tài khoản đang theo nhóm này, không thể xóa']);
         } else {
             $role->delete();
-            return redirect()->back()->with('success', 'Xóa nhóm thành công');
+            return redirect()->back()->with(['success' => 'Deleted successfully']);
         }
     }
 }

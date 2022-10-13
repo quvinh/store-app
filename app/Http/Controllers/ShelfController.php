@@ -132,27 +132,27 @@ class ShelfController extends Controller
         ->where('warehouse_details.warehouse_id', $warehouse_id)
         ->get();
 
-        $items = DB::table('items')
-        ->join('categories', 'categories.id', '=', 'items.category_id')
-        ->join('unit_details', 'unit_details.item_id', '=', 'items.id')
-        ->leftJoin('units', 'units.id', '=', 'unit_details.unit_id')
-        ->leftJoin('warehouses', 'warehouses.id', '=', 'items.warehouse_id')
-        ->rightJoin('shelf_details', 'shelf_details.item_id', '=', 'items.id')
-        ->rightJoin('shelves', 'shelves.id', '=', 'shelf_details.shelf_id')
-        ->select(
-            'items.*',
-            'units.id as unit_id',
-            'units.unit_name',
-            'categories.category_name',
-            'shelf_details.item_quantity as item_quantity_of_shelf',
-            'shelves.shelf_name',
-            'warehouses.warehouse_name'
-        )
-        ->where('items.warehouse_id', $warehouse_id)
-        ->where('items.item_quantity', '>', '0')
-        ->get();
+        // $items = DB::table('items')
+        // ->join('categories', 'categories.id', '=', 'items.category_id')
+        // ->join('unit_details', 'unit_details.item_id', '=', 'items.id')
+        // ->leftJoin('units', 'units.id', '=', 'unit_details.unit_id')
+        // ->leftJoin('warehouses', 'warehouses.id', '=', 'items.warehouse_id')
+        // ->rightJoin('shelf_details', 'shelf_details.item_id', '=', 'items.id')
+        // ->rightJoin('shelves', 'shelves.id', '=', 'shelf_details.shelf_id')
+        // ->select(
+        //     'items.*',
+        //     'units.id as unit_id',
+        //     'units.unit_name',
+        //     'categories.category_name',
+        //     'shelf_details.item_quantity as item_quantity_of_shelf',
+        //     'shelves.shelf_name',
+        //     'warehouses.warehouse_name'
+        // )
+        // ->where('items.warehouse_id', $warehouse_id)
+        // ->where('items.item_quantity', '>', '0')
+        // ->get();
 
-        return view('admin.components.warehouse.warehousedetail', compact('shelf', 'warehouse_id', 'warehouse', 'items'));
+        return view('admin.components.warehouse.warehousedetail', compact('shelf', 'warehouse_id', 'warehouse'));
     }
 
     public function addShelf(Request $request, $warehouse_id){

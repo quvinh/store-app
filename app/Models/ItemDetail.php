@@ -4,16 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Unit extends Model
+class ItemDetail extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
-        'unit_name',
-        'unit_amount',
+        'item_id',
+        'warehosue_id',
+        'supplier_id',
     ];
-
     public $timestamps = false;
 }

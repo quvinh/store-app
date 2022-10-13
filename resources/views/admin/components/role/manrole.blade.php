@@ -30,11 +30,11 @@
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Phân quyền</li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Projects</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">Phân quyền</h4>
+                    <h4 class="page-title">Projects</h4>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-8">
-                                <form action="{{ route('role.store') }}" method="post" class="text-sm-end">
+                                <form action="{{ route('admin.role.add') }}" method="post" class="text-sm-end">
                                     @csrf
                                     <div class="row">
                                     <div class="col-sm-9">
@@ -104,16 +104,16 @@
                                             <td class="table-user">
                                                 {{-- <img src="{{ asset('assets/images/users/avatar-4.jpg') }}" alt="table-user"
                                                     class="me-2 rounded-circle"> --}}
-                                                <a href="{{ route('role.edit', $role->id) }}"
+                                                <a href="{{ route('admin.role.edit', $role->id) }}"
                                                     class="text-body fw-semibold">{{ $role->name }}</a>
                                             </td>
                                             <td>
                                                 {{ count($role->permissions) }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('role.edit', $role->id) }}" class="action-icon"> <i
+                                                <a href="{{ route('admin.role.edit', $role->id) }}" class="action-icon"> <i
                                                         class="mdi mdi-square-edit-outline"></i></a>
-                                                <a href="{{ route('role.delete', $role->id) }}" class="action-icon"> <i
+                                                <a href="{{ route('admin.role.delete', $role->id) }}" class="action-icon"> <i
                                                         class="mdi mdi-delete"></i></a>
                                             </td>
                                         </tr>

@@ -6,18 +6,18 @@
             <div class="row mb-2">
                 <div class="col s6">
                     <label class="form-label" for="category_code">Mã loại vật tư:</label>
-                    <input type="text" class="form-control" id="category_code" placeholder="Mã loại vật tư" required=""
-                        name="category_code">
+                    <input type="text" class="form-control" id="category_code" placeholder="Mã loại vật tư"
+                        required="" name="category_code">
                     <div class="invalid-feedback">
                         Vui lòng nhập mã loại vật tư.
                     </div>
                 </div>
                 <div class="col s6">
                     <label class="form-label" for="category_name">Tên loại vật tư:</label>
-                    <input type="text" class="form-control" id="category_name" placeholder="Tên loại vật tư" required=""
-                        name="category_name">
+                    <input type="text" class="form-control" id="category_name" placeholder="Tên loại vật tư"
+                        required="" name="category_name">
                     <div class="invalid-feedback">
-                        Vui lòng nhập tên kho.
+                        Vui lòng nhập tên loại vật tư.
                     </div>
                 </div>
             </div>
@@ -27,13 +27,16 @@
                     <input type="text" class="form-control" id="category_note" placeholder="Ghi chú"
                         name="category_note">
                 </div>
-            </div>
-            <div class="row mb-2"><span class="form-label" style="font-weight:600">Kích
-                    hoạt ngay:</span>
-                <div class=" col s6">
+
+                <div class="col s6">
+                    <span class="form-label" style="font-weight:600">Kích
+                        hoạt ngay:</span><br><br>
                     <input type="checkbox" id="switch3" checked data-switch="success" name="category_status" />
                     <label for="switch3" data-on-label="Yes" data-off-label="No"></label>
                 </div>
+            </div>
+
+            <div class="row mb-2">
             </div>
         </div>
     </div>

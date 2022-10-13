@@ -59,9 +59,9 @@
                             <div class="row">
                                 <div class="col-sm-6 mb-3">
                                     <label for="select2"><i class="mdi mdi-square-edit-outline"></i>Kho vật tư</label>
-                                    <select data-toggle="select2" name="warehouse[]" id="warehouse" multiple>
+                                    <select data-toggle="select2" name="warehouse[]" id="warehouse" multiple required>
                                         @foreach ($warehouse as $warehouse)
-                                            <option value="{{ $warehouse->id }}"
+                                            <option  value="{{ $warehouse->id }}"
                                                 {{ in_array($warehouse->id, array_values($manager->all())) ? 'selected' : '' }}>
                                                 {{ $warehouse->id }} -
                                                 {{ $warehouse->warehouse_name }}</option>
@@ -89,7 +89,7 @@
                                             Full Name</label>
                                         <input type="text" class="form-control" id="name" name="name"
                                             placeholder="Enter full name"
-                                            value="{{ old('name') ? old('name') : $account->name }}">
+                                            value="{{ old('name') ? old('name') : $account->name }}" required>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -98,7 +98,7 @@
                                                 class="mdi mdi-square-edit-outline"></i> Email</label>
                                         <input type="email" class="form-control" id="email" name="email"
                                             placeholder="Enter Email"
-                                            value="{{ old('email') ? old('email') : $account->email }}">
+                                            value="{{ old('email') ? old('email') : $account->email }}" required>
                                     </div>
                                 </div> <!-- end col -->
                             </div> <!-- end row -->
@@ -110,7 +110,7 @@
                                             Username</label>
                                         <input type="text" class="form-control" id="username" name="username"
                                             placeholder="Enter username"
-                                            value="{{ old('username') ? old('username') : $account->username }}">
+                                            value="{{ old('username') ? old('username') : $account->username }}" required>
                                     </div>
                                 </div>
 

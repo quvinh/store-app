@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Loại vật tư
+    Unit
 @endsection
 
 @section('css')
@@ -18,7 +18,9 @@
 @endsection
 
 @section('content')
+    <!-- Start Content-->
     <div class="container-fluid">
+        <!-- start page title -->
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
@@ -26,13 +28,14 @@
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
                             <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Đơn vị tính</li>
+                            <li class="breadcrumb-item active">Danh mục đơn vị tính</li>
                         </ol>
                     </div>
                     <h4 class="page-title">Danh mục đơn vị tính</h4>
                 </div>
             </div>
         </div>
+        <!-- end page title -->
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -54,37 +57,77 @@
                             <hr>
                         </div>
                         <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
+                            {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
                                 <tr>
                                     <th>STT</th>
-                                    <th>Tên đơn vị tính</th>
-                                    <th>đơn vị</th>
-                                    <th style="width:10%">Thao tác</th>
+                                    <th>Tên</th>
+                                    <th>Số lượng</th>
+                                    <th style="width: 10%">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($unit as $key => $item)
+                                @foreach ($units as $key => $unit)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $item->unit_name }}</td>
-                                        <td>{{ $item->unit_amount }}</td>
-                                        <td>
-
-                                            <a href="{{ route('unit.edit', $item->id) }}" class="action-icon"><i
-                                                    class="mdi mdi-square-edit-outline"></i></a>
-
-                                            <a href="{{ route('unit.destroy', $item->id) }}" class="action-icon"><i
-                                                    class="mdi mdi-delete"></i></a>
+                                        <td>{{ $unit->unit_name }}</td>
+                                        <td>{{ $unit->unit_amount }}</td>
+                                        <td class="table-action">
+                                            <a href="{{ route('unit.edit', $unit->id) }}" class="action-icon">
+                                                <i class="mdi mdi-square-edit-outline"></i></a>
+                                            <a href="{{ route('unit.delete', $unit->id) }}" class="action-icon">
+                                                <i class="mdi mdi-delete"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
-                </div>
-            </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
         </div>
-    </div>
+        <!-- end row -->
+        @if (count($unitTrashed) > 0)
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-title text-center" style="padding-top: 10px">
+                            <h4>Danh sách đơn vị tính đã xóa</h4><div align="center"><hr width="95%"></div>
+                        </div>
+                        <div class="card-body">
+                            <table id="scroll-vertical-datatable-trashed" class="table dt-responsive nowrap">
+                                {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Tên</th>
+                                        <th>Số lượng</th>
+                                        <th style="width: 10%">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($unitTrashed as $key => $unit)
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>{{ $unit->unit_name }}</td>
+                                            <td>{{ $unit->unit_amount }}</td>
+                                            <td class="table-action">
+                                                <a href="{{ route('unit.restore', $unit->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-delete-restore"></i></a>
+                                                <a href="{{ route('unit.destroy', $unit->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-delete-forever"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+            </div>
+        @endif
+
+    </div> <!-- container -->
 @endsection
 
 @section('script')
@@ -97,13 +140,14 @@
     <script src="{{ asset('assets/js/vendor/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.buttons.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/buttons.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/buttons.print.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.select.min.js') }}"></script>
-    <script src="{{ asset('assets/js/vendor/buttons.html5.min.js') }}"></script>
-
+    <!-- third party js ends -->
 
     <!-- demo app -->
     <script src="{{ asset('assets/js/pages/demo.datatable-init.js') }}"></script>
-    {{-- <script src="{{ asset('assets/js/pages/demo.datatable-init-2.js') }}"></script> --}}
     <!-- end demo js-->
 @endsection

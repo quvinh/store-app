@@ -17,6 +17,9 @@ class ExImportDetail extends Model
         'item_total',
         'item_vat',
         'supplier_id',
+        'shelf_to',
+        'floor_to',
+        'cell_to',
     ];
 
     public $timestamps = false;

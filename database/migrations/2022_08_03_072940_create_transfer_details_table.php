@@ -19,6 +19,12 @@ class CreateTransferDetailsTable extends Migration
             $table->bigInteger('transfer_id');
             $table->bigInteger('item_id');
             $table->float('item_quantity');
+            $table->bigInteger('shelf_from')->nullable();
+            $table->integer('floor_from')->nullable();
+            $table->integer('cell_from')->nullable();
+            $table->bigInteger('shelf_to')->nullable();
+            $table->integer('floor_to')->nullable();
+            $table->integer('cell_to')->nullable();
         });
     }
 

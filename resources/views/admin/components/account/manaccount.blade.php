@@ -23,10 +23,10 @@
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
                             <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Đơn vị tính</li>
+                            <li class="breadcrumb-item active">Tài khoản</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">Danh mục đơn vị tính</h4>
+                    <h4 class="page-title">Danh mục tài khoản</h4>
                 </div>
             </div>
         </div>
