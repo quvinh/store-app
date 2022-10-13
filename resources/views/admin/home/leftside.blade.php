@@ -63,7 +63,7 @@
                             <a href="{{route('transfer.index')}}">Quản lý điều chuyển</a>
                         </li>
                         <li>
-                            <a href="{{route('item.index')}}">Quản lý tồn kho</a>
+                            <a href="{{route('detail_item.index')}}">Quản lý tồn kho</a>
                         </li>
                         <li>
                             <a href="{{route('inventory.index')}}">Quản lý điều chỉnh vật tư</a>
@@ -97,6 +97,9 @@
                 </a>
                 <div class="collapse" id="sideGroup">
                     <ul class="side-nav-second-level">
+                        <li>
+                            <a href="{{ route('item.index') }}">Danh mục vật tư</a>
+                        </li>
                         <li>
                             <a href="{{ route('category.index') }}">Danh mục loại vật tư</a>
                         </li>

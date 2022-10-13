@@ -42,7 +42,7 @@
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-sm-4">
-                                <a href="{{ route('ex_import.import') }}" class="btn btn-danger mb-2">
+                                <a href="{{ route('item.create') }}" class="btn btn-danger mb-2">
                                     Tạo mới vật tư
                                 </a>
                             </div>
@@ -50,34 +50,35 @@
                         <div>
                             <hr>
                         </div>
-                        <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
+                        <table id="scroll-vertical-datatable" class="table dt-responsive nowrap text-center">
                             {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
                                 <tr>
                                     <th>Tên</th>
                                     <th>Đơn vị tính</th>
                                     <th>Phân loại</th>
-                                    <th>Giá nhập</th>
-                                    <th>Giá xuất</th>
-                                    <th>Số lượng</th>
-                                    <th>Mã NSX</th>
+                                    <th>Định mức tối đa</th>
+                                    <th>Định mức tối thiểu</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Ngày cập nhật</th>
                                     <th>Ghi chú</th>
                                     <th style="width: 10%">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($items as $key => $item)
+                                @foreach ($data as $key => $item)
                                     <tr>
                                         <td>{{ $item->item_name }}</td>
                                         <td>{{ $item->unit }}</td>
-                                        <th>{{ $item->category }}</th>
-                                        <th>{{ $item->item_importprice }}</th>
-                                        <th>{{ $item->item_exportprice }}</th>
-                                        <th>{{ $item->supplier_id }}</th>
+                                        <td>{{ $item->category }}</td>
+                                        <th>{{ $item->item_max }}</th>
+                                        <th>{{ $item->item_min }}</th>
+                                        <th>{{ $item->created_at }}</th>
+                                        <th>{{ $item->updated_at }}</th>
                                         <td>{{ $item->item_note }}</td>
                                         <td class="table-action">
                                             <a href="{{ route('item.edit', $item->id) }}" class="action-icon">
-                                                <i class="mdi mdi-eye-outline"></i></a>
+                                                <i class="mdi mdi-square-edit-outline"></i></a>
                                             <a href="{{ route('item.delete', $item->id) }}" class="action-icon">
                                                 <i class="mdi mdi-delete"></i></a>
                                         </td>
@@ -89,7 +90,7 @@
                 </div> <!-- end card-->
             </div> <!-- end col -->
         </div>
-        @if (count($itemTrash) > 0)
+        @if (count($dataTrash) > 0)
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -107,23 +108,16 @@
                                         <th>Tên</th>
                                         <th>Đơn vị tính</th>
                                         <th>Phân loại</th>
-                                        <th>Giá nhập</th>
-                                        <th>Giá xuất</th>
-                                        <th>Số lượng</th>
-                                        <th>Mã NSX</th>
                                         <th>Ghi chú</th>
                                         <th style="width: 10%">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($items as $key => $item)
+                                    @foreach ($dataTrash as $key => $item)
                                         <tr>
                                             <td>{{ $item->item_name }}</td>
                                             <td>{{ $item->unit }}</td>
                                             <th>{{ $item->category }}</th>
-                                            <th>{{ $item->item_importprice }}</th>
-                                            <th>{{ $item->item_exportprice }}</th>
-                                            <th>{{ $item->supplier_id }}</th>
                                             <td>{{ $item->item_note }}</td>
                                             <td class="table-action">
                                                 <a href="{{ route('item.restore', $item->id) }}" class="action-icon">

@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\ExImport;
+use App\Models\Item;
+use App\Models\ItemDetail;
 use App\Models\Supplier;
 use App\Models\Unit;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -72,7 +76,15 @@ class ExportImportController extends Controller
      */
     public function imstore(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
+        $count= count($request->item);
+        for($i=0; $i < $count; $i++) {
+            ItemDetail::create([
+                'supplier_id' => $request->supplier[$i],
+                'item_id' => $request->id[$i],
+                // 'warehouse_id' =>
+            ]);
+        }
     }
 
     /**
