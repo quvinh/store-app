@@ -105,10 +105,11 @@ class ShelfController extends Controller
 
         $warehouse_id = DB::table('warehouse_details')
         ->join('shelves', 'id', '=', 'shelf_id')
+        ->where('shelves.id', $id)
         ->select('warehouse_id')
         ->pluck('warehouse_id');
 
-        return redirect()->route('shelf.shelf-list',$warehouse_id[0])->with('success', 'cập nhật thành công');
+        return redirect()->route('shelf.list',$warehouse_id[0])->with('success', 'cập nhật thành công');
     }
 
     /**
@@ -161,7 +162,6 @@ class ShelfController extends Controller
             'shelf_code' => 'required|unique:shelves',
             'shelf_status' => 'required',
             'shelf_position'=>'required',
-            'shelf_note'=> 'required',
         ]);
 
         if($validator->fails()){

@@ -57,16 +57,16 @@
                             <a href="{{ route('warehouse.warehouse-by-id') }}">Quản lý kho vật tư</a>
                         </li>
                         <li>
-                            <a href="#">Quản lý nhập/xuất</a>
+                            <a href="{{ route('ex_import.index') }}">Quản lý nhập / xuất</a>
                         </li>
                         <li>
-                            <a href="#">Quản lý điều chuyển</a>
+                            <a href="{{route('transfer.index')}}">Quản lý điều chuyển</a>
                         </li>
                         <li>
-                            <a href="#">Quản lý tồn kho</a>
+                            <a href="{{route('item.index')}}">Quản lý tồn kho</a>
                         </li>
                         <li>
-                            <a href="#">Quản lý điều chỉnh vật tư</a>
+                            <a href="{{route('inventory.index')}}">Quản lý điều chỉnh vật tư</a>
                         </li>
                     </ul>
                 </div>
@@ -101,30 +101,26 @@
                             <a href="{{ route('category.index') }}">Danh mục loại vật tư</a>
                         </li>
                         <li>
-                            <a href="{{ route('item.index') }}">Danh mục vật tư</a>
+                            <a href="{{ route('unit.index') }}">Danh mục đơn vị tính</a>
                         </li>
                         <li>
-                            <a href="{{ route('unit.index') }}">Đơn vị tính</a>
+                            <a href="{{ route('supplier.index') }}">Danh mục nhà cung cấp</a>
                         </li>
-                        <li>
-                            <a href="#">Danh mục nhà cung cấp</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('account.index') }}">Tài khoản</a>
-                        </li>
-
                     </ul>
                 </div>
             </li>
             <li class="side-nav-item">
-                <a data-bs-toggle="collapse" href="#sidebarSystem" aria-expanded="false" aria-controls="sidebarSystem"
+                <a data-bs-toggle="collapse" href="#sideSystem" aria-expanded="false" aria-controls="sideSystem"
                     class="side-nav-link">
                     <i class="uil-spin"></i>
                     <span> @lang('leftside.system.system') </span>
                     <span class="menu-arrow"></span>
                 </a>
-                <div class="collapse" id="sidebarSystem">
+                <div class="collapse" id="sideSystem">
                     <ul class="side-nav-second-level">
+                        <li>
+                            <a href="{{ route('account.index') }}">Tài khoản</a>
+                        </li>
                         <li>
                             <a href="#">@lang('leftside.system.role')</a>
                         </li>

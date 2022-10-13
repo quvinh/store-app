@@ -139,7 +139,6 @@ class AccountController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        dd($request->warehouse);
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required',

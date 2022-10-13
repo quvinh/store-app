@@ -44,8 +44,14 @@
                 <td class="table-action">
                     <a href="{{ route('shelf.edit', $shelf->id) }}" class="action-icon">
                         <i class="mdi mdi-square-edit-outline"></i></a>
+<<<<<<< HEAD
 
                     <a href="{{ route('shelf.destroy', $shelf->id) }}" class="action-icon"><i class="mdi mdi-delete"></i></a>
+=======
+                    <a href="#" class="action-icon"> <i class="mdi mdi-eye"></i></a>
+                    <a href="{{ route('shelf.destroy', $shelf->id) }}" class="action-icon">
+                        <i class="mdi mdi-delete"></i></a>
+>>>>>>> higo
                 </td>
             </tr>
         @endforeach

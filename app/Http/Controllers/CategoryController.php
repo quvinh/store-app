@@ -14,7 +14,7 @@ class CategoryController extends Controller
     public static function Routes()
     {
         Route::get('category', [CategoryController::class, 'index'])->name('category.index');
-        Route::post('category', [CategoryController::class, 'store'])->name('category.store');
+        Route::post('category/store', [CategoryController::class, 'store'])->name('category.store');
         Route::get('category/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
         Route::get('category/destroy/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
         Route::put('category/update/{id}', [CategoryController::class, 'update'])->name('category.update');

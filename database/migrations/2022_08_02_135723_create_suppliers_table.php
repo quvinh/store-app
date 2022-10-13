@@ -21,7 +21,7 @@ class CreateSuppliersTable extends Migration
             $table->char('supplier_phone', 15);
             $table->string('supplier_email', 100);
             $table->boolean('supplier_type');// personally or enterprise
-            $table->tinyInteger('supppier_status');
+            $table->tinyInteger('supplier_status');
             $table->char('supplier_citizenid', 20);
             $table->bigInteger('bank_id');
             $table->string('supplier_branch', 200);

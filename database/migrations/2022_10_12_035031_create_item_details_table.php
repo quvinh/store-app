@@ -18,6 +18,10 @@ class CreateItemDetailsTable extends Migration
             $table->bigInteger('item_id');
             $table->bigInteger('warehouse_id');
             $table->bigInteger('supplier_id');
+            $table->bigInteger('shelf_id');
+            $table->integer('floor_id');
+            $table->integer('cell_id');
+            $table->float('item_quantity');
             // $table->timestamps();
         });
     }

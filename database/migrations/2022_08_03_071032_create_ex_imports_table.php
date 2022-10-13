@@ -17,6 +17,7 @@ class CreateExImportsTable extends Migration
             $table->id();
             $table->char('exim_code', 20);
             $table->tinyInteger('exim_status');
+            $table->tinyInteger('exim_type');
             $table->bigInteger('invoice_id');
             $table->bigInteger('warehouse_id');
             $table->bigInteger('user_id');

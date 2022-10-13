@@ -54,64 +54,113 @@
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane show active" id="custom-styles-preview">
-                                <form class="needs-validation" novalidate="" method="POST"
-                                    action="{{ route('admin.station.store') }}">
+                                <form action="" method="post">
                                     @csrf
-                                    <div class="row">
+                                    <div class="row mb-1">
+                                        <div class="col-md-3 text-sm-end mt-2"><span class="text-danger">(*)</span> <span
+                                                class="text-primary">Kho xuất hàng</span></div>
                                         <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label" for="station_code">@lang('station.id')</label>
-                                                <input type="text" class="form-control" id="station_code"
-                                                    name="station_code" placeholder="Code"
-                                                    value="{{ old('station_code') ? old('station_code') : 'bot' . ($maxid + 1) }}"
-                                                    required="">
-                                                <!-- <div class="valid-feedback">
-                                                    Looks good!
-                                                </div> -->
-                                                <!-- <div class="invalid-feedback">
-                                                </div> -->
-                                            </div>
+                                            <select class="form-control select2" data-toggle="select2">
+                                                <option>Select</option>
+                                                <option value="CA">California</option>
+                                                <option value="NV">Nevada</option>
+                                                <option value="OR">Oregon</option>
+                                                <option value="WA">Washington</option>
+                                            </select>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label" for="station_name">@lang('station.name')</label>
-                                                <input type="text" class="form-control" id="station_name"
-                                                    name="station_name" placeholder="Name" value="{{ old('station_name') }}"
-                                                    required="">
-                                            </div>
-                                        </div>
+                                        <div class="col-md-3"></div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row mb-1">
+                                        <div class="col-md-3 text-sm-end mt-2"><span class="text-danger">(*)</span> <span
+                                                class="text-primary">Kho nhận hàng</span></div>
+                                        <div class="col-md-6">
+                                            <select class="form-control select2" data-toggle="select2">
+                                                <option>Select</option>
+                                                <option value="CA">California</option>
+                                                <option value="NV">Nevada</option>
+                                                <option value="OR">Oregon</option>
+                                                <option value="WA">Washington</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3"></div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-md-3 text-sm-end mt-2"><span class="text-primary">Mô tả chung</span>
+                                        </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <textarea class="form-control" name="station_note" id="station_note" placeholder="Note" rows="1"></textarea>
-                                                <div class="invalid-feedback">
-                                                    @lang('station.please')
+                                                <textarea class="form-control" id="example-textarea" rows="3" placeholder="Nhập mô tả..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3"></div>
+                                    </div>
+                                    <style>
+                                        .separator {
+                                            display: flex;
+                                            align-items: center;
+                                            text-align: center;
+                                        }
+
+                                        .separator::before,
+                                        .separator::after {
+                                            content: '';
+                                            flex: 1;
+                                            border-bottom: 1px solid #DDD;
+                                        }
+
+                                        .separator:not(:empty)::before {
+                                            margin-right: .25em;
+                                        }
+
+                                        .separator:not(:empty)::after {
+                                            margin-left: .25em;
+                                        }
+                                    </style>
+                                    <div class="separator mb-2"><b class="text-dark">DANH SÁCH PHỤ TÙNG</b></div>
+                                    {{-- LIST --}}
+                                    <div class="mt-1 mb-3" id="list-item">
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 text-sm-end mt-2">
+                                                <span class="text-danger">(*)</span> <span class="text-primary">Phụ tùng</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="form-control select2" data-toggle="select2" id="itemdetail_id" name="itemdetail_id">
+                                                    <option>Select</option>
+                                                    <option value="CA">California</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3"></div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 text-sm-end mt-2">
+                                                <span class="text-danger">(*)</span> <span class="text-primary">Số lượng</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <input class="form-control form-control-sm" id="item_quantity" name="item_quantity" data-toggle="touchspin" value="0" type="text" data-bts-button-down-class="btn btn-danger btn-sm" data-bts-button-up-class="btn btn-info btn-sm">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 text-sm-end">
+                                                        <button class="btn btn-sm btn-warning" type="button"><i class="mdi mdi-card-remove-outline"></i> Xóa dòng</button>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-3"></div>
                                         </div>
+                                    </div>
+                                    <div class="row mt-3 mb-1">
+                                        <div class="col-md-3 text-sm-end mt-2"></div>
                                         <div class="col-md-6">
-                                            <div class="form-check form-checkbox-success mb-3">
-                                                <input type="checkbox" class="form-check-input" id="station_status"
-                                                    name="station_status" checked="" value="1">
-                                                <label class="form-check-label" for="station_status">@lang('station.active')</label>
+                                            <div class="row">
+                                            <div class="text-sm-start col-md-6"><button type="button" class="btn btn-sm btn-success "><i class="mdi mdi-chevron-double-down"></i> Thêm dòng</button></div>
+                                            <div class="text-sm-end col-md-6"><button type="button" class="btn btn-sm btn-info "><i class="mdi mdi-content-save"></i> Xác nhận lưu</button></div>
                                             </div>
+                                            
                                         </div>
+                                        <div class="col-md-3"></div>
                                     </div>
-                                    <div class="mt-2">
-                                        <div class="form-check form-check-inline">
-                                            <input type="radio" id="customRadio3" name="station_action"
-                                                class="form-check-input" value="add" checked>
-                                            <label class="form-check-label" for="customRadio3">@lang('station.continue')</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input type="radio" id="customRadio4" name="station_action"
-                                                class="form-check-input" value="list">
-                                            <label class="form-check-label" for="customRadio4">@lang('station.redirect')</label>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <button class="btn btn-primary" type="submit">@lang('station.submit')</button>
                                 </form>
                             </div> <!-- end preview-->
 
