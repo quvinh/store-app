@@ -57,6 +57,10 @@ class ExportImportController extends Controller
         $suppliers = Supplier::all();
         $units = Unit::all();
         $items = DB::table('items')->whereNull('deleted_at')->get();
+        foreach($items as $item){
+            $item->value = $item->item_name;
+            $item->data = $item->id;
+        }
         return view('admin.components.ex_import.import', compact('categories', 'suppliers', 'units', 'items'));
     }
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AutoCompleteController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExportImportController;
@@ -53,4 +54,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     UnitController::Routes();
     AccountController::Routes();
     SupplierController::Routes();
+    AutoCompleteController::Routes();
 });

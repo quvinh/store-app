@@ -54,20 +54,20 @@
                                         <th>Đơn vị tính</th>
                                         <th>Số lượng</th>
                                         <th>Đơn giá</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="list-import">
                                     <tr>
                                         <td>
-                                            <input type="text" class="form-control" id="name"
-                                                placeholder="Phụ tùng/ Vật tư" required="" name="name">
-                                            <div class="invalid-feedback">
-                                                Vui lòng nhập Phụ tùng/ Vật tư.
+                                            <div>
+                                                <input id="item" class="form-control" name="item">
                                             </div>
                                         </td>
 
                                         <td>
                                             <select data-toggle="select2" title="Supplier" id="supplier" name="supplier">
+                                                <option value=""></option>
                                                 @foreach ($suppliers as $supplier)
                                                     <option value="{{ $supplier->id }}">
                                                         {{ $supplier->supplier_name }}
@@ -78,6 +78,7 @@
 
                                         <td>
                                             <select data-toggle="select2" title="Category" id="category" name="category">
+                                                <option value=""></option>
                                                 @foreach ($categories as $category)
                                                     <option value="{{ $category->id }}">
                                                         {{ $category->category_name }}
@@ -95,12 +96,19 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="number" min="1" id="quantity" name="quantity" value="" class="form-control"></td>
-                                        <td><input type="number" value="0" class="form-control"id="price" name="price"></td>
+                                        <td><input type="number" min="1" id="quantity" name="quantity"
+                                                value="" class="form-control"></td>
+                                        <td><input type="number" value="0" class="form-control"id="price"
+                                                name="price"></td>
+                                        <td><button class="btn btn-danger">Hủy</button></td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <button class="btn btn-success mb-2 me-1" type="submit">Lưu</button>
+                            <div class="text-end">
+                                <button class="btn btn-info mb-2" id="btnAdd">Thêm mới</button>
+                                <button class="btn btn-success mb-2" type="submit">Lưu</button>
+                            </div>
+
                         </form>
 
                     </div> <!-- end card-body-->
@@ -128,8 +136,25 @@
     <script src="{{ asset('assets/js/vendor/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.select.min.js') }}"></script>
     <!-- third party js ends -->
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    {{-- <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.10/jquery.autocomplete.min.js">
+    </script>
     <!-- demo app -->
     <script src="{{ asset('assets/js/pages/demo.datatable-init.js') }}"></script>
     <!-- end demo js-->
+    <script>
+        $(function() {
+            var items = <?php echo json_encode($items); ?>;
+            $('#item').autocomplete({
+                lookup: items,
+                onSelect: function(suggestion) {
+                    $("#item").val(suggestion.value);
+                    $("#category").val(suggestion.category_id).trigger('change');
+                    // $("#category option[value='" + suggestion.category_id + "']").attr('selected', 'selected');
+                    $("#supplier").val(suggestion.supplier_id).trigger('change');
+                    console.log($("#category").val() + ',' + $("#supplier").val())
+                }
+            });
+        });
+    </script>
 @endsection
