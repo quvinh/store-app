@@ -3,7 +3,6 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AutoCompleteController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExportImportController;
@@ -17,6 +16,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\WarehouseController;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +55,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     UnitController::Routes();
     AccountController::Routes();
     SupplierController::Routes();
-    AutoCompleteController::Routes();
+    SearchController::Routes();
     RoleController::Routes();
 });
