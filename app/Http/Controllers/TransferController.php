@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transfer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 class TransferController extends Controller
 {
@@ -49,7 +50,16 @@ class TransferController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'itemdetail_id' => 'required',
+            'item_quantity' => 'required',
+            'warehouse_from' => 'required',
+            'warehouse_to' => 'required',
+        ]);
+        if($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+        dd($request->all(), $request->warehouse_from);
     }
 
     /**
