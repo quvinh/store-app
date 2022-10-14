@@ -20,7 +20,7 @@ class CreateExImportsTable extends Migration
             $table->tinyInteger('exim_type');
             $table->bigInteger('invoice_id');
             $table->bigInteger('warehouse_id');
-            $table->bigInteger('user_id');
+            $table->bigInteger('created_by');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\ExImport;
+use App\Models\ExImportDetail;
 use App\Models\Item;
 use App\Models\ItemDetail;
 use App\Models\Supplier;
@@ -61,11 +62,15 @@ class ExportImportController extends Controller
         $suppliers = Supplier::all();
         $units = Unit::all();
         $items = DB::table('items')->whereNull('deleted_at')->get();
-        foreach($items as $item){
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouse_managers.warehouse_id', '=', 'warehouses.id')
+            ->where('warehouse_managers.user_id', Auth::user()->id)
+            ->select('warehouses.*')->get();
+        foreach ($items as $item) {
             $item->value = $item->item_name;
             $item->data = $item->id;
         }
-        return view('admin.components.ex_import.import', compact('categories', 'suppliers', 'units', 'items'));
+        return view('admin.components.ex_import.import', compact('categories', 'suppliers', 'units', 'items', 'warehouses'));
     }
 
     /**
@@ -76,13 +81,30 @@ class ExportImportController extends Controller
      */
     public function imstore(Request $request)
     {
-        // dd($request->all());
-        $count= count($request->item);
-        for($i=0; $i < $count; $i++) {
-            ItemDetail::create([
+        dd($request->all());
+        $count = count($request->item);
+        $date = date('dmY');
+        for ($i = 0; $i < $count; $i++) {
+            $import = ExImport::create([
+                'warehouse_id' => $request->warehouse[$i],
+                'exim_code' => 'IM_' . $date,
+                'exim_type' => 1,
+                'created_by' => Auth::user()->id,
+                'exim_status' => 0,
+                'invoice_id' => '',
+            ]);
+            ExImportDetail::create([
+                'exim_id' => $import->id,
                 'supplier_id' => $request->supplier[$i],
                 'item_id' => $request->id[$i],
-                // 'warehouse_id' =>
+                'warehouse_id' => $request->warehouse[$i],
+                'item_quantity' => $request->quantity[$i],
+                'item_price' => $request->price[$i],
+                'shelf_to' => '',
+                'floor_to' => '',
+                'cell_to' => '',
+                'item_total' => '',
+                'itemdetail_id' => '',
             ]);
         }
     }

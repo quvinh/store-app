@@ -16,6 +16,6 @@ class ExImport extends Model
         'exim_type',
         'invoice_id',
         'warehouse_id',
-        'user_id',
+        'created_by',
     ];
 }
