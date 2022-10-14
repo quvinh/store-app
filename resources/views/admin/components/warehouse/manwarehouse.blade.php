@@ -108,11 +108,7 @@
                                             @endif
                                         </td>
                                         <td class="table-action">
-<<<<<<< HEAD
                                             <a href="{{ route('shelf.warehouse-details', $warehouse->id) }}"
-=======
-                                            <a href="{{ route('shelf.list',$warehouse->id) }}"
->>>>>>> higo
                                                 class="action-icon"> <i class="mdi mdi-eye"></i></a>
                                             <a href="{{ route('warehouse.edit', $warehouse->id) }}" class="action-icon">
                                                 <i class="mdi mdi-square-edit-outline"></i></a>

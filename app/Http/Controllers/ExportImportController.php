@@ -7,6 +7,7 @@ use App\Models\ExImport;
 use App\Models\Supplier;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -33,17 +34,17 @@ class ExportImportController extends Controller
      */
     public function index()
     {
-        $im_items = DB::table('items')
-            ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
-            ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
-            ->where('ex_imports.exim_type', 1)
-            ->select('ex_imports.*')->get();
-        $ex_items = DB::table('items')
-            ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
-            ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
-            ->where('ex_imports.exim_type', 0)
-            ->select('ex_imports.*')->get();
-        return view('admin.components.ex_import.manex_import', compact('im_items', 'ex_items'));
+        // $im_items = DB::table('items')
+        //     ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
+        //     ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
+        //     ->where('ex_imports.exim_type', 1)
+        //     ->select('ex_imports.*')->get();
+        // $ex_items = DB::table('items')
+        //     ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
+        //     ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
+        //     ->where('ex_imports.exim_type', 0)
+        //     ->select('ex_imports.*')->get();
+        return view('admin.components.ex_import.manex_import');
     }
 
     /**
@@ -53,15 +54,22 @@ class ExportImportController extends Controller
      */
     public function import()
     {
+        $shelves = DB::table('shelves')->whereNull('deleted_at')->get();
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
+            ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
+            ->select('warehouses.*')
+            ->where('user_id', '=', Auth::user()->id)
+            ->get();
         $categories = Category::all();
         $suppliers = Supplier::all();
         $units = Unit::all();
         $items = DB::table('items')->whereNull('deleted_at')->get();
-        foreach($items as $item){
+        foreach ($items as $item) {
             $item->value = $item->item_name;
             $item->data = $item->id;
         }
-        return view('admin.components.ex_import.import', compact('categories', 'suppliers', 'units', 'items'));
+        return view('admin.components.ex_import.import', compact('shelves','categories', 'suppliers', 'units', 'items', 'warehouses'));
     }
 
     /**
@@ -81,11 +89,25 @@ class ExportImportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function export($id)
+    public function export()
     {
-        $warehouse = Unit::all();
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
+            ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
+            ->select('warehouses.*')
+            ->where('user_id', '=', Auth::user()->id)
+            ->get();
+
+        $categories = Category::all();
+        $suppliers = Supplier::all();
+        $units = Unit::all();
         $items = DB::table('items')->whereNull('deleted_at')->get();
-        return view('admin.components.ex_import.import', compact('warehouses', 'items'));
+        $shelves = DB::table('shelves')->whereNull('deleted_at')->get();
+        foreach ($items as $item) {
+            $item->value = $item->item_name;
+            $item->data = $item->id;
+        }
+        return view('admin.components.ex_import.export', compact('categories', 'suppliers', 'units','warehouses', 'items', 'shelves'));
     }
 
     /**
