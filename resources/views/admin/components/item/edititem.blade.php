@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Item
+    Edit Item
 @endsection
 
 @section('css')

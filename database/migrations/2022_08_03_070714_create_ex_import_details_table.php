@@ -17,6 +17,7 @@ class CreateExImportDetailsTable extends Migration
             $table->id();
             // $table->timestamps();
             $table->bigInteger('exim_id');
+            $table->bigInteger('item_id');
             $table->bigInteger('itemdetail_id');
             $table->float('item_quantity');
             $table->float('item_price');

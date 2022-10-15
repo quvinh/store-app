@@ -12,6 +12,7 @@ class ExImportDetail extends Model
     protected $fillable = [
         'exim_id',
         'item_id',
+        'itemdetail_id',
         'item_quantity',
         'item_price',
         'item_total',

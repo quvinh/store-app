@@ -10,6 +10,7 @@ use App\Models\ItemDetail;
 use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\Warehouse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,8 +22,13 @@ class ExportImportController extends Controller
     public static function Routes()
     {
         Route::get('ex_import', [ExportImportController::class, 'index'])->name('ex_import.index');
-        Route::get('import', [ExportImportController::class, 'import'])->name('ex_import.import');
-        Route::post('imstore', [ExportImportController::class, 'imstore'])->name('ex_import.imstore');
+        Route::group(['prefix' => 'import'], function () {
+            Route::get('', [ExportImportController::class, 'import'])->name('import.index');
+            Route::post('/store', [ExportImportController::class, 'im_store'])->name('import.store');
+            Route::get('/edit/{id}', [ExportImportController::class, 'im_edit'])->name('import.edit');
+            Route::put('/update/{id}', [ExportImportController::class, 'im_update'])->name('import.update');
+        });
+
         Route::get('export', [ExportImportController::class, 'export'])->name('ex_import.export');
         Route::post('exstore', [ExportImportController::class, 'exstore'])->name('ex_import.exstore');
         Route::group(['prefix' => 'ex_import'], function () {
@@ -41,13 +47,34 @@ class ExportImportController extends Controller
         $im_items = DB::table('items')
             ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
             ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
+            ->join('users', 'users.id', '=', 'ex_imports.created_by')
             ->where('ex_imports.exim_type', 1)
-            ->select('ex_imports.*')->get();
+            ->select('ex_imports.*', 'items.item_name as item', 'users.name as created_by')
+            ->groupBy('exim_code')
+            ->get();
+        foreach ($im_items as $val) {
+            $val->item = DB::table('items')
+                ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
+                ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
+                ->where('ex_imports.exim_type', 1)
+                ->where('ex_imports.exim_code', $val->exim_code)
+                ->select('items.item_name as item')
+                ->get();
+        }
         $ex_items = DB::table('items')
             ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
             ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
             ->where('ex_imports.exim_type', 0)
-            ->select('ex_imports.*')->get();
+            ->select('ex_imports.*', 'items.item_name as item')->get();
+        foreach ($ex_items as $val) {
+            $val->item = DB::table('items')
+                ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
+                ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
+                ->where('ex_imports.exim_type', 0)
+                ->where('ex_imports.exim_code', $val->exim_code)
+                ->select('items.item_name as item')
+                ->get();
+        }
         return view('admin.components.ex_import.manex_import', compact('im_items', 'ex_items'));
     }
 
@@ -79,34 +106,36 @@ class ExportImportController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function imstore(Request $request)
+    public function im_store(Request $request)
     {
-        dd($request->all());
-        $count = count($request->item);
+        $count = count($request->id);
         $date = date('dmY');
+        $stt = DB::table('ex_imports')->where([
+            'warehouse_id' => $request->warehouse[0],
+            'exim_type' => 1,
+        ])->whereDate('created_at', '=', Carbon::now()->toDateString())->count();
+        $import = ExImport::create([
+            'warehouse_id' => $request->warehouse[0],
+            'exim_code' => 'IM_' . $date . '_' . ($stt + 1),
+            'exim_type' => 1,
+            'created_by' => Auth::user()->id,
+            'exim_status' => 0,
+            'invoice_id' => 0,
+        ]);
         for ($i = 0; $i < $count; $i++) {
-            $import = ExImport::create([
-                'warehouse_id' => $request->warehouse[$i],
-                'exim_code' => 'IM_' . $date,
-                'exim_type' => 1,
-                'created_by' => Auth::user()->id,
-                'exim_status' => 0,
-                'invoice_id' => '',
-            ]);
             ExImportDetail::create([
                 'exim_id' => $import->id,
-                'supplier_id' => $request->supplier[$i],
                 'item_id' => $request->id[$i],
+                'supplier_id' => $request->supplier[$i],
                 'warehouse_id' => $request->warehouse[$i],
                 'item_quantity' => $request->quantity[$i],
                 'item_price' => $request->price[$i],
-                'shelf_to' => '',
-                'floor_to' => '',
-                'cell_to' => '',
-                'item_total' => '',
-                'itemdetail_id' => '',
+                'item_total' => 0,
+                'itemdetail_id' => 0,
+                'item_vat' => 0
             ]);
         }
+        return redirect()->route('ex_import.index')->with(['success', 'Tạo phiếu nhập thành công.']);
     }
 
     /**
@@ -115,6 +144,19 @@ class ExportImportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    public function im_edit($id){
+        $im_items = DB::table('items')
+            ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
+            ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
+            ->where('ex_imports.id', $id)
+            ->select('ex_import_details.*', 'items.item_name as item', 'ex_imports.exim_code', 'ex_imports.exim_status', 'ex_imports.warehouse_id')
+            ->get();
+        return view('admin.components.ex_import.editimport', compact('im_items'));
+    }
+    public function im_update(Request $request){
+
+    }
     public function export($id)
     {
         $warehouse = Unit::all();
