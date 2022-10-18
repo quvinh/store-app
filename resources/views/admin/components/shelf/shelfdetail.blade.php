@@ -5,7 +5,6 @@
             <th>STT</th>
             <th>Mã vật tư</th>
             <th>Tên vật tư</th>
-            <th>Ảnh</th>
             <th>Loại vật tư</th>
             <th>Số lượng</th>
             <th>Đơn vị tính</th>
@@ -25,39 +24,32 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($items as $key => $items)
+        @foreach ($items as $key => $item)
             <tr>
                 <td>{{ $key + 1 }}</td>
-                <td>{{ $items->item_code }}</td>
-                <td>{{ $items->item_name }}</td>
+                <td>{{ $item->item_code }}</td>
+                <td>{{ $item->item_name }}</td>
+                <td>{{ $item->category_name }}</td>
+                <td>{{ $item->item_quantity_of_cell }}</td>
+                <td>{{ $item->unit_name }}</td>
+                <td>{{ $item->item_importprice ? $item->item_importprice : '-----' }}</td>
+                <td>{{ $item->item_exportprice ? $item->item_exportprice : '-----' }}</td>
+                <td>{{ $item->item_weight ? $item->item_weight : '-----' }}</td>
+                <td>{{ $item->item_weightuint ? $item->item_weightuint : '-----'}}</td>
+                <td>{{ $item->item_long ? $item->item_long : '-----' }}</td>
+                <td>{{ $item->item_width ? $item->item_width : '-----' }}</td>
+                <td>{{ $item->item_height ? $item->item_height : '-----' }}</td>
+                <td>{{ $item->item_quantity ? $item->item_quantity : '-----' }}</td>
+                <td>{{ $item->shelf_name }}</td>
+                <td>{{ $item->warehouse_name }}</td>
                 <td>
-                    @if ($items->item_images == '' || $items->item_images == null)
-                        <img src="{{ asset('images/img/no-image.jpg') }}" alt="No-image" height="32">
-                    @else
-                        <img src="{{ asset($items->item_images) }}" alt="image" height="32">
-                    @endif
-                </td>
-                <td>{{ $items->category_name }}</td>
-                <td>{{ $items->item_quantity_of_shelf }}</td>
-                <td>{{ $items->unit_name }}</td>
-                <td>{{ $items->item_importprice }}</td>
-                <td>{{ $items->item_exportprice }}</td>
-                <td>{{ $items->item_weight }}</td>
-                <td>{{ $items->item_weightuint }}</td>
-                <td>{{ $items->item_long }}</td>
-                <td>{{ $items->item_width }}</td>
-                <td>{{ $items->item_height }}</td>
-                <td>{{ $items->item_quantity }}</td>
-                <td>{{ $items->shelf_name }}</td>
-                <td>{{ $items->warehouse_name }}</td>
-                <td>
-                    @if ($items->item_status === 1)
+                    @if ($item->item_status === 1)
                         <span class="badge bg-success">Còn hàng</span>
                     @else
                         <span class="badge bg-danger">hết hàng</span>
                     @endif
                 </td>
-                <td>{{ $items->item_note }}</td>
+                <td>{{ $item->item_note ? $item->item_note : '----- ' }}</td>
                 <td class="table-action">
                     x
                 </td>

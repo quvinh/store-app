@@ -109,7 +109,9 @@ class ShelfController extends Controller
         ->select('warehouse_id')
         ->pluck('warehouse_id');
 
-        return redirect()->route('shelf.list',$warehouse_id[0])->with('success', 'cập nhật thành công');
+        // return redirect()->route('shelf.warehouse-details',$warehouse_id[0])->with('success', 'cập nhật thành công');
+
+        return redirect()->back()->with('success', 'cập nhật thành công');
     }
 
     /**
@@ -133,27 +135,30 @@ class ShelfController extends Controller
         ->where('warehouse_details.warehouse_id', $warehouse_id)
         ->get();
 
-        // $items = DB::table('items')
-        // ->join('categories', 'categories.id', '=', 'items.category_id')
-        // ->join('unit_details', 'unit_details.item_id', '=', 'items.id')
-        // ->leftJoin('units', 'units.id', '=', 'unit_details.unit_id')
-        // ->leftJoin('warehouses', 'warehouses.id', '=', 'items.warehouse_id')
-        // ->rightJoin('shelf_details', 'shelf_details.item_id', '=', 'items.id')
-        // ->rightJoin('shelves', 'shelves.id', '=', 'shelf_details.shelf_id')
-        // ->select(
-        //     'items.*',
-        //     'units.id as unit_id',
-        //     'units.unit_name',
-        //     'categories.category_name',
-        //     'shelf_details.item_quantity as item_quantity_of_shelf',
-        //     'shelves.shelf_name',
-        //     'warehouses.warehouse_name'
-        // )
-        // ->where('items.warehouse_id', $warehouse_id)
-        // ->where('items.item_quantity', '>', '0')
-        // ->get();
 
-        return view('admin.components.warehouse.warehousedetail', compact('shelf', 'warehouse_id', 'warehouse'));
+        $items = DB::table('item_details')
+        ->leftJoin('items', 'items.id', '=', 'item_details.item_id')
+        ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
+        ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
+        ->leftJoin('unit_details', 'unit_details.item_id', '=', 'items.id')
+        ->leftJoin('units', 'units.id', '=', 'unit_details.unit_id')
+        ->leftJoin('categories', 'categories.id', '=','items.category_id')
+        ->select(
+            'items.*',
+            'warehouse_name',
+            'shelf_name',
+            'supplier_id',
+            'cell_id',
+            'floor_id',
+            'category_name',
+            'unit_name',
+            'item_details.item_quantity as item_quantity_of_cell',
+        )
+        ->orderByDesc('items.item_name')
+        ->where('item_details.warehouse_id', $warehouse_id)
+        ->where('item_details.item_quantity', '>', '0')
+        ->get();
+        return view('admin.components.warehouse.warehousedetail', compact('shelf', 'warehouse_id', 'warehouse', 'items'));
     }
 
     public function addShelf(Request $request, $warehouse_id){
@@ -191,15 +196,7 @@ class ShelfController extends Controller
     }
 
     // public function shelfDetail($shelf_id) {
-    //     $items = DB::table('shelf_details')
-    //     ->join('shelves','shelves.id', '=','shelf_details.shelf_id')
-    //     ->leftJoin('warehouses','warehouses.id', '=','shelves.warehouse_id')
-    //     ->join('items','items.id', '=','shelf_details.item_id')
-    //     ->rightJoin('units','units.id', '=','items.units_id')
-    //     ->rightJoin('categories','categories.id', '=','items.category_id')
-    //     ->select('items.*','units.*','shelf.shelf_name','warehouses.warehouse_name')
-    //     ->where(['shelf_details.shelf_id','=',$shelf_id])
-    //     ->get();
+
     //     dd($items);
     //     return view('admin.components.shelf.shelf_detail', compact('items'));
     // }

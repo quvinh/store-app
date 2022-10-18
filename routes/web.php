@@ -58,3 +58,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     SearchController::Routes();
     RoleController::Routes();
 });
+
+// Route::get('/admin/example', function (){
+//     return view('admin.components.ex_import.example');
+// });

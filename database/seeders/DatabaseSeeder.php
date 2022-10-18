@@ -108,7 +108,15 @@ class DatabaseSeeder extends Seeder
             [
                 'warehouse_id' => 2,
                 'user_id' => 2,
-            ]
+            ],
+            [
+                'warehouse_id' => 1,
+                'user_id' => 3,
+            ],
+            [
+                'warehouse_id' => 2,
+                'user_id' => 3,
+            ],
         ]);
         DB::table('items')->insert([
             [

@@ -52,7 +52,7 @@
 
         <div class="tab-content">
             <div class="tab-pane show active" id="import">
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
@@ -65,7 +65,7 @@
                                 </div>
                                 <hr>
                                 <table id="import-datatable" class="table table-centered table-striped dt-responsive nowrap w-100">
-                                    {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
+
                                     <thead>
                                         <tr>
                                             <th>Mã phiếu nhập</th>
@@ -97,7 +97,7 @@
                             </div> <!-- end card-body-->
                         </div> <!-- end card-->
                     </div> <!-- end col -->
-                </div>
+                </div> --}}
             </div>
             <div class="tab-pane" id="export">
                 <div class="row">
@@ -112,28 +112,37 @@
                                     </div>
                                 </div>
                                 <hr>
-                                <table id="export-datatable" class="table table-centered table-striped dt-responsive nowrap w-100">
+                                <table id="export-datatable"
+                                    class="table table-centered table-striped dt-responsive nowrap w-100">
                                     {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                                     <thead>
                                         <tr>
                                             <th>Mã phiếu nhập</th>
                                             <th>Người tạo</th>
-                                            <th>Vật tư/ Phụ tùng</th>
                                             <th>Trạng thái</th>
                                             <th>Thời gian tạo</th>
                                             <th style="width: 10%">Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($im_items as $key => $item)
+                                        @foreach ($ex_items as $key => $item)
                                             <tr>
                                                 <td>{{ $item->exim_code }}</td>
-                                                <td>{{ $item->use_id }}</td>
-                                                <th>{{ $item->item }}</th>
-                                                <th>{{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</th>
-                                                <td>{{ $item->exim_created_at }}</td>
+                                                <td>{{ $item->user_name }}</td>
+                                                <th>
+                                                    @if ($item->exim_status == '0')
+                                                        <span class="badge bg-light text-dark">Chờ xác nhận</span>
+                                                    @elseif ($item->exim_status == '1')
+                                                        <span class="badge bg-info">Đã xác nhận</span>
+                                                    @elseif($item->exim_status == '2')
+                                                        <span class="badge bg-primary">Chờ duyệt</span>
+                                                    @else
+                                                        <span class="badge bg-success">Hoàn thành</span>
+                                                    @endif
+                                                </th>
+                                                <td>{{ $item->created_at }}</td>
                                                 <td class="table-action">
-                                                    <a href="{{ route('item.edit', $item->id) }}" class="action-icon">
+                                                    <a href="{{ route('export.export-detail', $item->id) }}" class="action-icon">
                                                         <i class="mdi mdi-eye-outline"></i></a>
                                                     <a href="{{ route('item.delete', $item->id) }}" class="action-icon">
                                                         <i class="mdi mdi-delete"></i></a>
@@ -196,7 +205,7 @@
                     orderable: !1
                 }, {
                     orderable: !1
-                },{
+                }, {
                     orderable: !1
                 }],
                 select: {
@@ -230,7 +239,7 @@
                     orderable: !1
                 }, {
                     orderable: !1
-                },{
+                }, {
                     orderable: !1
                 }],
                 select: {
