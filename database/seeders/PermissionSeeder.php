@@ -123,6 +123,8 @@ class PermissionSeeder extends Seeder
             'password' => bcrypt('123456'),
             'gender' => 1,
             'birthday' => '2000-06-26',
+            'address' => 'Hai Phong',
+            'mobile' => '0962334135',
         ]);
         $lvv = User::create([
             'name' => 'Higo',
@@ -131,6 +133,8 @@ class PermissionSeeder extends Seeder
             'password' => bcrypt('123456'),
             'gender' => 1,
             'birthday' => '2000-01-11',
+            'address' => 'Hai Phong',
+            'mobile' => '0962334136',
         ]);
         $quv = User::create([
             'name' => 'The King',
@@ -139,6 +143,8 @@ class PermissionSeeder extends Seeder
             'password' => bcrypt('123456'),
             'gender' => 1,
             'birthday' => '2000-06-21',
+            'address' => 'Hai Phong',
+            'mobile' => '0962334137',
         ]);
         $admin->assignRole($roleAdmin);
         $lvv->assignRole($roleAdmin);

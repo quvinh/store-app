@@ -23,6 +23,9 @@ class CreateUsersTable extends Migration
             $table->boolean('gender');
             $table->string('image')->nullable();
             $table->date('birthday')->nullable();
+            $table->string('address')->nullable();
+            $table->string('residence')->nullable();
+            $table->char('mobile', 20)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

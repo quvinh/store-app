@@ -170,7 +170,6 @@
                                 </tbody>
                             </table>
 
-
                         </form>
 
                     </div> <!-- end card-body-->
@@ -212,11 +211,19 @@
             $('#item').autocomplete({
                 lookup: items,
                 onSelect: function(suggestion) {
+<<<<<<< HEAD
                     $("#item").val(suggestion.value);
                     $("#id").val(suggestion.id);
                     $("#code").val(suggestion.item_code);
                     $("#category").val(suggestion.category_id).trigger('change');
                     $("#unit").val(suggestion.item_unit).trigger('change');
+=======
+                    $("#item1").val(suggestion.value);
+                    $("#id1").val(suggestion.id);
+                    $("#code1").val(suggestion.item_code);
+                    $("#category1").val(suggestion.category_id).trigger('change');
+                    $("#unit1").val(suggestion.item_unit).trigger('change');
+>>>>>>> quocvuong2106
                 }
             });
             $('#btnAdd').on('click', function() {
@@ -336,5 +343,79 @@
                 $('#save-list').attr('disabled', true);
             }
         }
+    </script>
+    <script>
+        var i = 2;
+        $(document).ready(function() {
+            $('#btnAdd').on('click', function(){
+                $('#list-import').append(
+                    '<tr id="tr'+(i++)+'">\
+                        <td hidden><input type="text" name="id[]" id="id'+i+'"></td>\
+                                        @if (count($warehouses) > 1)\
+                                            <td>\
+                                                <select data-toggle="select2" title="Warehouse" id="warehouse'+i+'"\
+                                                    name="warehouse[]">\
+                                                    <option value=""></option>\
+                                                    @foreach ($warehouses as $warehouse)
+                                                        <option value="{{ $warehouse->id }}">\
+                                                            {{ $warehouse->warehouse_name }}
+                                                        </option>\
+                                                    @endforeach\
+                                                </select>\
+                                            </td>\
+                                        @else\
+                                            <td hidden><input type="text" name="warehouse[]" id="warehouse'+i+'"\
+                                                    value={{ $warehouses->first()->id }}></td>\
+                                        @endif\
+
+                                        <td>\
+                                            <input id="item'+i+'" class="form-control auto" name="item[]">\
+                                        </td>\
+
+                                        <td>\
+                                            <input type="text" id="code'+i+'" class="form-control" name="code[]">\
+                                        </td>\
+
+                                        <td>\
+                                            <select data-toggle="select2" title="Supplier" id="supplier'+i+'" name="supplier[]">\
+                                                <option value=""></option>\
+                                                @foreach ($suppliers as $supplier)\
+                                                    <option value="{{ $supplier->id }}">\
+                                                        {{ $supplier->supplier_name }}\
+                                                    </option>\
+                                                @endforeach\
+                                            </select>\
+                                        </td>\
+
+                                        <td>\
+                                            <select data-toggle="select2" title="Category" id="category'+i+'" name="category[]">\
+                                                <option value=""></option>\
+                                                @foreach ($categories as $category)\
+                                                    <option value="{{ $category->id }}">\
+                                                        {{ $category->category_name }}\
+                                                    </option>\
+                                                @endforeach\
+                                            </select>\
+                                        </td>\
+
+                                        <td>\
+                                            <select data-toggle="select2" title="Supplier" id="unit'+i+'" name="unit[]">\
+                                                <option value=""></option>\
+                                                @foreach ($units as $unit)\
+                                                    <option value="{{ $unit->id }}">\
+                                                        {{ $unit->unit_name }}\
+                                                    </option>\
+                                                @endforeach\
+                                            </select>\
+                                        </td>\
+                                        <td><input type="number" min="1" id="quantity'+i+'" name="quantity[]"\
+                                                value="" class="form-control"></td>\
+                                        <td><input type="text" value="0" class="form-control"id="price"\
+                                                name="price[]"></td>\
+                                        <td><button class="btn btn-danger" id="cancel'+i+'">Hủy</button></td>\
+                                    </tr>'
+                )
+            })
+        });
     </script>
 @endsection

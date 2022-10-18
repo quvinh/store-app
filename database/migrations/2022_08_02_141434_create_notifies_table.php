@@ -20,7 +20,7 @@ class CreateNotifiesTable extends Migration
             $table->string('notify_summary');
             $table->text('notify_sendto');
             $table->tinyInteger('notify_status');
-            $table->bigInteger('user_id');
+            $table->bigInteger('created_by');
             $table->timestamps();
             $table->softDeletes();
         });

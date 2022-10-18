@@ -13,7 +13,7 @@ class SearchController extends Controller
         Route::get('search', [SearchController::class, 'search'])->name('search');
     }
 
-    public function shelf(Request $request)
+    public function search(Request $request)
     {
         $name = $request->input('item');
         $items = DB::table('items')->whereNull('deleted_at')->where('item_name', 'LIKE', $name)->get();
