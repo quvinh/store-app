@@ -141,7 +141,6 @@
 @section('script')
     <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
-
     <!-- third party js -->
     <script src="{{ asset('assets/js/vendor/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.bootstrap5.js') }}"></script>

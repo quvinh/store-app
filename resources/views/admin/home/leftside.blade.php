@@ -26,7 +26,7 @@
         <!--- Sidemenu -->
         <ul class="side-nav">
 
-            <li class="side-nav-title side-nav-item">Navigation</li>
+            <li class="side-nav-title side-nav-item">Apps</li>
 
             <li class="side-nav-item">
                 <a href="{{ route('dashboard.index') }}" class="side-nav-link">
@@ -34,15 +34,15 @@
                     <span> Dashboard </span>
                 </a>
             </li>
-
-            <li class="side-nav-title side-nav-item">Apps</li>
-
             <li class="side-nav-item">
                 <a href="{{ route('calendar.index') }}" class="side-nav-link">
                     <i class="uil-calender"></i>
                     <span> Calendar </span>
                 </a>
             </li>
+            <li class="side-nav-title side-nav-item">Chức năng</li>
+
+
 
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#sidebarWarehouse" aria-expanded="false"
@@ -54,7 +54,7 @@
                 <div class="collapse" id="sidebarWarehouse">
                     <ul class="side-nav-second-level">
                         <li>
-                            <a href="{{ route('warehouse.index') }}">Quản lý kho vật tư</a>
+                            <a href="{{ route('warehouse.warehouse-by-id') }}">Quản lý kho vật tư</a>
                         </li>
                         <li>
                             <a href="{{ route('ex_import.index') }}">Quản lý nhập / xuất</a>

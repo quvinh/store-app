@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
@@ -19,6 +20,7 @@ class WarehouseController extends Controller
         Route::get('warehouse/edit/{id}', [WarehouseController::class, 'edit'])->name('warehouse.edit');
         Route::get('warehouse/destroy/{id}', [WarehouseController::class, 'destroy'])->name('warehouse.destroy');
         Route::put('warehouse/update/{id}', [WarehouseController::class, 'update'])->name('warehouse.update');
+        Route::get('warehouse', [WarehouseController::class, 'warehouseById'])->name('warehouse.warehouse-by-id');
     }
     /**
      * Display a listing of the resource.
@@ -184,5 +186,18 @@ class WarehouseController extends Controller
         $warehouse = Warehouse::find($id);
         $warehouse->delete();
         return redirect()->back()->with('success', 'xoa thành công');
+    }
+
+    public function warehouseById()
+    {
+
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
+            ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
+            ->select('warehouses.*')
+            ->where('user_id', '=', Auth::user()->id)
+            ->get();
+
+        return view('admin.components.warehouse.manwarehouse', compact('warehouses'));
     }
 }
