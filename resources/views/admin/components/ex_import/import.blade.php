@@ -211,19 +211,11 @@
             $('#item').autocomplete({
                 lookup: items,
                 onSelect: function(suggestion) {
-<<<<<<< HEAD
                     $("#item").val(suggestion.value);
                     $("#id").val(suggestion.id);
                     $("#code").val(suggestion.item_code);
                     $("#category").val(suggestion.category_id).trigger('change');
                     $("#unit").val(suggestion.item_unit).trigger('change');
-=======
-                    $("#item1").val(suggestion.value);
-                    $("#id1").val(suggestion.id);
-                    $("#code1").val(suggestion.item_code);
-                    $("#category1").val(suggestion.category_id).trigger('change');
-                    $("#unit1").val(suggestion.item_unit).trigger('change');
->>>>>>> quocvuong2106
                 }
             });
             $('#btnAdd').on('click', function() {
