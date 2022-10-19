@@ -56,16 +56,20 @@
                         <form action="" class="px-5">
                             <div class="mb-3">
                                 <label for="user_name" class="form-label">Nhân viên phụ trách:</label>
-                                <input type="text" id="user_name" class="form-control" readonly>
+                                <input type="text" id="user_name" class="form-control" readonly
+                                    value="{{ $export[0]->name }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="export_code" class="form-label">Mã phiếu:</label>
+                                <input type="text" id="export_code" class="form-control" readonly
+                                    value="{{ $export[0]->exim_code }}">
                             </div>
                             <div class="mb-3">
                                 <label for="export_status" class="form-label">Trạng thái:</label>
-                                <input type="text" id="user_name" class="form-control" readonly>
+                                <input type="text" id="export_status" class="form-control" readonly
+                                    value="{{ $export[0]->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}">
                             </div>
-                            <div class="mb-3">
-                                <label for="export_note" class="form-label">Mô tả:</label>
-                                <input type="text" id="export_note" class="form-control" readonly>
-                            </div>
+
                         </form>
                     </div>
                 </div>
@@ -89,13 +93,43 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td  colspan="7"> Chưa có dữ liệu</td>
-                                </tr>
+                                @foreach ($export_details as $key => $item)
+                                    <tr>
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $item->item_name }}</td>
+                                        <td>{{ $item->supplier_name }}</td>
+                                        <td>{{ $item->ex_item_quantity }}</td>
+                                        <td>{{ $item->item_price }}</td>
+                                        <td>Đã duyệt</td>
+                                        <td>
+                                            <a type="button" title="Chi tiết" class="view-item action-icon"
+                                                data-code="{{ $item->item_code }}" id="view">
+                                                <i class="mdi mdi-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+
                             </tbody>
                         </table>
                     </div>
                 </div>
+                <div class="modal fade" id="item_details" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myCenterModalLabel">ID:<p id="code"></p>
+                                </h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-hidden="true"></button>
+                            </div>
+                            <div class="modal-body">
+                                <ul>
+                                    <li></li>
+                                </ul>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
             </div>
         </div>
     </div>
@@ -118,4 +152,15 @@
     <script src="{{ asset('assets/js/vendor/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.select.min.js') }}"></script>
     <!-- third party js ends -->
+
+    <script>
+        $(document).ready(function() {
+            $('.view-item').on('click', function() {
+                // alert('1');
+                console.log($(this).attr('data-code'));
+                $('#code').text($(this).attr('data-code'));
+                $('#item_details').modal('show');
+            })
+        })
+    </script>
 @endsection

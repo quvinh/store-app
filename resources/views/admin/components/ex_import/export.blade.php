@@ -64,16 +64,27 @@
                                 <div class="col s6">
                                     <input type="text" name="id" id="id" hidden>
                                     <div class="mb-3">
-                                        <label for="item_name" class="form-label">Vật tư/Phụ tùng:</label>
-                                        <input type="text" name="item_name" id="item_name" class="form-control"
-                                            placeholder="Vật tư/Phụ tùng" aria-describedby="helpId">
+                                        <div class="mb-1">
+                                            <label for="warehouse">Kho:</label>
+                                        </div>
+                                        <select data-toggle="select2" title="Warehouse" id="warehouse" name="warehouse"
+                                            class="form-control">
+                                            <option value=""></option>
+                                            @foreach ($warehouses as $warehouse)
+                                                <option value="{{ $warehouse->id }}"
+                                                    {{ app('request')->input('warehouse') == $warehouse->id ? 'selected' : '' }}>
+                                                    {{ $warehouse->id }} - {{ $warehouse->warehouse_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <input type="button" class="btn btn-success" value="Filter" id="btnFilter">
                                     </div>
                                 </div>
                                 <div class="col s6">
                                     <div class="mb-3">
-                                        <label for="item_code" class="form-label">Mã vật tư:</label>
-                                        <input type="text" name="item_code" id="item_code" class="form-control"
-                                            placeholder="Mã vật tư" aria-describedby="helpId">
+                                        <label for="item_name" class="form-label">Vật tư/Phụ tùng:</label>
+                                        <input type="text" name="item_name" id="item_name" class="form-control"
+                                            placeholder="Vật tư/Phụ tùng" aria-describedby="helpId">
                                     </div>
                                 </div>
                             </div>
@@ -137,18 +148,6 @@
                                 <div class="col s6">
                                     <div class="row">
                                         <div class="col">
-                                            <div class="mb-1">
-                                                <label for="warehouse">Kho:</label>
-                                            </div>
-                                            <select data-toggle="select2" title="Warehouse" id="warehouse"
-                                                name="warehouse" class="form-control">
-                                                <option value=""></option>
-                                                @foreach ($warehouses as $warehouse)
-                                                    <option value="{{ $warehouse->id }}">
-                                                        {{ $warehouse->warehouse_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
 
                                         </div>
                                         <div class="col">
@@ -274,99 +273,108 @@
     <!-- end demo js-->
     <script>
         $(document).ready(function() {
+            $('#warehouse').on('change', function() {
+                document.getElementById("btnFilter").click();
+            })
+
+            $('#btnFilter').on('click', function() {
+                var warehouse = $('#warehouse').val();
+                window.location.href = (warehouse) ? ('?warehouse_id=' + warehouse) : '';
+            })
             // $('#warehouse').on('change', function() {
             //     $('#warehouse').val($(this).val());
             // })
-            let list = [];
-            var i = 1;
-            var items = <?php echo json_encode($items); ?>;
-            $('#item_name').autocomplete({
-                lookup: items,
-                onSelect: function(event, ui) {
-                    $("#item_name").val(ui.item.value);
-                    $("#category").val(ui.item.category_id).trigger('change');
-                    $("#unit").val(ui.item.item_unit).trigger('change');
-                    $("#warehouse").val(ui.item.warehouse_id).trigger('change');
-                    $("#supplier").val(ui.item.supplier_id).trigger('change');
-                    $("#shelf").val(ui.item.shelf_id).trigger('change');
-                    $("#floor").val(ui.item.floor_id);
-                    $("#cell").val(ui.item.cell_id);
-                    $("#quantity").val(ui.item.item_detail_quantity);
-                    $("#item_code").val(ui.item.item_code);
-                }
+            // let list = [];
+            // var i = 1;
+            // var items = <?php echo json_encode($items); ?>;
+            // $('#item_name').autocomplete({
+            //     lookup: items,
+            //     onSelect: function(suggestions) {
+            //         $("#item_name").val(suggestions.value);
+            //         $("#category").val(suggestions.category_id).trigger('change');
+            //         $("#unit").val(suggestions.item_unit).trigger('change');
+            //         $("#warehouse").val(suggestions.warehouse_id).trigger('change');
+            //         $("#supplier").val(suggestions.supplier_id).trigger('change');
+            //         $("#shelf").val(suggestions.shelf_id).trigger('change');
+            //         $("#floor").val(suggestions.floor_id);
+            //         $("#cell").val(suggestions.cell_id);
+            //         $("#quantity").val(suggestions.item_detail_quantity);
+            //         $("#item_code").val(suggestions.item_code);
+            //     }
 
-            });
-            // .autocomplete("instance")._renderItem = function(ul, item) {
-            //     return $("<li>")
-            //         .append("<div>" + item.item_name +"&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;Loại vật tư:&nbsp;" +item.category_name+ "<br>" + "Số lượng:&nbsp;" + item.item_detail_quantity + " &nbsp;&nbsp;- &nbsp;&nbsp;Kho:&nbsp;"+ item.warehouse_name+"&nbsp;&nbsp; -&nbsp;&nbsp; Kệ:&nbsp;" +item.shelf_name+" &nbsp;&nbsp;- &nbsp;&nbsp;Tầng:&nbsp;"+item.floor_id+"&nbsp;&nbsp; -&nbsp;&nbsp; Ô:&nbsp;"+item.cell_id+"</div>")
-            //         .appendTo(ul);
-            // };
-            // $("#item_name").data("ui-autocomplete")._trigger("change");
-            $('#btnAdd').click(function() {
-                var html = '';
-                var item_name = $("#item_name").val();
-                var id = $("#id").val();
-                var item_code = $("#item_code").val();
-                var category = $("#category option:selected").val();
-                var category_id = $("#category").val();
-                var unit = $("#unit option:selected").val();
-                var unit_id = $("#unit").val();
-                var warehouse = $("#warehouse option:selected").val();
-                var warehouse_id = $("#warehouse").val();
-                var supplier = $("#supplier option:selected").val();
-                var supplier_id = $("#supplier").val();
-                var shelf = $("#shelf option:selected").val();
-                var shelf_id = $("#shelf").val();
-                var floor = $("#floor").val();
-                var cell = $("#cell").val();
-                var quantity = $("#quantity").val();
-                var item_quantity = $("#item_quantity").val();
-                var price = $("#export_price").val();
-                if (item_name !== '' && supplier !== '' && quantity > 0 && price > 0 && item_quantity > 0 &&
-                    quantity >= item_quantity) {
-                    list.push({
-                        line: i,
-                        item_id: id,
-                        item_name: item_name,
-                        item_code: item_code,
-                        category_name: category,
-                        category_id: category_id,
-                        unit_name: unit,
-                        unit_id: unit_id,
-                        warehouse_name: warehouse,
-                        warehouse_id: warehouse_id,
-                        supplier_name: supplier,
-                        supplier_id: supplier_id,
-                        shelf_name: shelf,
-                        shelf_id: shelf_id,
-                        floor_id: floor,
-                        cell_id: cell,
-                        item_quantity: item_quantity,
-                        item_price: price,
-                    });
+            // })
+            // // .autocomplete("instance")._renderItem = function(ul, item) {
+            // //     return $("<li>")
+            // //         .append("<div>" + item.item_name +"&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;Loại vật tư:&nbsp;" +item.category_name+ "<br>" + "Số lượng:&nbsp;" + item.item_detail_quantity + " &nbsp;&nbsp;- &nbsp;&nbsp;Kho:&nbsp;"+ item.warehouse_name+"&nbsp;&nbsp; -&nbsp;&nbsp; Kệ:&nbsp;" +item.shelf_name+" &nbsp;&nbsp;- &nbsp;&nbsp;Tầng:&nbsp;"+item.floor_id+"&nbsp;&nbsp; -&nbsp;&nbsp; Ô:&nbsp;"+item.cell_id+"</div>")
+            // //         .appendTo(ul);
+            // // };
+            // // $("#item_name").data("ui-autocomplete")._trigger("change");
+            // $('#btnAdd').click(function() {
+            //     var html = '';
+            //     var item_name = $("#item_name").val();
+            //     var id = $("#id").val();
+            //     var item_code = $("#item_code").val();
+            //     var category = $("#category option:selected").val();
+            //     var category_id = $("#category").val();
+            //     var unit = $("#unit option:selected").val();
+            //     var unit_id = $("#unit").val();
+            //     var warehouse = $("#warehouse option:selected").val();
+            //     var warehouse_id = $("#warehouse").val();
+            //     var supplier = $("#supplier option:selected").val();
+            //     var supplier_id = $("#supplier").val();
+            //     var shelf = $("#shelf option:selected").val();
+            //     var shelf_id = $("#shelf").val();
+            //     var floor = $("#floor").val();
+            //     var cell = $("#cell").val();
+            //     var quantity = $("#quantity").val();
+            //     var item_quantity = $("#item_quantity").val();
+            //     var price = $("#export_price").val();
+            //     if (item_name !== '' && supplier !== '' && quantity > 0 && price > 0 && item_quantity > 0 &&
+            //         quantity >= item_quantity) {
+            //         list.push({
+            //             line: i,
+            //             item_id: id,
+            //             item_name: item_name,
+            //             item_code: item_code,
+            //             category_name: category,
+            //             category_id: category_id,
+            //             unit_name: unit,
+            //             unit_id: unit_id,
+            //             warehouse_name: warehouse,
+            //             warehouse_id: warehouse_id,
+            //             supplier_name: supplier,
+            //             supplier_id: supplier_id,
+            //             shelf_name: shelf,
+            //             shelf_id: shelf_id,
+            //             floor_id: floor,
+            //             cell_id: cell,
+            //             item_quantity: item_quantity,
+            //             item_price: price,
+            //         });
 
-                    list.map((item, index) => {
-                        html +=
-                            `<tr>
-                                <td><input type="text" name="item_id[]" value="${item.item_id}" hidden>${item.item_name }</td>
-                                <td><input type="text" name="item_code[]" value="${item.item_code}" hidden>${item.item_code}</td>
-                                <td><input type="text" name="category[]" value="${item.category_id}" hidden>${item.category_name}</td>
-                                <td><input type="text" name="unit[]" value="${item.unit_id}" hidden>${item.unit_name}</td>
-                                <td><input type="text" name="warehouse[]" value="${item.warehouse_id}" hidden>${item.warehouse_name}</td>
-                                <td><input type="text" name="shelf[]" value="${item.shelf_id}" hidden>${item.shelf_name}</td>
-                                <td><input type="text" name="floor[]" value="${item.floor_id}" hidden>${item.floor_id}</td>
-                                <td><input type="text" name="cell[]" value="${item.cell_id}" hidden>${item.cell_id}</td>
-                                <td><input type="text" name="supplier[]" value="${item.supplier_id}" hidden>${item.supplier_name}</td>
-                                <td><input type="text" name="item_quantity[]" value="${item.item_quantity}" hidden>${item.item_quantity}</td>
-                                <td><input type="text" name="item_price[]" value="${item.item_price}" hidden>${item.item_price}</td>
-                            </tr>`
-                    });
-                    $('#quantity').val(quantity - item_quantity);
-                    $('#item_quantity').val(0);
-                    $('#list_export').html(html);
-                    i++;
-                }
-            });
+            //         list.map((item, index) => {
+            //             html +=
+            //                 `<tr>
+        //                     <td><input type="text" name="item_id[]" value="${item.item_id}" hidden>${item.item_name }</td>
+        //                     <td><input type="text" name="item_code[]" value="${item.item_code}" hidden>${item.item_code}</td>
+        //                     <td><input type="text" name="category[]" value="${item.category_id}" hidden>${item.category_name}</td>
+        //                     <td><input type="text" name="unit[]" value="${item.unit_id}" hidden>${item.unit_name}</td>
+        //                     <td><input type="text" name="warehouse[]" value="${item.warehouse_id}" hidden>${item.warehouse_name}</td>
+        //                     <td><input type="text" name="shelf[]" value="${item.shelf_id}" hidden>${item.shelf_name}</td>
+        //                     <td><input type="text" name="floor[]" value="${item.floor_id}" hidden>${item.floor_id}</td>
+        //                     <td><input type="text" name="cell[]" value="${item.cell_id}" hidden>${item.cell_id}</td>
+        //                     <td><input type="text" name="supplier[]" value="${item.supplier_id}" hidden>${item.supplier_name}</td>
+        //                     <td><input type="text" name="item_quantity[]" value="${item.item_quantity}" hidden>${item.item_quantity}</td>
+        //                     <td><input type="text" name="item_price[]" value="${item.item_price}" hidden>${item.item_price}</td>
+        //                 </tr>`
+            //         });
+            //         $('#quantity').val(quantity - item_quantity);
+            //         $('#item_quantity').val(0);
+            //         $('#list_export').html(html);
+            //         i++;
+            //     }
+            // })
+
         });
     </script>
 @endsection

@@ -131,13 +131,9 @@
                                                 <td>{{ $item->user_name }}</td>
                                                 <th>
                                                     @if ($item->exim_status == '0')
-                                                        <span class="badge bg-light text-dark">Chờ xác nhận</span>
-                                                    @elseif ($item->exim_status == '1')
-                                                        <span class="badge bg-info">Đã xác nhận</span>
-                                                    @elseif($item->exim_status == '2')
-                                                        <span class="badge bg-primary">Chờ duyệt</span>
+                                                        <span class="badge bg-light text-dark">Chờ duyệt</span>
                                                     @else
-                                                        <span class="badge bg-success">Hoàn thành</span>
+                                                        <span class="badge bg-success">Đã duyệt</span>
                                                     @endif
                                                 </th>
                                                 <td>{{ $item->created_at }}</td>
