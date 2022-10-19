@@ -19,7 +19,7 @@ class CreateCouponLogsTable extends Migration
             $table->string('coupon_name', 200);
             $table->string('coupon_seo', 200);
             $table->char('coupon_type', 10);
-            $table->bigInteger('user_id');
+            $table->bigInteger('created_by');
             $table->timestamps();
         });
     }

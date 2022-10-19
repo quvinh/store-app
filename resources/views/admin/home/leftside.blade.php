@@ -125,7 +125,7 @@
                             <a href="{{ route('account.index') }}">Tài khoản</a>
                         </li>
                         <li>
-                            <a href="#">@lang('leftside.system.role')</a>
+                            <a href="{{ route('admin.role') }}">@lang('leftside.system.role')</a>
                         </li>
                         <li>
                             <a href="#">@lang('leftside.system.invoice')</a>

@@ -57,7 +57,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form class="needs-validation" novalidate action="{{ route('ex_import.imstore') }}" method="POST"
+                        <form class="needs-validation" novalidate action="{{ route('ex_import.exstore') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row">

@@ -19,7 +19,7 @@ class CreateInventoriesTable extends Migration
             $table->tinyInteger('inventory_status');
             $table->text('inventory_note')->nullable();
             $table->bigInteger('invoice_id');
-            $table->bigInteger('user_id');
+            $table->bigInteger('created_by');
             $table->timestamps();
             $table->softDeletes();
         });

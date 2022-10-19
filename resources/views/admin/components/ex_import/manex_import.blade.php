@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Item
+    Ex_Import
 @endsection
 
 @section('css')
@@ -52,20 +52,21 @@
 
         <div class="tab-content">
             <div class="tab-pane show active" id="import">
-                {{-- <div class="row">
+                <div class="row">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row mb-2">
                                     <div class="col-sm-4">
-                                        <a href="{{ route('ex_import.import') }}" class="btn btn-danger mb-2">
+                                        <a href="{{ route('import.index') }}" class="btn btn-danger mb-2">
                                             Thêm mới
                                         </a>
                                     </div>
                                 </div>
                                 <hr>
-                                <table id="import-datatable" class="table table-centered table-striped dt-responsive nowrap w-100">
-
+                                <table id="import-datatable"
+                                    class="table table-centered table-striped dt-responsive nowrap w-100">
+                                    {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                                     <thead>
                                         <tr>
                                             <th>Mã phiếu nhập</th>
@@ -80,14 +81,19 @@
                                         @foreach ($im_items as $key => $item)
                                             <tr>
                                                 <td>{{ $item->exim_code }}</td>
-                                                <td>{{ $item->use_id }}</td>
-                                                <th>{{ $item->item }}</th>
+                                                <td>{{ $item->created_by }}</td>
+                                                <th>
+                                                    @foreach ($item->item as $vt)
+                                                        {{ $vt->item }} <br>
+                                                    @endforeach
+                                                </th>
                                                 <th>{{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</th>
-                                                <td>{{ $item->exim_created_at }}</td>
+                                                <td>{{ $item->created_at }}</td>
                                                 <td class="table-action">
-                                                    <a href="{{ route('item.edit', $item->id) }}" class="action-icon">
+                                                    <a href="{{ route('import.edit', $item->id) }}" class="action-icon">
                                                         <i class="mdi mdi-eye-outline"></i></a>
-                                                    <a href="{{ route('item.delete', $item->id) }}" class="action-icon">
+                                                    <a href="{{ route('ex_import.delete', $item->id) }}"
+                                                        class="action-icon">
                                                         <i class="mdi mdi-delete"></i></a>
                                                 </td>
                                             </tr>
@@ -97,7 +103,7 @@
                             </div> <!-- end card-body-->
                         </div> <!-- end card-->
                     </div> <!-- end col -->
-                </div> --}}
+                </div>
             </div>
             <div class="tab-pane" id="export">
                 <div class="row">
@@ -117,7 +123,7 @@
                                     {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                                     <thead>
                                         <tr>
-                                            <th>Mã phiếu nhập</th>
+                                            <th>Mã phiếu xuất</th>
                                             <th>Người tạo</th>
                                             <th>Trạng thái</th>
                                             <th>Thời gian tạo</th>
@@ -128,6 +134,15 @@
                                         @foreach ($ex_items as $key => $item)
                                             <tr>
                                                 <td>{{ $item->exim_code }}</td>
+<<<<<<< HEAD
+                                                <td>{{ $item->created_by }}</td>
+                                                <th>
+                                                    @foreach ($item->item as $vt)
+                                                        {{ $vt->item }}<br>
+                                                    @endforeach
+                                                </th>
+                                                <th>{{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</th>
+=======
                                                 <td>{{ $item->user_name }}</td>
                                                 <th>
                                                     @if ($item->exim_status == '0')
@@ -136,11 +151,13 @@
                                                         <span class="badge bg-success">Đã duyệt</span>
                                                     @endif
                                                 </th>
+>>>>>>> quocvuong2106
                                                 <td>{{ $item->created_at }}</td>
                                                 <td class="table-action">
                                                     <a href="{{ route('export.export-detail', $item->id) }}" class="action-icon">
                                                         <i class="mdi mdi-eye-outline"></i></a>
-                                                    <a href="{{ route('item.delete', $item->id) }}" class="action-icon">
+                                                    <a href="{{ route('ex_import.delete', $item->id) }}"
+                                                        class="action-icon">
                                                         <i class="mdi mdi-delete"></i></a>
                                                 </td>
                                             </tr>

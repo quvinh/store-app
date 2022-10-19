@@ -14,6 +14,6 @@ class CouponLog extends Model
         'coupon_name',
         'coupon_seo',
         'coupon_type',
-        'user_id',
+        'created_by',
     ];
 }
