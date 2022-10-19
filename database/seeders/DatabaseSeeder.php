@@ -134,5 +134,43 @@ class DatabaseSeeder extends Seeder
                 'item_status' => 1,
             ]
         ]);
+        DB::table('item_details')->insert([
+            [
+                'item_id' => 1,
+                'warehouse_id' => 1,
+                'supplier_id' => 1,
+                'shelf_id' => 1,
+                'floor_id' => 1,
+                'cell_id' => 1,
+                'item_quantity' => 20
+            ],
+            [
+                'item_id' => 1,
+                'warehouse_id' => 1,
+                'supplier_id' => 1,
+                'shelf_id' => 1,
+                'floor_id' => 1,
+                'cell_id' => 2,
+                'item_quantity' => 25
+            ],
+            [
+                'item_id' => 2,
+                'warehouse_id' => 1,
+                'supplier_id' => 2,
+                'shelf_id' => 2,
+                'floor_id' => 4,
+                'cell_id' => 10,
+                'item_quantity' => 23
+            ],
+            [
+                'item_id' => 1,
+                'warehouse_id' => 1,
+                'supplier_id' => 1,
+                'shelf_id' => 2,
+                'floor_id' => 4,
+                'cell_id' => 24,
+                'item_quantity' => 26
+            ]
+        ]);
     }
 }

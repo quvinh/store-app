@@ -135,7 +135,6 @@ class ShelfController extends Controller
         ->where('warehouse_details.warehouse_id', $warehouse_id)
         ->get();
 
-
         $items = DB::table('item_details')
         ->leftJoin('items', 'items.id', '=', 'item_details.item_id')
         ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')

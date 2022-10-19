@@ -66,7 +66,6 @@
                                 <hr>
                                 <table id="import-datatable"
                                     class="table table-centered table-striped dt-responsive nowrap w-100">
-                                    {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                                     <thead>
                                         <tr>
                                             <th>Mã phiếu nhập</th>
@@ -112,7 +111,7 @@
                             <div class="card-body">
                                 <div class="row mb-2">
                                     <div class="col-sm-4">
-                                        <a href="{{ route('ex_import.export') }}" class="btn btn-danger mb-2">
+                                        <a href="{{ route('export.index') }}" class="btn btn-danger mb-2">
                                             Thêm mới
                                         </a>
                                     </div>
@@ -125,6 +124,7 @@
                                         <tr>
                                             <th>Mã phiếu xuất</th>
                                             <th>Người tạo</th>
+                                            <th>Vật tư/ Phụ tùng</th>
                                             <th>Trạng thái</th>
                                             <th>Thời gian tạo</th>
                                             <th style="width: 10%">Thao tác</th>
@@ -134,24 +134,13 @@
                                         @foreach ($ex_items as $key => $item)
                                             <tr>
                                                 <td>{{ $item->exim_code }}</td>
-<<<<<<< HEAD
                                                 <td>{{ $item->created_by }}</td>
                                                 <th>
                                                     @foreach ($item->item as $vt)
                                                         {{ $vt->item }}<br>
                                                     @endforeach
                                                 </th>
-                                                <th>{{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</th>
-=======
-                                                <td>{{ $item->user_name }}</td>
-                                                <th>
-                                                    @if ($item->exim_status == '0')
-                                                        <span class="badge bg-light text-dark">Chờ duyệt</span>
-                                                    @else
-                                                        <span class="badge bg-success">Đã duyệt</span>
-                                                    @endif
-                                                </th>
->>>>>>> quocvuong2106
+                                                <th>{{ $item->exim_status == '0' ? 'Chờ duyệt' : $item->deleted_at !=null ? 'Đã xóa' : 'Đã duyệt' }}</th>
                                                 <td>{{ $item->created_at }}</td>
                                                 <td class="table-action">
                                                     <a href="{{ route('export.export-detail', $item->id) }}" class="action-icon">

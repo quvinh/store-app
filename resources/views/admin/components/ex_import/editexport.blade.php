@@ -103,29 +103,119 @@
                                         <td>Đã duyệt</td>
                                         <td>
                                             <a type="button" title="Chi tiết" class="view-item action-icon"
-                                                data-code="{{ $item->item_code }}" id="view">
-                                                <i class="mdi mdi-eye"></i></a>
+                                                data-name="{{ $item->item_name }}" data-unit="{{ $item->unit_name }}"
+                                                data-supplier="{{ $item->supplier_name }}"
+                                                data-category="{{ $item->category_name }}"
+                                                data-price="{{ $item->item_price }}" data-long="{{ $item->item_long }}"
+                                                data-height="{{ $item->item_height }}"
+                                                data-width="{{ $item->item_width }}" data-note="{{ $item->item_note }}"
+                                                data-weight="{{ $item->item_weight }}"
+                                                data-weightunit="{{ $item->item_weightuint }}"
+                                                data-image="{{ $item->item_images }}" data-code="{{ $item->item_code }}"
+                                                id="view">
+                                                <i class="mdi mdi-eye"></i>
+                                            </a>
+                                            <a href="" class="action-icon" title="Duyệt"><i class="uil-file-check"></i></a>
                                         </td>
+
                                     </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="modal fade" id="item_details" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title" id="myCenterModalLabel">ID:<p id="code"></p>
+                                <h4 class="modal-title" id="myCenterModalLabel">
+                                    <p id="name"></p>
                                 </h4>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-hidden="true"></button>
                             </div>
                             <div class="modal-body">
-                                <ul>
-                                    <li></li>
-                                </ul>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="code" class="form-label">Mã vật tư:</label>
+                                            <input type="text" id="code" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="category" class="form-label">Loại:</label>
+                                            <input type="text" id="category" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="supplier" class="form-label">Nhà SX:</label>
+                                            <input type="text" id="supplier" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="unit" class="form-label">Đơn vị tính:</label>
+                                            <input type="text" id="unit" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="item_price" class="form-label">Đơn giá:</label>
+                                            <input type="text" id="item_price" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="long" class="form-label">Dài:</label>
+                                            <input type="text" id="long" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="height" class="form-label">Cao:</label>
+                                            <input type="text" id="height" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="width" class="form-label">Cao:</label>
+                                            <input type="text" id="width" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="mb-3">
+                                                    <label for="weight" class="form-label">Nặng:</label>
+                                                    <input type="text" id="weight" class="form-control" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="mb-3">
+                                                    <label for="weightuint" class="form-label">Đơn vị:</label>
+                                                    <input type="text" id="weightuint" class="form-control" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="note" class="form-label">Mô tả:</label>
+                                            <input type="text" id="note" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
@@ -156,9 +246,19 @@
     <script>
         $(document).ready(function() {
             $('.view-item').on('click', function() {
-                // alert('1');
                 console.log($(this).attr('data-code'));
-                $('#code').text($(this).attr('data-code'));
+                $('#code').val($(this).attr('data-code'));
+                $('#name').text($(this).attr('data-name'));
+                $('#unit').val($(this).attr('data-unit'));
+                $('#supplier').val($(this).attr('data-supplier'));
+                $('#category').val($(this).attr('data-category'));
+                $('#item_price').val($(this).attr('data-price'));
+                $('#long').val($(this).attr('data-long'));
+                $('#height').val($(this).attr('data-height'));
+                $('#width').val($(this).attr('data-width'));
+                $('#note').val($(this).attr('data-note'));
+                $('#weight').val($(this).attr('data-weight'));
+                $('#weightuint').val($(this).attr('data-weightuint'));
                 $('#item_details').modal('show');
             })
         })
