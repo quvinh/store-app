@@ -140,10 +140,18 @@
                                                         {{ $vt->item }}<br>
                                                     @endforeach
                                                 </th>
-                                                <th>{{ $item->exim_status == '0' ? 'Chờ duyệt' : $item->deleted_at !=null ? 'Đã xóa' : 'Đã duyệt' }}</th>
+                                                <th>
+                                                    @if ($item->exim_status == '0' && $item->deleted_at == null)
+                                                        Chờ duyệt
+                                                    @elseif ($item->exim_status == '1' && $item->deleted_at == null)
+                                                        Đã duyệt
+                                                    @else
+                                                        Đã xóa
+                                                    @endif
+                                                </th>
                                                 <td>{{ $item->created_at }}</td>
                                                 <td class="table-action">
-                                                    <a href="{{ route('export.export-detail', $item->id) }}" class="action-icon">
+                                                    <a href="{{ route('export.edit', $item->id) }}" class="action-icon">
                                                         <i class="mdi mdi-eye-outline"></i></a>
                                                     <a href="{{ route('ex_import.delete', $item->id) }}"
                                                         class="action-icon">

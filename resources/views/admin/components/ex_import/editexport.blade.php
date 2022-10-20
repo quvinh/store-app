@@ -80,6 +80,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Chi tiết</h5>
+
                         <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
                             <thead>
                                 <tr>
@@ -93,35 +94,57 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($export_details as $key => $item)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>{{ $item->item_name }}</td>
-                                        <td>{{ $item->supplier_name }}</td>
-                                        <td>{{ $item->ex_item_quantity }}</td>
-                                        <td>{{ $item->item_price }}</td>
-                                        <td>Đã duyệt</td>
-                                        <td>
-                                            <a type="button" title="Chi tiết" class="view-item action-icon"
-                                                data-name="{{ $item->item_name }}" data-unit="{{ $item->unit_name }}"
-                                                data-supplier="{{ $item->supplier_name }}"
-                                                data-category="{{ $item->category_name }}"
-                                                data-price="{{ $item->item_price }}" data-long="{{ $item->item_long }}"
-                                                data-height="{{ $item->item_height }}"
-                                                data-width="{{ $item->item_width }}" data-note="{{ $item->item_note }}"
-                                                data-weight="{{ $item->item_weight }}"
-                                                data-weightunit="{{ $item->item_weightuint }}"
-                                                data-image="{{ $item->item_images }}" data-code="{{ $item->item_code }}"
-                                                id="view">
-                                                <i class="mdi mdi-eye"></i>
-                                            </a>
-                                            <a href="" class="action-icon" title="Duyệt"><i class="uil-file-check"></i></a>
-                                        </td>
 
-                                    </tr>
+                                @foreach ($export_details as $key => $item)
+                                    <form action="{{ route('export.update',
+                                        [
+                                            'id'=>$item->itemdetail_id,
+                                            'exim_id'=>$item->exim_id
+                                        ]) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <tr>
+
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>{{ $item->item_name }}</td>
+                                            <td>{{ $item->supplier_name }}</td>
+                                            <td>{{ $item->ex_item_quantity }}</td>
+                                            <td>{{ $item->item_price }}</td>
+                                            <td>{{ $item->exim_detail_status==1 ? 'Đã duyệt' : 'Chờ duyệt' }}</td>
+                                            <td>
+
+                                                <button type="button" title="Chi tiết" class="view-item btn btn-warning"
+                                                    data-name="{{ $item->item_name }}" data-unit="{{ $item->unit_name }}"
+                                                    data-supplier="{{ $item->supplier_name }}"
+                                                    data-category="{{ $item->category_name }}"
+                                                    data-price="{{ $item->item_price }}"
+                                                    data-long="{{ $item->item_long }}"
+                                                    data-height="{{ $item->item_height }}"
+                                                    data-width="{{ $item->item_width }}"
+                                                    data-note="{{ $item->item_note }}"
+                                                    data-weight="{{ $item->item_weight }}"
+                                                    data-weightunit="{{ $item->item_weightuint }}"
+                                                    data-image="{{ $item->item_images }}"
+                                                    data-code="{{ $item->item_code }}"
+                                                    data-shelf-name="{{ $item->shelf_name }}"
+                                                    data-floor="{{ $item->floor_id }}"
+                                                    data-cell="{{ $item->cell_id }}"
+                                                    data-warehouse-name="{{ $item->warehouse_name }}" id="view">
+                                                Chi tiết
+                                                </button>
+
+                                                <button class="btn btn-primary" {{ $item->exim_detail_status==1 ? 'hidden' : '' }} type="submit">duyệt</button>
+                                                {{-- <a
+                                                    class="action-icon" title="Duyệt" type="submit"><i
+                                                        class="uil-file-check"></i></a> --}}
+                                            </td>
+
+                                        </tr>
+                                    </form>
                                 @endforeach
                             </tbody>
                         </table>
+
                     </div>
                 </div>
                 <div class="modal fade" id="item_details" tabindex="-1" role="dialog" aria-hidden="true">
@@ -166,6 +189,34 @@
                                 <div class="row">
                                     <div class="col">
                                         <div class="mb-3">
+                                            <label for="warehouse" class="form-label">Kho:</label>
+                                            <input type="text" id="warehouse" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="shelf" class="form-label">Giá/Kệ:</label>
+                                            <input type="text" id="shelf" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="floor" class="form-label">Tầng:</label>
+                                            <input type="text" id="floor" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="cell" class="form-label">Ô:</label>
+                                            <input type="text" id="cell" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
                                             <label for="item_price" class="form-label">Đơn giá:</label>
                                             <input type="text" id="item_price" class="form-control" readonly>
                                         </div>
@@ -186,7 +237,7 @@
                                     </div>
                                     <div class="col">
                                         <div class="mb-3">
-                                            <label for="width" class="form-label">Cao:</label>
+                                            <label for="width" class="form-label">Rộng:</label>
                                             <input type="text" id="width" class="form-control" readonly>
                                         </div>
                                     </div>
@@ -259,6 +310,10 @@
                 $('#note').val($(this).attr('data-note'));
                 $('#weight').val($(this).attr('data-weight'));
                 $('#weightuint').val($(this).attr('data-weightuint'));
+                $('#warehouse').val($(this).attr('data-warehouse-name'));
+                $('#shelf').val($(this).attr('data-shelf-name'));
+                $('#floor').val($(this).attr('data-floor'));
+                $('#cell').val($(this).attr('data-cell'));
                 $('#item_details').modal('show');
             })
         })

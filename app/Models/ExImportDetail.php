@@ -13,7 +13,7 @@ class ExImportDetail extends Model
         'exim_id',
         'item_id',
         'itemdetail_id',
-        'exim_item_status',
+        'exim_detail_status',
         'item_quantity',
         'item_price',
         'item_total',

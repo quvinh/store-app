@@ -57,14 +57,14 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form class="needs-validation" novalidate action="{{ route('export.exstore') }}" method="POST"
+                        <form class="needs-validation" novalidate action="{{ route('export.store') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col">
                                     <div class="text-sm-start">
                                         <a href="{{ route('export.index') }}" class="btn btn-primary mb-2 me-1"><i
-                                                class="mdi mdi-backburger"></i> Back to list</a>
+                                                class="mdi mdi-backburger"></i> Back</a>
                                     </div>
                                 </div>
                                 <div class="col">

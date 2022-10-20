@@ -15,7 +15,8 @@
             <th>Chiều dài</th>
             <th>Chiều rộng</th>
             <th>Chiều cao</th>
-            <th>Tổng số lượng trong kho</th>
+            <th>SL khả dụng</th>
+            <th>SL không khả dụng</th>
             <th>Giá kệ</th>
             <th>Kho</th>
             <th>Trạng thái</th>
@@ -39,11 +40,12 @@
                 <td>{{ $item->item_long ? $item->item_long : '-----' }}</td>
                 <td>{{ $item->item_width ? $item->item_width : '-----' }}</td>
                 <td>{{ $item->item_height ? $item->item_height : '-----' }}</td>
-                <td>{{ $item->item_quantity ? $item->item_quantity : '-----' }}</td>
+                <td>{{ $item->item_valid[0] }}</td>
+                <td>{{ $item->item_valid[1] }}</td>
                 <td>{{ $item->shelf_name }}</td>
                 <td>{{ $item->warehouse_name }}</td>
                 <td>
-                    @if ($item->item_status === 1)
+                    @if ($item->item_valid[0] > 0)
                         <span class="badge bg-success">Còn hàng</span>
                     @else
                         <span class="badge bg-danger">hết hàng</span>

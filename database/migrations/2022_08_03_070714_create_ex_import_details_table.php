@@ -23,7 +23,7 @@ class CreateExImportDetailsTable extends Migration
             $table->float('item_price');
             $table->float('item_total');
             $table->float('item_vat');
-            $table->tinyInteger('exim_item_status');
+            $table->tinyInteger('exim_detail_status');
             $table->bigInteger('supplier_id');
             $table->bigInteger('shelf_to')->nullable();
             $table->integer('floor_to')->nullable();

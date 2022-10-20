@@ -121,14 +121,14 @@ class DatabaseSeeder extends Seeder
         DB::table('items')->insert([
             [
                 'item_name' => 'Bánh xe',
-                'item_code' => rand(100000,999999),
+                'item_code' => rand(100000, 999999),
                 'item_unit' => 1,
                 'category_id' => 2,
                 'item_status' => 1,
             ],
             [
                 'item_name' => 'Bánh lái',
-                'item_code' => rand(100000,999999),
+                'item_code' => rand(100000, 999999),
                 'item_unit' => 1,
                 'category_id' => 1,
                 'item_status' => 1,
@@ -170,6 +170,16 @@ class DatabaseSeeder extends Seeder
                 'floor_id' => 4,
                 'cell_id' => 24,
                 'item_quantity' => 26
+            ]
+        ]);
+        DB::table('unit_details')->insert([
+            [
+                'unit_id' => 1,
+                'item_id' => 1,
+            ],
+            [
+                'unit_id' => 2,
+                'item_id' => 2,
             ]
         ]);
     }
