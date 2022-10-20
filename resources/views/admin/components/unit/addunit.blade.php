@@ -1,5 +1,4 @@
-<form class="needs-validation" novalidate action="{{ route('unit.store') }}" method="POST"
-    enctype="multipart/form-data">
+<form class="needs-validation" novalidate action="{{ route('unit.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="mb-3">
         <div class="col s12 m6 l6">
@@ -15,7 +14,7 @@
                 <div class="col s6">
                     <label class="form-label" for="unit_amount">Số lượng:</label>
                     <input type="text" class="form-control" id="unit_amount" placeholder="Tên loại vật tư"
-                         name="unit_amount">
+                        name="unit_amount">
                 </div>
             </div>
         </div>

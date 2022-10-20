@@ -201,7 +201,7 @@
                 </span>
                 <span>
                     <span class="account-user-name">{{Auth::user()->name}}</span>
-                    {{-- <span class="account-position">{{Auth::user()->getRoleNames()->first()}}</span> --}}
+                    <span class="account-position">{{Auth::user()->getRoleNames()->first()}}</span>
                 </span>
             </a>
             <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
@@ -211,8 +211,8 @@
                 </div>
 
                 <!-- item-->
-                {{-- <a href="{{route('admin.profile')}}" class="dropdown-item notify-item"> --}}
-                <a href="#" class="dropdown-item notify-item">
+                <a href="{{route('account.profile')}}" class="dropdown-item notify-item">
+                {{-- <a href="#" class="dropdown-item notify-item"> --}}
 
                     <i class="mdi mdi-account-circle me-1"></i>
                     <span>@lang('header.myaccount')</span>

@@ -5,7 +5,7 @@
             <div class="col-md-6">
                 <script>
                     document.write(new Date().getFullYear())
-                </script> © Dailythue - thuemienbac.vn
+                </script> © Created by 3VSoft. Version 1.0
             </div>
             <div class="col-md-6">
                 <div class="text-md-end footer-links d-none d-md-block">

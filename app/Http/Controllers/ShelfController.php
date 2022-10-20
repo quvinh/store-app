@@ -13,11 +13,11 @@ class ShelfController extends Controller
 {
     public static function Routes() {
         // Route::get('shelf', [ShelfController::class, 'index' ])->name('shelf.index');
-        Route::get('warehouse/{id}', [ShelfController::class, 'shelfList'])->name('shelf.list');
-        Route::post('warehouse/{warehouse_id}/shelf/add', [ShelfController::class, 'addShelf'])->name('shelf.add');
-        Route::get('shelf/edit/{id}', [ShelfController::class, 'edit'])->name('shelf.edit');
-        Route::put('shelf/update/{id}', [ShelfController::class, 'update'])->name('shelf.update');
-        Route::delete('shelf/delete/{id}', [ShelfController::class, 'destroy'])->name('shelf.destroy');
+        Route::get('warehouse/{id}', [ShelfController::class, 'warehouseDetail'])->name('shelf.warehouse-details');
+        Route::post('warehouse/{warehouse_id}/add-shelf', [ShelfController::class, 'addShelf'])->name('shelf.add-shelf');
+        Route::get('edit-shelf/{id}', [ShelfController::class, 'edit'])->name('shelf.edit');
+        Route::put('update-shelf/{id}', [ShelfController::class, 'update'])->name('shelf.update');
+        Route::get('delete-shelf/{id}', [ShelfController::class, 'destroy'])->name('shelf.destroy');
         // Route::get('shelf/{id}', [ShelfController::class, 'shelfDetail'])->name('shelf.shelf-detail');
     }
     /**
@@ -109,7 +109,9 @@ class ShelfController extends Controller
         ->select('warehouse_id')
         ->pluck('warehouse_id');
 
-        return redirect()->route('shelf.list',$warehouse_id[0])->with('success', 'cập nhật thành công');
+        // return redirect()->route('shelf.warehouse-details',$warehouse_id[0])->with('success', 'cập nhật thành công');
+
+        return redirect()->back()->with('success', 'cập nhật thành công');
     }
 
     /**
@@ -125,14 +127,38 @@ class ShelfController extends Controller
         return redirect()->back()->with('success', 'Thông báo công.');
     }
 
-    public function shelfList($warehouse_id) {
+    public function warehouseDetail($warehouse_id) {
         $warehouse = Warehouse::find($warehouse_id);
         $shelf = DB::table('warehouse_details')
         ->join('shelves', 'shelves.id', '=', 'warehouse_details.shelf_id')
         ->select('shelves.*')
         ->where('warehouse_details.warehouse_id', $warehouse_id)
         ->get();
-        return view('admin.components.warehouse.warehousedetail', compact('shelf', 'warehouse_id', 'warehouse'));
+
+
+        $items = DB::table('item_details')
+        ->leftJoin('items', 'items.id', '=', 'item_details.item_id')
+        ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
+        ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
+        ->leftJoin('unit_details', 'unit_details.item_id', '=', 'items.id')
+        ->leftJoin('units', 'units.id', '=', 'unit_details.unit_id')
+        ->leftJoin('categories', 'categories.id', '=','items.category_id')
+        ->select(
+            'items.*',
+            'warehouse_name',
+            'shelf_name',
+            'supplier_id',
+            'cell_id',
+            'floor_id',
+            'category_name',
+            'unit_name',
+            'item_details.item_quantity as item_quantity_of_cell',
+        )
+        ->orderByDesc('items.item_name')
+        ->where('item_details.warehouse_id', $warehouse_id)
+        ->where('item_details.item_quantity', '>', '0')
+        ->get();
+        return view('admin.components.warehouse.warehousedetail', compact('shelf', 'warehouse_id', 'warehouse', 'items'));
     }
 
     public function addShelf(Request $request, $warehouse_id){
@@ -147,7 +173,7 @@ class ShelfController extends Controller
             return redirect()->back()->withErrors($validator);
         }
 
-        $status = 1;
+        $status = 0;
 
         Shelf::create(array_merge(
             $validator->validate(),
@@ -155,7 +181,7 @@ class ShelfController extends Controller
                 'shelf_code'=>$request->shelf_code,
                 'shelf_name'=>$request->shelf_name,
                 'shelf_position'=>$request->shelf_position,
-                'shelf_status'=>$status,
+                'shelf_status'=>$request->shelf_status == 'on' ? '1' : '0',
                 'shelf_note'=>$request->shelf_note
             ]
         ));
@@ -169,17 +195,11 @@ class ShelfController extends Controller
         return redirect()->back()->with('success', 'Tạo mới giá kệ thành công');
     }
 
-    public function shelfDetail($shelf_id) {
-        $items = DB::table('shelf_details')
-        ->join('shelves','shelves.id', '=','shelf_details.shelf_id')
-        ->leftJoin('warehouses','warehouses.id', '=','shelves.warehouse_id')
-        ->join('items','items.id', '=','shelf_details.item_id')
-        ->rightJoin('units','units.id', '=','items.units_id')
-        ->rightJoin('categories','categories.id', '=','items.category_id')
-        ->select('items.*','units.*','shelf.shelf_name','warehouses.warehouse_name')
-        ->where(['shelf_details.shelf_id','=',$shelf_id])
-        ->get();
-        dd($items);
-        return view('admin.components.shelf.shelf_detail', compact('items'));
-    }
+    // public function shelfDetail($shelf_id) {
+
+    //     dd($items);
+    //     return view('admin.components.shelf.shelf_detail', compact('items'));
+    // }
+
+
 }

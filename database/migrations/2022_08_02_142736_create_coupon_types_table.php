@@ -17,7 +17,7 @@ class CreateCouponTypesTable extends Migration
             $table->id();
             $table->string('type_name', 200);
             $table->char('type_short', 20);
-            $table->bigInteger('user_id');
+            $table->bigInteger('created_by');
             $table->timestamps();
             $table->softDeletes();
         });

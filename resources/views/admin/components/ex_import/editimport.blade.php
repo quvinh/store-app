@@ -46,7 +46,7 @@
                                 <a href="{{ route('ex_import.index') }}" class="btn btn-info">Quay lại</a>
                             </div>
                             <div class="col-6 text-end">
-                                <a href="{{route('import.confirm', $im_items->first()->exim_id)}}" class="btn btn-primary">Duyệt</a>
+                                <a href="{{route('import.update', $im_items->first()->exim_id)}}" class="btn btn-primary">Lưu</a>
                             </div>
                         </div><br>
                         <div class="row">
@@ -61,7 +61,7 @@
                                 <input type="text" class="form-control" readonly
                                     value="{{ $im_items[0]->exim_status }}"><br>
                                 <input type="text" class="form-control" readonly
-                                    value="{{ $im_items[0]->warehouse_id }}"><br>
+                                    value="{{ $im_items[0]->name }}"><br>
                             </div>
                         </div>
                         <table class="table dt-responsive nowrap text-center">
@@ -79,7 +79,7 @@
                                 @foreach ($im_items as $item)
                                     <tr class="text-center">
                                         <td>{{ $item->item }}</td>
-                                        <th>{{ $item->supplier_id }}</th>
+                                        <th>{{ $item->supplier_name }}</th>
                                         <th>{{ $item->item_quantity }}</th>
                                         <th>{{ $item->item_price }}</th>
                                         <th>{{ $item->exim_detail_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}</th>

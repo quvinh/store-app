@@ -15,6 +15,6 @@ class Notify extends Model
         'notify_summary',
         'notify_sendto',
         'notify_status',
-        'user_id',
+        'created_by',
     ];
 }

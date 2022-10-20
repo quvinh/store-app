@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Import
+    Confirm Import
 @endsection
 
 @section('css')
@@ -64,92 +64,81 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <a href="{{route('ex_import.index')}}" class="btn btn-info">Quay lại</a><br><br>
-                        <form class="needs-validation" novalidate action="{{ route('import.store') }}" method="POST"
+                        <form class="needs-validation" novalidate
+                            action="{{ route('import.update-status', $im_items->first()->exim_id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
+                            @method('PUT')
                             <div class="row">
-                                <div class="col s6">
-                                    <input type="text"id="id" hidden>
-                                    <div {{ count($warehouses) > 1 ? '' : 'hidden' }}>
-                                        <select data-toggle="select2" title="Warehouse" id="warehouse">
-                                            @foreach ($warehouses as $warehouse)
-                                                <option value="{{ $warehouse->id }}">
-                                                    {{ $warehouse->warehouse_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <br>
-                                    </div>
-
-                                    <label for="item">Tên vật tư</label>
-                                    <input id="item" class="form-control"><br>
-                                    <label for="code">Mã vật tư</label>
-                                    <input type="text" id="code" class="form-control"><br>
-
-                                    <div class="row">
-                                        <div class="col s6">
-                                            <label for="quantity">Số lượng</label>
-                                            <input class="form-control" id="quantity" data-toggle="touchspin"
-                                                value="0" type="text" data-bts-button-down-class="btn btn-danger"
-                                                data-bts-button-up-class="btn btn-info"><br>
-                                        </div>
-                                        <div class="col s6">
-                                            <label for="price">Giá nhập</label>
-                                            <input type="text" value="0" class="form-control" id="price">
-                                        </div>
-                                    </div>
-
-
+                                <div class="col-6">
+                                    <a href="{{ route('ex_import.index') }}" class="btn btn-info">Quay lại</a>
                                 </div>
-                                <div class="col s6">
-                                    <div><label for="supplier">Nhà cung cấp</label>
-                                        <select data-toggle="select2" title="Supplier" id="supplier">
-                                            <option value="">Chọn nhà cung cấp</option>
-                                            @foreach ($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}">
-                                                    {{ $supplier->supplier_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <br>
-                                    <div><label for="category">Loại vật tư</label>
-                                        <select data-toggle="select2" title="Category" id="category">
-                                            <option value="">Chọn loại vật tư</option>
-                                            @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}">
-                                                    {{ $category->category_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <br>
-                                    <div><label for="unit">Đơn vị tính</label>
-                                        <select data-toggle="select2" title="Supplier" id="unit">
-                                            <option value="">Chọn đơn vị tính</option>
-                                            @foreach ($units as $unit)
-                                                <option value="{{ $unit->id }}">
-                                                    {{ $unit->unit_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <br>
-
+                                <div class="col-6 text-end">
+                                    <button class="btn btn-primary" type="submit">Lưu</button>
+                                </div>
+                            </div><br>
+                            <div class="row">
+                                <div class="col-3 text-end">
+                                    <label for="" class="form-control">Mã phiếu</label><br>
+                                    <label for="" class="form-control">Trạng thái</label><br>
+                                    <label for="" class="form-control">Người tạo</label><br>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ $im_items[0]->exim_code }}"><br>
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ $im_items[0]->exim_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}"><br>
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ $im_items[0]->name }}"><br>
                                 </div>
                             </div>
-                            <div class="text-end">
-                                <button class="btn btn-info mb-2" id="btnAdd" type="button"><i
-                                        class="mdi mdi-chevron-double-down"></i> Thêm vào danh
-                                    sách</button>
-                                <button class="btn btn-danger mb-2" id="btnDelete" type="button"><i
-                                        class="mdi mdi-close-circle"></i> Hủy danh
-                                    sách</button>
-                                <button class="btn btn-success mb-2" id="btnSave" type="submit" disabled><i
-                                        class="mdi mdi-content-save"></i>
-                                    Lưu</button>
-                            </div>
+                            <table class="table dt-responsive nowrap text-center">
+                                {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
+                                <thead>
+                                    <tr>
+                                        <th width="15%">Phụ tùng/ Vật tư</th>
+                                        <th width="15%">Nhà cung cấp</th>
+                                        <th width="10%">Số lượng</th>
+                                        <th width="10%">Đơn giá</th>
+                                        <th width="10%">Chọn Kệ</th>
+                                        <th width="7%">Chọn Tầng</th>
+                                        <th width="7%">Chọn Ô</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="list-import">
+                                    @foreach ($im_items as $item)
+                                        <tr>
+                                            <td><input type="text" value="{{ $item->item }}"
+                                                    class="form-control text-center" readonly>
+                                                <input type="text" value="{{ $item->id }}" name="id[]"
+                                                    class="form-control text-center" hidden>
+                                            </td>
+                                            <th><input type="text" value="{{ $item->supplier_name }}"
+                                                    class="form-control text-center" readonly></th>
+                                            <th><input type="text" value="{{ $item->item_quantity }}"
+                                                    class="form-control text-center" readonly></th>
+                                            <th><input type="text" value="{{ $item->item_price }}"
+                                                    class="form-control text-center" readonly></th>
+                                            <th>
+                                                <select data-toggle="select2" title="Shelf" id="shelf" name="shelf[]">
+                                                    @foreach ($shelves as $shelf)
+                                                        <option
+                                                            value="{{ $shelf->id }} {{ $shelf->id == $item->shelf_to ? 'selected' : '' }}">
+                                                            {{ $shelf->shelf_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </th>
+                                            <th><input type="number" name="floor[]" id="{{ $item->id }}"
+                                                    class="form-control text-center"
+                                                    value="{{ $item->floor_to ? $item->floor_to : '' }}"></th>
+                                            <th><input type="number" name="cell[]" id="{{ $item->id }}"
+                                                    class="form-control text-center"
+                                                    value="{{ $item->cell_to ? $item->cell_to : '' }}"></th>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </form>
 
                     </div> <!-- end card-body-->

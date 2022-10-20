@@ -40,28 +40,39 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <ul class="nav nav-tabs nav-bordered mb-3">
+                        <h5 class="card-title">Giá kệ</h5>
+                        @include('admin.components.shelf.manshelf')
+                        {{-- <ul class="nav nav-tabs nav-bordered mb-3">
                             <li class="nav-item">
-                                <a href="#shelf" data-bs-toggle="tab" aria-expanded="true" class="nav-link active">
-                                    <i class="mdi mdi-home-variant d-md-none d-block"></i>
+                                <a href="#buttons-table-preview" data-bs-toggle="tab" aria-expanded="false"
+                                    class="nav-link active">
                                     <span class="d-none d-md-block">Giá kệ</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#item" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
-                                    <i class="mdi mdi-account-circle d-md-none d-block"></i>
+                                <a href="#buttons-table-code" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
                                     <span class="d-none d-md-block">Vật tư</span>
                                 </a>
                             </li>
-                        </ul>
+                        </ul> <!-- end nav-->
                         <div class="tab-content">
-                            <div class="tab-pane show active" id="shelf">
+                            <div class="tab-pane show active" id="buttons-table-preview">
                                 @include('admin.components.shelf.manshelf')
                             </div>
-                            <div class="tab-pane" id="item">
-                                <p>...</p>
+                            <div class="tab-pane" id="buttons-table-code">
+                                @include('admin.components.shelf.shelfdetail')
                             </div>
-                        </div>
+                        </div> --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Vật tư</h5>
+                        @include('admin.components.shelf.shelfdetail')
                     </div>
                 </div>
             </div>
@@ -70,7 +81,6 @@
 @endsection
 
 @section('script')
-
     <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
     <!-- third party js -->
@@ -82,9 +92,11 @@
     <script src="{{ asset('assets/js/vendor/buttons.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.select.min.js') }}"></script>
-    <!-- third party js ends -->
+    <script src="{{ asset('assets/js/vendor/buttons.html5.min.js') }}"></script>
+
 
     <!-- demo app -->
     <script src="{{ asset('assets/js/pages/demo.datatable-init.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/pages/demo.datatable-init-2.js') }}"></script> --}}
     <!-- end demo js-->
 @endsection

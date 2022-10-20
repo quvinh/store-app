@@ -59,13 +59,14 @@
                             <hr>
                         </div>
                         <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
-                        {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
+                            {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
                                 <tr>
                                     <th>STT</th>
                                     <th>Mã kho</th>
                                     <th>Ảnh</th>
                                     <th>Tên</th>
+                                    <th>Nhân viên phụ trách</th>
                                     <th>Vị trí</th>
                                     <th>Trạng thái</th>
                                     <th style="width: 10%">Thao tác</th>
@@ -73,6 +74,13 @@
                             </thead>
                             <tbody>
                                 @foreach ($warehouses as $key => $warehouse)
+                                    @php
+                                        $user = DB::table('warehouse_managers')
+                                            ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
+                                            ->select('users.*')
+                                            ->where('warehouse_managers.warehouse_id', $warehouse->id)
+                                            ->get();
+                                    @endphp
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $warehouse->warehouse_code }}</td>
@@ -86,6 +94,11 @@
                                             @endif
                                         </td>
                                         <td>{{ $warehouse->warehouse_name }}</td>
+                                        <td>
+                                            @foreach ($user as $item)
+                                            <span class="badge bg-primary">{{ $item->name }}-ID:{{ $item->id }}</span><br>
+                                            @endforeach
+                                        </td>
                                         <td>{{ $warehouse->warehouse_street }}</td>
                                         <td>
                                             @if ($warehouse->warehouse_status == '1')
@@ -95,7 +108,7 @@
                                             @endif
                                         </td>
                                         <td class="table-action">
-                                            <a href="{{ route('shelf.list',$warehouse->id) }}"
+                                            <a href="{{ route('shelf.warehouse-details', $warehouse->id) }}"
                                                 class="action-icon"> <i class="mdi mdi-eye"></i></a>
                                             <a href="{{ route('warehouse.edit', $warehouse->id) }}" class="action-icon">
                                                 <i class="mdi mdi-square-edit-outline"></i></a>

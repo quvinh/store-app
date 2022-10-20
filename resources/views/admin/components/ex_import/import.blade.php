@@ -170,7 +170,6 @@
                                 </tbody>
                             </table>
 
-
                         </form>
 
                     </div> <!-- end card-body-->
@@ -234,7 +233,7 @@
                 var supplier = $("#supplier option:selected").text();
                 var warehouse_id = parseInt($("#warehouse").val());
                 var warehouse = $("#warehouse option:selected").text();
-                if (name !== '' && supplier !== '' && price > 0 && quantity > 0) {
+                if (name !== '' && supplier_id !== '' && price > 0 && quantity > 0) {
                     // if (list.filter(item => item.id === id && item.supplier_id === supplier_id).length > 0)
                     // {
                     //     var data = [...list];
@@ -296,7 +295,7 @@
                                         <th><input type="text" name="price[]" value="${item.price}" hidden>${item.price}</th>
                                         <th class="table-action"><a type="button" class="action-icon text-warning"
                                                 id="btn${item.line}" data-id="${item.id}"
-                                                onclick="remove('btn${item.line}')">Hủy</a></th>
+                                                onclick="remove('btn${item.line}')"><i class="mdi mdi-close-circle"></i></a></th>
                                     </tr>`
                     });
                     $('#quantity').val(0);
