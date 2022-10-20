@@ -47,6 +47,9 @@ class ItemController extends Controller
             ->get();
         return view('admin.components.item.manitem', compact('data', 'dataTrash'));
     }
+    public function detail() {
+        return view('admin.components.item.detail_item');
+    }
 
     /**
      * Show the form for creating a new resource.

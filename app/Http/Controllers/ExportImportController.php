@@ -27,6 +27,8 @@ class ExportImportController extends Controller
             Route::post('/store', [ExportImportController::class, 'im_store'])->name('import.store');
             Route::get('/edit/{id}', [ExportImportController::class, 'im_edit'])->name('import.edit');
             Route::put('/update/{id}', [ExportImportController::class, 'im_update'])->name('import.update');
+            Route::get('/confirm/{id}', [ExportImportController::class, 'im_confirm'])->name('import.confirm');
+            Route::put('/update-status/{id}', [ExportImportController::class, 'im_update_status'])->name('import.update-status');
         });
 
         Route::get('export', [ExportImportController::class, 'export'])->name('ex_import.export');
@@ -145,18 +147,40 @@ class ExportImportController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function im_edit($id){
+    public function im_edit($id)
+    {
         $im_items = DB::table('items')
+            ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
+            ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
+            ->where('ex_imports.id', $id)
+            ->select('ex_import_details.*', 'items.item_name as item', 'ex_imports.exim_code', 'ex_imports.exim_status', 'ex_imports.warehouse_id', 'ex_imports.id as exim_id')
+            ->get();
+        return view('admin.components.ex_import.editimport', compact('im_items'));
+    }
+
+    public function im_update(Request $request)
+    {
+        //
+    }
+    public function im_confirm($id)
+    {
+        $items = DB::table('items')
             ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
             ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
             ->where('ex_imports.id', $id)
             ->select('ex_import_details.*', 'items.item_name as item', 'ex_imports.exim_code', 'ex_imports.exim_status', 'ex_imports.warehouse_id')
             ->get();
-        return view('admin.components.ex_import.editimport', compact('im_items'));
+        $shelves = DB::table('shelves')
+            ->join('warehouse_details', 'warehouse_details.shelf_id', '=', 'shelves.id')
+            ->select('shelves.*')
+            ->where('warehouse_details.warehouse_id', $items->first()->warehouse_id)->get();
+        return view('admin.components.ex_import.confirmimport', compact('items', 'shelves'));
     }
-    public function im_update(Request $request){
 
+    public function im_update_status(Request $request)
+    {
     }
+
     public function export($id)
     {
         $warehouse = Unit::all();
