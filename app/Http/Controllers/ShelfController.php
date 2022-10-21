@@ -167,7 +167,7 @@ class ShelfController extends Controller
         foreach ($items as $val) {
             $initem_valid = DB::table('ex_import_details')
                 ->join('item_details', 'item_details.id', '=', 'ex_import_details.itemdetail_id')
-                ->select(DB::raw('SUM(ex_import_details.item_quantity) as quantity'), 'item_details.item_id')
+                ->select(DB::raw('SUM(ex_import_details.item_quantity) as quantity'))
                 ->where('ex_import_details.exim_detail_status', '0')
                 ->where('item_details.id', $val->item_detail_id)
                 ->get();

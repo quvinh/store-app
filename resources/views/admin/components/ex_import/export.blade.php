@@ -130,7 +130,7 @@
                                             name="item_detail">
                                             @foreach ($items as $item)
                                                 <option value="{{ $item->itemdetails_id }}">
-                                                    {{ $item->item_name }} - {{ $item->item_code }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - {{ $item->floor_id }} - {{ $item->cell_id }} - SL:{{ $item->item_detail_quantity }}
+                                                    {{ $item->item_name }} - {{ $item->item_code }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - {{ $item->floor_id }} - {{ $item->cell_id }} - SLKD:{{ $item->item_quantity[0] }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -231,6 +231,7 @@
                 var shelf_name = $("#itemdetail_id option:selected").text().split(' - ')[3];
                 var floor_id = $("#itemdetail_id option:selected").text().split(' - ')[4];
                 var cell_id = $("#itemdetail_id option:selected").text().split(' - ')[5];
+                var item_valid = $("#itemdetail_id option:selected").text().split(':')[1];
                 var item_quantity = $("#item_quantity").val();
                 var price = $("#export_price").val();
 
@@ -252,7 +253,8 @@
                                     quantity: item.quantity + parseInt(item_quantity),
                                     floor_id: item.floor_id,
                                     cell_id: item.cell_id,
-                                    shelf_name: item.shelf_name
+                                    shelf_name: item.shelf_name,
+                                    item_valid: item.item_valid
                                     // warehouse_id: item.warehouse_id,
                                 });
                             }
@@ -270,6 +272,7 @@
                             shelf_name: shelf_name,
                             floor_id: floor_id,
                             cell_id: cell_id,
+                            item_valid: item_valid,
                             // warehouse_id: warehouse_id,
                         })
                         console.log(list);
@@ -283,6 +286,7 @@
                                         <input name="warehouse_id" value="${warehouse_id}" hidden>
                                         <input name="item_quantity[]" value="${item.quantity}" hidden>
                                         <input name="export_price[]" value="${item.price}" hidden>
+                                        <input name="item_valid[]" value="${item.item_valid}" hidden>
                                     </td>
                                     <td><b>${item.code}</b></td>
                                     <td><b>${item.warehouse_name}</b></td>
