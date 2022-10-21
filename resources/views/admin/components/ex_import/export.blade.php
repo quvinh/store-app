@@ -130,7 +130,7 @@
                                             name="item_detail">
                                             @foreach ($items as $item)
                                                 <option value="{{ $item->itemdetails_id }}">
-                                                    {{ $item->item_name }} - {{ $item->item_code }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - {{ $item->floor_id }} - {{ $item->cell_id }} - SLKD:{{ $item->item_quantity[0] }}
+                                                    {{ $item->item_name }} - {{ $item->item_code }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - Tằng ID:{{ $item->floor_id }} - Ô ID:{{ $item->cell_id }} - SLKD:{{ $item->item_quantity[0] }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -221,22 +221,31 @@
             })
 
             $('#btnAdd').click(function() {
+                var a = [], b = [];
                 var html = '';
+                var text = $("#itemdetail_id option:selected").text()
+                var c = text.split('-');
+                a = [...c.slice(4)];
+                for (var i = 0; i < a.length; i++) {
+                    b.push(a[i].replace(/\D/g, ' ').trim().replace(/\s+/g, ' '))
+                }
+                // var a = text.replace(/\D/g, ' ').replace(/\s+/g, ' ').trim().split(' ')[];
                 var item_detail = $("#itemdetail_id").val();
                 var warehouse_id = $('#warehouse').val();
-                var item_name = $("#itemdetail_id option:selected").text().split(' - ')[0];
-                var supplier_name = $("#itemdetail_id option:selected").text().split(' - ')[2];
-                var item_code = $("#itemdetail_id option:selected").text().split(' - ')[1];
+                var item_name = text.split(' - ')[0];
+                var supplier_name = text.split(' - ')[2];
+                var item_code = text.split(' - ')[1];
                 var warehouse_name = $("#warehouse option:selected").text().split(' - ')[1];
-                var shelf_name = $("#itemdetail_id option:selected").text().split(' - ')[3];
-                var floor_id = $("#itemdetail_id option:selected").text().split(' - ')[4];
-                var cell_id = $("#itemdetail_id option:selected").text().split(' - ')[5];
-                var item_valid = $("#itemdetail_id option:selected").text().split(':')[1];
+                var shelf_name = text.split(' - ')[3];
+                var floor_id = b[0];
+                var cell_id = b[1];
+                var item_valid = b[2];
                 var item_quantity = $("#item_quantity").val();
+                console.log(item_quantity);
                 var price = $("#export_price").val();
 
                 if (item_name !== '' && supplier_name !== '' && item_quantity > 0 && price > 0) {
-                    if (list.filter(item => item.id == item_detail).length > 0) {
+                    if (list.filter(item => item.id == item_detail).length > 0  ) {
                         var data = [...list];
                         var newdata = [];
                         list.map(item => {
