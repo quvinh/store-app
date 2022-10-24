@@ -17,7 +17,7 @@
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="light-style">
     <link href="{{ asset('assets/css/app-dark.min.css') }}" rel="stylesheet" type="text/css" id="dark-style">
-    <link href="{{ asset('assets/css/demo-autocomplete.css') }}" rel="stylesheet" type="text/css">
+    {{-- <link href="{{ asset('assets/css/demo-autocomplete.css') }}" rel="stylesheet" type="text/css"> --}}
 @endsection
 
 @section('content')
@@ -226,8 +226,8 @@
                 var text = $("#itemdetail_id option:selected").text()
                 var c = text.split('-');
                 a = [...c.slice(4)];
-                for (var i = 0; i < a.length; i++) {
-                    b.push(a[i].replace(/\D/g, ' ').trim().replace(/\s+/g, ' '))
+                for (var val of a) {
+                    b.push(val.replace(/\D/g, ' ').trim().replace(/\s+/g, ' '))
                 }
                 // var a = text.replace(/\D/g, ' ').replace(/\s+/g, ' ').trim().split(' ')[];
                 var item_detail = $("#itemdetail_id").val();
@@ -241,7 +241,6 @@
                 var cell_id = b[1];
                 var item_valid = b[2];
                 var item_quantity = $("#item_quantity").val();
-                console.log(item_quantity);
                 var price = $("#export_price").val();
 
                 if (item_name !== '' && supplier_name !== '' && item_quantity > 0 && price > 0) {

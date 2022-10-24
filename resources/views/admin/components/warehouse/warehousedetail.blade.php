@@ -30,7 +30,7 @@
                             <li class="breadcrumb-item active">Kho vật tư</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">{{ $warehouse->warehouse_name }}</h4>
+                    <h4 class="page-title">{{ $warehouse->warehouse_name }} <small>xem chi tiết</small> </h4>
                 </div>
             </div>
         </div>

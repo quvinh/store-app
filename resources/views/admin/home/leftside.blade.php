@@ -63,7 +63,7 @@
                             <a href="{{route('transfer.index')}}">Quản lý điều chuyển</a>
                         </li>
                         <li>
-                            <a href="{{route('detail_item.index')}}">Quản lý tồn kho</a>
+                            <a href="{{route('inventory-item.index')}}">Quản lý tồn kho</a>
                         </li>
                         <li>
                             <a href="{{route('inventory.index')}}">Quản lý điều chỉnh vật tư</a>

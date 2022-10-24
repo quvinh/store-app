@@ -32,7 +32,7 @@ class ExportImportController extends Controller
 
         Route::group(['prefix' => 'export'], function () {
             Route::get('/', [ExportImportController::class, 'export'])->name('export.index');
-            Route::post('/exstore', [ExportImportController::class, 'exstore'])->name('export.store');
+            Route::post('/exstore', [ExportImportController::class, 'exportStore'])->name('export.store');
             Route::get('/export-detail/{id}', [ExportImportController::class, 'exportDetail'])->name('export.edit');
             Route::put('/update-export/{exim_id}/{id}', [ExportImportController::class, 'exportUpdate'])->name('export.update');
         });
@@ -265,7 +265,7 @@ class ExportImportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function exstore(Request $request)
+    public function exportStore(Request $request)
     {
         $count = count($request->itemdetail_id);
         $date = date('dmY');
