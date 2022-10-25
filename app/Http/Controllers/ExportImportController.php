@@ -242,17 +242,31 @@ class ExportImportController extends Controller
             ->where('item_details.warehouse_id', $warehouse_id)
             ->get();
         foreach ($items as $val) {
-            $initem_valid = DB::table('ex_import_details')
+            $exim_invalid = DB::table('ex_import_details')
                 ->join('item_details', 'item_details.id', '=', 'ex_import_details.itemdetail_id')
-                ->select(DB::raw('SUM(ex_import_details.item_quantity) as quantity'))
+                ->select(
+                    DB::raw('SUM(ex_import_details.item_quantity) as quantity'),
+                )
                 ->where('ex_import_details.exim_detail_status', '0')
-                ->where('item_details.id', $val->itemdetails_id)
+                ->where('item_details.id', $val->itemdetail_id)
                 ->get();
-            if ($initem_valid[0]->quantity == null) {
-                $initem_valid[0]->quantity = 0;
+            $trans_invalid = DB::table('transfer_details')
+                ->join('transfers', 'transfers.id', '=', 'transfer_details.transfer_id')
+                ->select(
+                    DB::raw('SUM(transfer_details.item_quantity) as quantity'),
+                )
+                ->where('transfers.transfer_status', '0')
+                ->where('transfer_details.itemdetail_id', $val->itemdetail_id)
+                ->get();
+            if ($exim_invalid[0]->quantity == null) {
+                $exim_invalid[0]->quantity = 0;
+            }
+            if ($trans_invalid[0]->quantity == null) {
+                $trans_invalid[0]->quantity = 0;
             }
             $val->item_quantity = [
-                $val->item_detail_quantity - $initem_valid[0]->quantity, $initem_valid[0]->quantity
+                $val->item_detail_quantity - $exim_invalid[0]->quantity - $trans_invalid[0]->quantity,
+                $exim_invalid[0]->quantity +  $trans_invalid[0]->quantity
             ];
         }
         // dd($items);
@@ -279,7 +293,7 @@ class ExportImportController extends Controller
             'invoice_id' => 0,
         ]);
         for ($i = 0; $i < $count; $i++) {
-            if($request->item_valid[$i] < $request->item_quantity[$i]) {
+            if ($request->item_valid[$i] < $request->item_quantity[$i]) {
                 $last3 = DB::table('ex_imports')->orderBy('id', 'DESC')->first();
                 ExImport::find($last3->id)->forceDelete();
                 return redirect()->back()->withErrors('Tạo phiếu thất bại, Số lượng nhập không thể lớn hơn số lượng khả dụng');

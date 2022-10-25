@@ -155,8 +155,8 @@ class ShelfController extends Controller
                 'floor_id',
                 'category_name',
                 'unit_name',
-                'item_details.item_quantity as item_quantity_of_cell',
-                'item_details.id as item_detail_id',
+                'item_details.item_quantity as item_detail_quantity',
+                'item_details.id as itemdetails_id',
                 'items.item_quantity as item_valid'
             )
             ->orderByDesc('items.item_name')
@@ -165,18 +165,33 @@ class ShelfController extends Controller
             ->get();
 
         foreach ($items as $val) {
-            $initem_valid = DB::table('ex_import_details')
+            $exim_invalid = DB::table('ex_import_details')
                 ->join('item_details', 'item_details.id', '=', 'ex_import_details.itemdetail_id')
-                ->select(DB::raw('SUM(ex_import_details.item_quantity) as quantity'))
+                ->select(
+                    DB::raw('SUM(ex_import_details.item_quantity) as quantity'),
+                )
                 ->where('ex_import_details.exim_detail_status', '0')
-                ->where('item_details.id', $val->item_detail_id)
+                ->where('item_details.id', $val->itemdetails_id)
                 ->get();
-            if ($initem_valid[0]->quantity == null) {
-                $initem_valid[0]->quantity = 0;
+            $trans_invalid = DB::table('transfer_details')
+                ->join('transfers', 'transfers.id', '=', 'transfer_details.transfer_id')
+                ->select(
+                    DB::raw('SUM(transfer_details.item_quantity) as quantity'),
+                )
+                ->where('transfers.transfer_status', '0')
+                ->where('transfer_details.itemdetail_id', $val->itemdetails_id)
+                ->get();
+            if ($exim_invalid[0]->quantity == null) {
+                $exim_invalid[0]->quantity = 0;
+            }
+            if ($trans_invalid[0]->quantity == null) {
+                $trans_invalid[0]->quantity = 0;
             }
             $val->item_valid = [
-                $val->item_quantity_of_cell - $initem_valid[0]->quantity, $initem_valid[0]->quantity
+                $val->item_detail_quantity - $exim_invalid[0]->quantity - $trans_invalid[0]->quantity,
+                $exim_invalid[0]->quantity +  $trans_invalid[0]->quantity
             ];
+
         }
         return view('admin.components.warehouse.warehousedetail', compact('shelf', 'warehouse_id', 'warehouse', 'items'));
     }

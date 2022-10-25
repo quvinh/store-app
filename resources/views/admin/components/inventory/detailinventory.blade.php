@@ -41,13 +41,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#export" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                            <a href="#import" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
                                 <i class="mdi mdi-account-circle d-md-none d-block"></i>
                                 <span class="d-none d-md-block">Phiếu nhập</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#import" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                            <a href="#export" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
                                 <i class="mdi mdi-settings-outline d-md-none d-block"></i>
                                 <span class="d-none d-md-block">Phiếu xuất</span>
                             </a>

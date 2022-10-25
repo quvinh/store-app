@@ -85,11 +85,9 @@
                                     <th>Số lượng</th>
                                     <th>SL khả dụng</th>
                                     <th>SL không khả dụng</th>
-                                    <th>Đơn vị tính</th>
                                     <th>Giá kệ</th>
                                     <th>Tầng</th>
                                     <th>Ô</th>
-                                    <th>Nhà sản xuất</th>
                                     <th>Trạng thái</th>
                                     <th>Ghi chú</th>
                                     <th style="width: 10%">Thao tác</th>
@@ -103,11 +101,9 @@
                                         <td>{{ $item->item_detail_quantity }}</td>
                                         <td>{{ $item->item_quantity[0] }}</td>
                                         <td>{{ $item->item_quantity[1] }}</td>
-                                        <td>{{ $item->unit_name }}</td>
                                         <td>{{ $item->shelf_name }}</td>
                                         <td>{{ $item->floor_id }}</td>
                                         <td>{{ $item->cell_id }}</td>
-                                        <td>{{ $item->supplier_name }}</td>
                                         <td>
                                             @if ($item->item_quantity[0] > 0)
                                                 <span class="badge bg-success">Còn hàng</span>
