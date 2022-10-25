@@ -87,7 +87,11 @@
                                                         {{ $vt->item }} <br>
                                                     @endforeach
                                                 </th>
-                                                <th><span style="font-size: 15px" class="badge badge-{{ $item->exim_status == '0' ? 'info-lighten' : 'success-lighten' }}">{{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</span></th>
+                                                <th>
+                                                    <span style="font-size: 15px"
+                                                        class="badge badge-{{ $item->exim_status == '0' ? 'info-lighten' : 'success-lighten' }}">
+                                                        {{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</span>
+                                                </th>
                                                 <td>{{ $item->created_at }}</td>
                                                 <td class="table-action">
                                                     <a href="{{ route('import.edit', $item->id) }}" class="action-icon">
@@ -218,11 +222,11 @@
                 },
                 pageLength: 50,
                 columns: [{
-                    orderable: !0
+                    orderable: !1
                 }, {
-                    orderable: !0
+                    orderable: !1
                 }, {
-                    orderable: !0
+                    orderable: !1
                 }, {
                     orderable: !1
                 }, {
@@ -233,9 +237,7 @@
                 // select: {
                 //     style: "multi"
                 // },
-                // order: [
-                //     [1, "asc"]
-                // ],
+                order: true,
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded"), $(
                         "#import-datatable_length label").addClass("form-label")
