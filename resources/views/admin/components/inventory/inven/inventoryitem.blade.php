@@ -113,7 +113,7 @@
                                         </td>
                                         <td>{{ $item->item_note ? $item->item_note : '----- ' }}</td>
                                         <td class="table-action">
-                                            <a href="{{ route('inventory-item.show', $item->id) }}" class="action-icon" title="Xem chi tiết">
+                                            <a href="{{ route('inventory-item.show', $item->itemdetail_id) }}" class="action-icon" title="Xem chi tiết">
                                                 <i class="mdi mdi-eye-outline"></i></a>
                                         </td>
                                     </tr>

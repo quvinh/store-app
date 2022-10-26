@@ -8,6 +8,11 @@
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="light-style">
     <link href="{{ asset('assets/css/app-dark.min.css') }}" rel="stylesheet" type="text/css" id="dark-style">
+
+    <link href="{{ asset('assets/css/vendor/dataTables.bootstrap5.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/css/vendor/responsive.bootstrap5.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/css/vendor/buttons.bootstrap5.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/css/vendor/select.bootstrap5.css') }}" rel="stylesheet" type="text/css">
 @endsection
 
 @section('content')
@@ -62,16 +67,16 @@
 
                     <div class="tab-content">
                         <div class="tab-pane show active" id="detail">
-                            @include('admin.components.inventory.detail')
+                            @include('admin.components.inventory.inven.detail')
                         </div>
                         <div class="tab-pane" id="import">
-                            @include('admin.components.inventory.import')
+                            @include('admin.components.inventory.inven.import')
                         </div>
                         <div class="tab-pane" id="export">
-                            @include('admin.components.inventory.export')
+                            @include('admin.components.inventory.inven.export')
                         </div>
                         <div class="tab-pane" id="transfer">
-                            @include('admin.components.inventory.transfer')
+                            @include('admin.components.inventory.inven.transfer')
                         </div>
                     </div>
                 </div>
@@ -85,4 +90,50 @@
 @section('script')
     <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/dataTables.bootstrap5.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/responsive.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/buttons.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/dataTables.keyTable.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/dataTables.select.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $("#export-datatable").DataTable({
+                language: {
+                    paginate: {
+                        previous: "<i class='mdi mdi-chevron-left'>",
+                        next: "<i class='mdi mdi-chevron-right'>"
+                    },
+                    info: "Showing export _START_ to _END_ of _TOTAL_",
+                    lengthMenu: 'Display <select class="form-select form-select-sm ms-1 me-1"><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="-1">All</option></select>'
+                },
+                pageLength: 50,
+                columns: [{
+                    orderable: !0
+                }, {
+                    orderable: !0
+                }, {
+                    orderable: !0
+                }, {
+                    orderable: !1
+                }, {
+                    orderable: !1
+                }, {
+                    orderable: !1
+                }],
+                select: {
+                    style: "multi"
+                },
+                // order: [
+                //     [1, "asc"]
+                // ],
+                drawCallback: function() {
+                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded"), $(
+                        "#export-datatable_length label").addClass("form-label")
+                },
+            })
+        })
+    </script>
 @endsection

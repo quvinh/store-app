@@ -19,7 +19,6 @@
     <link href="{{ asset('assets/css/app-dark.min.css') }}" rel="stylesheet" type="text/css" id="dark-style">
     {{-- <link href="{{ asset('assets/css/demo-autocomplete.css') }}" rel="stylesheet" type="text/css"> --}}
 @endsection
-
 @section('content')
     <!-- Start Content-->
     <div class="container-fluid">
@@ -38,45 +37,28 @@
                 </div>
             </div>
         </div>
-        <!-- end page title -->
-        @if (session()->has('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                {{ session()->get('success') }}
-            </div>
-        @endif
-        @if ($errors->any())
-            @foreach ($errors->all() as $error)
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    {{ $error }}
-                </div>
-            @endforeach
-        @endif
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form class="needs-validation" novalidate action="{{ route('export.store') }}" method="POST"
+                        <div class="row">
+                            <div class="col">
+                                <div class="text-sm-start">
+                                <a href="{{ route('inventory.index') }}" class="btn btn-primary mb-2 me-1"><i
+                                        class="mdi mdi-backburger"></i> Back</a>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="text-sm-end">
+                                    <button type="submit" class="btn btn-success mb-2 me-1" id="save-list">Lưu</button>
+                                </div>
+                            </div>
+                        </div>
+                        <form class="needs-validation" novalidate action="#" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col">
-                                    <div class="text-sm-start">
-                                        <a href="{{ route('ex_import.index') }}" class="btn btn-primary mb-2 me-1"><i
-                                                class="mdi mdi-backburger"></i> Back</a>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="text-sm-end">
-                                        <button type="submit" class="btn btn-success mb-2 me-1" id="save-list">Lưu</button>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col s6">
                                     <input type="text" name="id" id="id" hidden>
                                     <div class="mb-3">
                                         <label for="warehouse" class="form-label">Kho:</label>
@@ -94,55 +76,28 @@
                                         <input type="button" class="btn btn-success" value="Filter" id="btnFilter" hidden>
                                     </div>
                                 </div>
-                                <div class="col s6">
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="mb-3">
-                                                <label for="item_quantity" class="form-label">Số lượng</label>
-                                                <input class="form-control" id="item_quantity" data-toggle="touchspin"
-                                                    value="0" type="text"
-                                                    data-bts-button-down-class="btn btn-danger"
-                                                    data-bts-button-up-class="btn btn-info"><br>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="mb-3">
-                                                <label for="export_price" class="form-label">Đơn giá:</label>
-                                                <input type="number" name="export_price" id="export_price"
-                                                    class="form-control" placeholder="Đơn giá" aria-describedby="helpId">
-                                            </div>
-                                            {{--  <div class="mb-3">
-                                                <label for="quantity" class="form-label">Trong kho:</label>
-                                                <input type="text" name="quantity" id="quantity"
-                                                    class="form-control" aria-describedby="helpId" readonly>
-                                            </div> --}}
-                                        </div>
-                                    </div>
-                                </div>
-
+                                <div class="col"></div>
                             </div>
-
                             <div class="row">
-                                <div class="col s6">
+                                <div class="col">
                                     <div class="mb-3">
                                         <label for="itemdetail_id" class="form-label">Vật tư/Phụ tùng:</label>
-                                        <select data-toggle="select2" title="Item" id="itemdetail_id"
-                                            name="item_detail">
+                                        <select data-toggle="select2" title="Item" id="itemdetail_id" name="item_detail">
                                             @foreach ($items as $item)
                                                 <option value="{{ $item->itemdetail_id }}">
-                                                    {{ $item->item_name }} - {{ $item->item_code }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - Tằng ID:{{ $item->floor_id }} - Ô ID:{{ $item->cell_id }} - SLKD:{{ $item->item_quantity[0] }}
+                                                    {{ $item->item_name }} - {{ $item->item_code }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - Tằng ID:{{ $item->floor_id }} - Ô ID:{{ $item->cell_id }} - SL:{{ $item->item_detail_quantity }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col s6">
-                                    <div class="row">
-                                        <div class="col">
-
-                                        </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label for="item_quantity" class="form-label">Số lượng thực tế:</label>
+                                        <input class="form-control" id="item_quantity" data-toggle="touchspin"
+                                            value="0" type="text" data-bts-button-down-class="btn btn-danger"
+                                            data-bts-button-up-class="btn btn-info"><br>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="row">
@@ -152,23 +107,20 @@
                                     <button type="button" class="btn btn-danger" id="destroy-list">Hủy</button>
                                 </div>
                             </div>
-
-                            <br>
-                            <hr>
-                            <br>
+                            <br><br>
                             <table id="export-datatable" class="table dt-responsive nowrap">
                                 <thead>
                                     <tr>
                                         <th>STT</th>
                                         <th>Vật tư</th>
-                                        <th>Mã vật tư</th>
+                                        <th>Nhà sản xuất</th>
                                         <th>Kho</th>
                                         <th>Giá/Kệ</th>
                                         <th>Tầng</th>
                                         <th>Ô</th>
-                                        <th>Nhà sản xuất</th>
                                         <th>Số lượng</th>
-                                        <th>Đơn giá</th>
+                                        <th>Số lượng thực tế</th>
+                                        <th>Hao tổn</th>
                                         <th>Thao tác</th>
                                     </tr>
                                 </thead>
@@ -176,14 +128,13 @@
                                 </tbody>
                             </table>
                         </form>
-                    </div> <!-- end card-body-->
-                </div> <!-- end card-->
-            </div> <!-- end col -->
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- end row -->
-    </div> <!-- container -->
+        <!-- end page title -->
+    </div>
 @endsection
-
 @section('script')
     <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
@@ -200,28 +151,14 @@
     <script src="{{ asset('assets/js/vendor/buttons.print.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.select.min.js') }}"></script>
-    <!-- third party js ends -->
 
-    {{-- <script src="{{ asset('assets/js/jquery.autocomplete.min.js') }}"></script> --}}
-    {{-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script> --}}
-
-    <!-- demo app -->
-    <script src="{{ asset('assets/js/pages/demo.datatable-init.js') }}"></script>
-    <!-- end demo js-->
     <script>
         let list = [];
         $(document).ready(function() {
-            $('#warehouse').on('change', function() {
-                document.getElementById("btnFilter").click();
-            })
-            $('#btnFilter').on('click', function() {
-                var warehouse = $('#warehouse').val();
-                window.location.href = (warehouse) ? ('?warehouse_id=' + warehouse) : '';
-            })
 
-            $('#btnAdd').click(function() {
-                var a = [], b = [];
+            $('#btnAdd').on('click', function() {
+                var a = [],
+                    b = [];
                 var html = '';
                 var text = $("#itemdetail_id option:selected").text()
                 var c = text.split('-');
@@ -229,7 +166,6 @@
                 for (var val of a) {
                     b.push(val.replace(/\D/g, ' ').trim().replace(/\s+/g, ' '))
                 }
-                // var a = text.replace(/\D/g, ' ').replace(/\s+/g, ' ').trim().split(' ')[];
                 var item_detail = $("#itemdetail_id").val();
                 var warehouse_id = $('#warehouse').val();
                 var item_name = text.split(' - ')[0];
@@ -240,24 +176,23 @@
                 var floor_id = b[0];
                 var cell_id = b[1];
                 var item_valid = b[2];
-                var item_quantity = $("#item_quantity").val();
-                var price = $("#export_price").val();
 
-                if (item_name !== '' && supplier_name !== '' && item_quantity > 0 && price > 0) {
+                console.log(floor_id, item_valid)
+                var item_quantity = $("#item_quantity").val();
+                if (item_name !== '' && supplier_name !== '' && item_quantity > 0) {
                     if (list.filter(item => item.id == item_detail).length > 0  ) {
                         var data = [...list];
                         var newdata = [];
                         list.map(item => {
                             if (item.id === parseInt(item_detail)) {
                                 console.log(item.id, item.quantity, item.quantity + parseInt(
-                                    item_quantity), item.price);
+                                    item_quantity));
                                 newdata.push(...data.filter(value => value.id !== item.id), {
                                     id: item.id,
                                     name: item.name,
                                     code: item.code,
                                     supplier_name: item.supplier_name,
                                     warehouse_name: item.warehouse_name,
-                                    price: item.price,
                                     quantity: item.quantity + parseInt(item_quantity),
                                     floor_id: item.floor_id,
                                     cell_id: item.cell_id,
@@ -275,7 +210,6 @@
                             quantity: parseInt(item_quantity),
                             supplier_name: supplier_name,
                             warehouse_name: warehouse_name,
-                            price: parseInt(price),
                             code: item_code,
                             shelf_name: shelf_name,
                             floor_id: floor_id,
@@ -289,21 +223,20 @@
                         html += `<tr>
                                     <td>${parseInt(index + 1)}</td>
                                     <td>
-                                        <span class="text-primary">${item.name}</span>
+                                        <span style="color: blue">${item.name}</span>
                                         <input name="itemdetail_id[]" value="${item.id}" hidden>
                                         <input name="warehouse_id" value="${warehouse_id}" hidden>
                                         <input name="item_quantity[]" value="${item.quantity}" hidden>
-                                        <input name="export_price[]" value="${item.price}" hidden>
                                         <input name="item_valid[]" value="${item.item_valid}" hidden>
                                     </td>
-                                    <td><b>${item.code}</b></td>
+                                    <td><b>${item.supplier_name}</b></td>
                                     <td><b>${item.warehouse_name}</b></td>
                                     <td><b>${item.shelf_name}</b></td>
                                     <td><b>${item.floor_id}</b></td>
                                     <td><b>${item.cell_id}</b></td>
-                                    <td><b>${item.supplier_name}</b></td>
+                                    <td><b>${item.item_valid}</b></td>
                                     <td><b>${item.quantity}</b></td>
-                                    <td><b>${item.price}</b></td>
+                                    <td><b style="color: red">${parseInt(item.item_valid) - parseInt(item.quantity)}</b></td>
                                     <td class="table-action">
                                         <a type="button" class="action-icon text-warning" id="btn${item.id}" data-id="${item.id}" onclick="remove_button('btn${item.id}')"> <i
                                                 class="mdi mdi-close-circle"></i></a>
@@ -326,8 +259,50 @@
                     list = [];
                 })
             })
-        });
 
+            // $("#export-datatable").DataTable({
+            //     language: {
+            //         paginate: {
+            //             previous: "<i class='mdi mdi-chevron-left'>",
+            //             next: "<i class='mdi mdi-chevron-right'>"
+            //         },
+            //         info: "Showing export _START_ to _END_ of _TOTAL_",
+            //         lengthMenu: 'Display <select class="form-select form-select-sm ms-1 me-1"><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="-1">All</option></select>'
+            //     },
+            //     pageLength: 50,
+            //     columns: [{
+            //         orderable: !0
+            //     }, {
+            //         orderable: !0
+            //     }, {
+            //         orderable: !0
+            //     }, {
+            //         orderable: !1
+            //     }, {
+            //         orderable: !1
+            //     }, {
+            //         orderable: !1
+            //     }, {
+            //         orderable: !1
+            //     }, {
+            //         orderable: !1
+            //     }, {
+            //         orderable: !1
+            //     }, {
+            //         orderable: !1
+            //     }],
+            //     select: {
+            //         style: "multi"
+            //     },
+            //     // order: [
+            //     //     [1, "asc"]
+            //     // ],
+            //     drawCallback: function() {
+            //         $(".dataTables_paginate > .pagination").addClass("pagination-rounded"), $(
+            //             "#export-datatable_length label").addClass("form-label")
+            //     },
+            // })
+        });
         function remove_button(id) {
             $('#' + id).closest('tr').remove();
             var getId = parseInt(id.replace('btn', ''));
@@ -340,4 +315,5 @@
             }
         }
     </script>
+    <!-- third party js ends -->
 @endsection

@@ -2,8 +2,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <table id="export-datatable"
-                    class="table table-centered table-striped dt-responsive nowrap w-100">
+                <table id="export-datatable" class="table table-centered table-striped dt-responsive nowrap w-100">
                     {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                     <thead>
                         <tr>
@@ -38,8 +37,7 @@
                                 <td class="table-action">
                                     <a href="{{ route('export.edit', $item->id) }}" class="action-icon">
                                         <i class="mdi mdi-eye-outline"></i></a>
-                                    <a href="{{ route('ex_import.delete', $item->id) }}"
-                                        class="action-icon">
+                                    <a href="{{ route('ex_import.delete', $item->id) }}" class="action-icon">
                                         <i class="mdi mdi-delete"></i></a>
                                 </td>
                             </tr>
@@ -50,3 +48,4 @@
         </div> <!-- end card-->
     </div> <!-- end col -->
 </div>
+

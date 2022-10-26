@@ -52,6 +52,11 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        <div class="text-sm-start">
+                            <a href="{{ route('ex_import.index') }}" class="btn btn-primary mb-2 me-1"><i
+                                    class="mdi mdi-backburger"></i> Back</a>
+                        </div>
+                        <br>
                         <h5 class="card-title">Thông tin</h5>
                         <form action="" class="px-5">
                             <div class="mb-3">
@@ -96,11 +101,12 @@
                             <tbody>
 
                                 @foreach ($export_details as $key => $item)
-                                    <form action="{{ route('export.update',
-                                        [
-                                            'id'=>$item->itemdetail_id,
-                                            'exim_id'=>$item->exim_id
-                                        ]) }}" method="POST">
+                                    <form
+                                        action="{{ route('export.update', [
+                                            'id' => $item->itemdetail_id,
+                                            'exim_id' => $item->exim_id,
+                                        ]) }}"
+                                        method="POST">
                                         @csrf
                                         @method('PUT')
                                         <tr>
@@ -110,7 +116,7 @@
                                             <td>{{ $item->supplier_name }}</td>
                                             <td>{{ $item->ex_item_quantity }}</td>
                                             <td>{{ $item->item_price }}</td>
-                                            <td>{{ $item->exim_detail_status==1 ? 'Đã duyệt' : 'Chờ duyệt' }}</td>
+                                            <td>{{ $item->exim_detail_status == 1 ? 'Đã duyệt' : 'Chờ duyệt' }}</td>
                                             <td>
 
                                                 <button type="button" title="Chi tiết" class="view-item btn btn-warning"
@@ -127,13 +133,14 @@
                                                     data-image="{{ $item->item_images }}"
                                                     data-code="{{ $item->item_code }}"
                                                     data-shelf-name="{{ $item->shelf_name }}"
-                                                    data-floor="{{ $item->floor_id }}"
-                                                    data-cell="{{ $item->cell_id }}"
+                                                    data-floor="{{ $item->floor_id }}" data-cell="{{ $item->cell_id }}"
                                                     data-warehouse-name="{{ $item->warehouse_name }}" id="view">
-                                                Chi tiết
+                                                    Chi tiết
                                                 </button>
 
-                                                <button class="btn btn-primary" {{ $item->exim_detail_status==1 ? 'hidden' : '' }} type="submit">duyệt</button>
+                                                <button class="btn btn-primary"
+                                                    {{ $item->exim_detail_status == 1 ? 'hidden' : '' }}
+                                                    type="submit">duyệt</button>
                                                 {{-- <a
                                                     class="action-icon" title="Duyệt" type="submit"><i
                                                         class="uil-file-check"></i></a> --}}

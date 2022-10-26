@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\ExportImportController;
-
+use App\Models\Inventory;
 
 class InventoryController extends Controller
 {
@@ -15,6 +14,8 @@ class InventoryController extends Controller
     public static function Routes()
     {
         Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
+        Route::get('adjust-device', [InventoryController::class, 'create'])->name('inventory.create');
+
         Route::get('inventory-item', [InventoryController::class, 'iventory'])->name('inventory-item.index');
         Route::get('inventory-item/{id}', [InventoryController::class, 'inventoryDetail'])->name('inventory-item.show');
     }
@@ -25,7 +26,8 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        return view('admin.components.inventory.maninventory');
+        $inventories = Inventory::all();
+        return view('admin.components.inventory.adjust.maninventory', compact('inventories'));
     }
 
     /**
@@ -33,9 +35,34 @@ class InventoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
+            ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
+            ->select('warehouses.*')
+            ->where('user_id', '=', Auth::user()->id)
+            ->get();
+        if (isset($request->warehouse_id)) {
+            $warehouse_id = $request->warehouse_id;
+        } else $warehouse_id = $warehouses[0]->id;
+        $items = DB::table('item_details')
+            ->join('items', 'items.id', '=', 'item_details.item_id')
+            ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
+            ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
+            ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
+            ->select(
+                'items.*','item_details.id as itemdetail_id',
+                'item_details.item_quantity as item_detail_quantity',
+                'warehouse_id','supplier_id','shelf_id','floor_id','cell_id',
+                'shelf_name','warehouse_name','category_name','supplier_name'
+            )
+            ->whereNull('items.deleted_at')
+            ->where('item_details.item_quantity','>',0)
+            ->where('item_details.warehouse_id', $warehouse_id)
+            ->get();
+        return view('admin.components.inventory.adjust.addinventory', compact('warehouses', 'items'));
     }
 
     /**
@@ -107,18 +134,19 @@ class InventoryController extends Controller
 
         $items = $this->getItem('item_details.warehouse_id', $warehouse_id);
 
-        return view('admin.components.inventory.inventoryitem', compact('warehouses', 'items'));
+        return view('admin.components.inventory.inven.inventoryitem', compact('warehouses', 'items'));
     }
 
     public function inventoryDetail($id)
     {
 
         $item = $this->getItem('item_details.id', $id);
+        // dd($item);
         $imports = $this->getExim(1, $id);
         $exports = $this->getExim(0, $id);
         // $transfer = DB::table('items')
 
-        return view('admin.components.inventory.detailinventory', compact('item', 'imports', 'exports'));
+        return view('admin.components.inventory.inven.detailinventory', compact('item', 'imports', 'exports'));
     }
 
     public function getItem($text, $id)
@@ -129,25 +157,24 @@ class InventoryController extends Controller
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
             ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
-            ->join('unit_details', 'unit_details.item_id', '=', 'items.id')
-            ->join('units', 'units.id', '=', 'unit_details.unit_id')
+            ->join('units', 'units.id', '=', 'items.item_unit')
             ->select(
                 'items.*',
-                'item_details.id as itemdetails_id',
+                'item_details.id as itemdetail_id',
                 'item_details.item_quantity as item_detail_quantity',
                 'warehouse_id',
                 'supplier_id',
                 'shelf_id',
                 'floor_id',
                 'cell_id',
-                'item_details.id as item_detail_id',
+                'item_details.id as itemdetail_id',
                 'shelf_name',
                 'warehouse_name',
                 'category_name',
                 'supplier_name',
                 'unit_name'
             )
-
+            ->where('item_details.item_quantity', '>', 0)
             ->whereNull('items.deleted_at')
             ->where($text, $id)
             ->get();
@@ -158,7 +185,7 @@ class InventoryController extends Controller
                     DB::raw('SUM(ex_import_details.item_quantity) as quantity'),
                 )
                 ->where('ex_import_details.exim_detail_status', '0')
-                ->where('item_details.id', $val->itemdetails_id)
+                ->where('item_details.id', $val->itemdetail_id)
                 ->get();
             $trans_invalid = DB::table('transfer_details')
                 ->join('transfers', 'transfers.id', '=', 'transfer_details.transfer_id')
@@ -166,7 +193,7 @@ class InventoryController extends Controller
                     DB::raw('SUM(transfer_details.item_quantity) as quantity'),
                 )
                 ->where('transfers.transfer_status', '0')
-                ->where('transfer_details.itemdetail_id', $val->itemdetails_id)
+                ->where('transfer_details.itemdetail_id', $val->itemdetail_id)
                 ->get();
             if ($exim_invalid[0]->quantity == null) {
                 $exim_invalid[0]->quantity = 0;

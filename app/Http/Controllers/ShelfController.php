@@ -143,8 +143,7 @@ class ShelfController extends Controller
             ->leftJoin('items', 'items.id', '=', 'item_details.item_id')
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
             ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
-            ->leftJoin('unit_details', 'unit_details.item_id', '=', 'items.id')
-            ->leftJoin('units', 'units.id', '=', 'unit_details.unit_id')
+            ->leftJoin('units', 'units.id', '=', 'items.item_unit')
             ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
             ->select(
                 'items.*',
@@ -156,7 +155,7 @@ class ShelfController extends Controller
                 'category_name',
                 'unit_name',
                 'item_details.item_quantity as item_detail_quantity',
-                'item_details.id as itemdetails_id',
+                'item_details.id as itemdetail_id',
                 'items.item_quantity as item_valid'
             )
             ->orderByDesc('items.item_name')
@@ -171,7 +170,7 @@ class ShelfController extends Controller
                     DB::raw('SUM(ex_import_details.item_quantity) as quantity'),
                 )
                 ->where('ex_import_details.exim_detail_status', '0')
-                ->where('item_details.id', $val->itemdetails_id)
+                ->where('item_details.id', $val->itemdetail_id)
                 ->get();
             $trans_invalid = DB::table('transfer_details')
                 ->join('transfers', 'transfers.id', '=', 'transfer_details.transfer_id')
@@ -179,7 +178,7 @@ class ShelfController extends Controller
                     DB::raw('SUM(transfer_details.item_quantity) as quantity'),
                 )
                 ->where('transfers.transfer_status', '0')
-                ->where('transfer_details.itemdetail_id', $val->itemdetails_id)
+                ->where('transfer_details.itemdetail_id', $val->itemdetail_id)
                 ->get();
             if ($exim_invalid[0]->quantity == null) {
                 $exim_invalid[0]->quantity = 0;

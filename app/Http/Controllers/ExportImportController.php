@@ -223,22 +223,14 @@ class ExportImportController extends Controller
             ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
             ->select(
-                'items.*',
-                'item_details.id as itemdetails_id',
+                'items.*','item_details.id as itemdetail_id',
                 'item_details.item_quantity as item_detail_quantity',
-                'warehouse_id',
-                'supplier_id',
-                'shelf_id',
-                'floor_id',
-                'cell_id',
-                'item_details.id as item_detail_id',
-                'shelf_name',
-                'warehouse_name',
-                'category_name',
-                'supplier_name'
+                'warehouse_id','supplier_id','shelf_id','floor_id','cell_id',
+                'shelf_name','warehouse_name','category_name','supplier_name'
             )
 
             ->whereNull('items.deleted_at')
+            ->where('item_details.item_quantity','>',0)
             ->where('item_details.warehouse_id', $warehouse_id)
             ->get();
         foreach ($items as $val) {
@@ -373,29 +365,16 @@ class ExportImportController extends Controller
             ->join('items', 'items.id', '=', 'item_details.item_id')
             ->join('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
             ->join('categories', 'categories.id', '=', 'items.category_id')
-            ->join('unit_details', 'unit_details.item_id', '=', 'item_details.item_id')
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
             ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
-            ->join('units', 'units.id', '=', 'unit_details.unit_id')
+            ->join('units', 'units.id', '=', 'items.item_unit')
             ->select(
-                'ex_import_details.id as ex_import_details_id',
-                'exim_id',
-                'itemdetail_id',
-                'item_price',
-                'item_total',
-                'item_vat',
-                'exim_detail_status',
-                'ex_import_details.supplier_id',
-                'shelf_name',
-                'warehouse_name',
-                'floor_id',
-                'cell_id',
-                'ex_import_details.item_quantity as ex_item_quantity',
+                'ex_import_details.id as ex_import_details_id','exim_id','itemdetail_id',
+                'item_price','item_total','item_vat','exim_detail_status',
+                'ex_import_details.supplier_id','shelf_name','warehouse_name',
+                'floor_id','cell_id','ex_import_details.item_quantity as ex_item_quantity',
                 // DB::raw('SUM(ex_import_details.item_quantity) as ex_item_quantity'),
-                'items.*',
-                'supplier_name',
-                'unit_name',
-                'category_name',
+                'items.*','supplier_name','unit_name','category_name',
             )
             ->where('exim_id', $id)
             ->get();
