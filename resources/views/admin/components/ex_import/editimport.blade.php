@@ -41,9 +41,13 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div>
-                            <a href="{{ route('ex_import.index') }}" class="btn btn-info text-start">Quay lại</a>
-                            <a href="" class="btn btn-primary text-end">Duyệt</a>
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="{{ route('ex_import.index') }}" class="btn btn-info">Quay lại</a>
+                            </div>
+                            <div class="col-6 text-end">
+                                <a href="{{route('import.update', $im_items->first()->exim_id)}}" class="btn btn-primary">Lưu</a>
+                            </div>
                         </div><br>
                         <div class="row">
                             <div class="col-3 text-end">
@@ -52,9 +56,12 @@
                                 <label for="" class="form-control">Người tạo</label><br>
                             </div>
                             <div class="col-9">
-                                <input type="text" class="form-control" readonly value="{{$im_items[0]->exim_code}}"><br>
-                                <input type="text" class="form-control" readonly value="{{$im_items[0]->exim_status}}"><br>
-                                <input type="text" class="form-control" readonly value="{{$im_items[0]->warehouse_id}}"><br>
+                                <input type="text" class="form-control" readonly
+                                    value="{{ $im_items[0]->exim_code }}"><br>
+                                <input type="text" class="form-control" readonly
+                                    value="{{ $im_items[0]->exim_status }}"><br>
+                                <input type="text" class="form-control" readonly
+                                    value="{{ $im_items[0]->name }}"><br>
                             </div>
                         </div>
                         <table class="table dt-responsive nowrap text-center">
@@ -65,20 +72,17 @@
                                     <th width="">Nhà cung cấp</th>
                                     <th width="">Số lượng</th>
                                     <th width="">Đơn giá</th>
-                                    <th width="">Action</th>
+                                    <th width="">Trạng thái</th>
                                 </tr>
                             </thead>
                             <tbody id="list-import">
                                 @foreach ($im_items as $item)
                                     <tr class="text-center">
                                         <td>{{ $item->item }}</td>
-                                        <th>{{ $item->supplier_id }}</th>
-                                        <th>{{$item->item_quantity}}</th>
-                                        <th>{{$item->item_price}}</th>
-                                        <td class="table-action">
-                                            <a href="{{ route('import.edit', $item->id) }}" class="btn btn-info">
-                                                <i class="mdi mdi-eye-outline"></i> Duyệt</a>
-                                        </td>
+                                        <th>{{ $item->supplier_name }}</th>
+                                        <th>{{ $item->item_quantity }}</th>
+                                        <th>{{ $item->item_price }}</th>
+                                        <th>{{ $item->exim_detail_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}</th>
                                     </tr>
                                 @endforeach
                             </tbody>

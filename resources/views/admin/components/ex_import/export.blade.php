@@ -319,8 +319,8 @@
                     alert('Chọn kho, phụ tùng và số lượng lớn hơn 0');
                 }
                 $('#destroy-list').on('click', function() {
-                    $('#warehouse_from').attr('disabled', false);
-                    $('#warehouse_to').attr('disabled', false);
+                    // $('#warehouse_from').attr('disabled', false);
+                    $('#warehouse').attr('disabled', false);
                     $('#save-list').attr('disabled', true);
                     $('#export-datatable tbody').html('');
                     list = [];
@@ -334,8 +334,8 @@
             var data = [...list.filter(item => item.id !== getId)];
             list = [...data];
             if (list.length === 0) {
-                $('#warehouse_from').attr('disabled', false);
-                $('#warehouse_to').attr('disabled', false);
+                // $('#warehouse_from').attr('disabled', false);
+                $('#warehouse').attr('disabled', false);
                 $('#save-list').attr('disabled', true);
             }
         }

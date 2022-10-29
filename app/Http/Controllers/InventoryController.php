@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Inventory;
 use App\Models\InventoryDetail;
+use App\Models\ItemDetail;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -19,6 +20,8 @@ class InventoryController extends Controller
         Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
         Route::get('adjust-device', [InventoryController::class, 'create'])->name('inventory.create');
         Route::post('inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
+        Route::get('inventory/confirm/{id}', [InventoryController::class, 'edit'])->name('inventory.edit');
+        Route::put('inventory/confirm/{id}', [InventoryController::class, 'update'])->name('inventory.update');
 
         Route::get('inventory-item', [InventoryController::class, 'iventory'])->name('inventory-item.index');
         Route::get('inventory-item/{id}', [InventoryController::class, 'inventoryDetail'])->name('inventory-item.show');
@@ -28,10 +31,23 @@ class InventoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $inventories = Inventory::all();
-        return view('admin.components.inventory.adjust.maninventory', compact('inventories'));
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
+            ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
+            ->select('warehouses.*')
+            ->where('user_id', '=', Auth::user()->id)
+            ->get();
+        if (isset($request->warehouse_id)) {
+            $warehouse_id = $request->warehouse_id;
+        } else $warehouse_id = $warehouses[0]->id;
+        $inventories = DB::table('inventories')
+            ->join('users', 'users.id', '=', 'inventories.created_by')
+            ->where('warehouse_id', $warehouse_id)
+            ->select('inventories.*', 'users.name')
+            ->get();
+        return view('admin.components.inventory.adjust.maninventory', compact('inventories', 'warehouses'));
     }
 
     /**
@@ -58,13 +74,21 @@ class InventoryController extends Controller
             ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
             ->select(
-                'items.*','item_details.id as itemdetail_id',
+                'items.*',
+                'item_details.id as itemdetail_id',
                 'item_details.item_quantity as item_detail_quantity',
-                'warehouse_id','supplier_id','shelf_id','floor_id','cell_id',
-                'shelf_name','warehouse_name','category_name','supplier_name'
+                'warehouse_id',
+                'supplier_id',
+                'shelf_id',
+                'floor_id',
+                'cell_id',
+                'shelf_name',
+                'warehouse_name',
+                'category_name',
+                'supplier_name'
             )
             ->whereNull('items.deleted_at')
-            ->where('item_details.item_quantity','>',0)
+            ->where('item_details.item_quantity', '>', 0)
             ->where('item_details.warehouse_id', $warehouse_id)
             ->get();
         return view('admin.components.inventory.adjust.addinventory', compact('warehouses', 'items', 'user'));
@@ -78,8 +102,12 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-
-        if($request->itemdetail_id !=null){
+        $participants = '';
+        for ($i = 0; $i < count($request->people); $i++) {
+            $participants = $participants.$request->people[$i].'   ';
+        }
+        dd($participants);
+        if ($request->itemdetail_id != null) {
             $count = count($request->itemdetail_id);
         }
         // dd($request->itemdetail_id[0]);
@@ -89,10 +117,10 @@ class InventoryController extends Controller
             'inventory_code' => 'IVT_' . $date . '_' . ($stt + 1),
             'inventory_status' => 0,
             'inventory_note' => $request->note,
-            'invoice_id'=> 0,
+            'invoice_id' => 0,
             'created_by' => Auth::user()->id,
             'warehouse_id' => $request->warehouse_id,
-            'participants' => $request->people,
+            'participants' => $participants,
         ]);
 
 
@@ -106,12 +134,11 @@ class InventoryController extends Controller
 
             InventoryDetail::create([
                 'inventory_id' => $inventory->id,
-                'itemdetail_id' =>(int)($request->itemdetail_id[$i]),
-                'item_difference' =>(int)($request->item_difference[$i])
+                'itemdetail_id' => (int)($request->itemdetail_id[$i]),
+                'item_difference' => (int)($request->item_difference[$i])
             ]);
         };
-        return redirect()->route('inventory.index')->with(['success', 'Tạo phiếu thành công.']);
-
+        return redirect()->route('inventory.index')->with('success', 'Tạo phiếu thành công.');
     }
 
     /**
@@ -133,7 +160,29 @@ class InventoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $inventory = DB::table('inventories')
+            ->join('users', 'users.id', '=', 'inventories.created_by')
+            ->where('inventories.id', $id)
+            ->select('inventories.*', 'name')
+            ->get();
+        $inventory_detail = DB::table('inventory_details')
+            ->leftJoin('item_details', 'item_details.id', '=', 'inventory_details.itemdetail_id')
+            ->leftJoin('items', 'items.id', '=', 'item_details.item_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
+            ->leftJoin('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
+            ->select(
+                'item_details.*',
+                'items.item_name',
+                'items.id as item_id',
+                DB::raw('SUM(inventory_details.item_difference) as item_broken'),
+                'items.item_code',
+                'suppliers.supplier_name',
+                'warehouse_name'
+            )
+            ->groupBy('item_details.item_id')
+            ->where('inventory_id', $id)
+            ->get();
+        return view('admin.components.inventory.adjust.confirminventory', compact('inventory', 'inventory_detail'));
     }
 
     /**
@@ -145,7 +194,27 @@ class InventoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $inventory = Inventory::find($id);
+        $inventory_detail = InventoryDetail::where('inventory_id', $id)->get();
+
+        // dd($inventory_detail[0]->item_difference);
+        $count = DB::table('inventory_details')->where('inventory_id', $id)->count();
+
+        if ($count < 0) {
+            return redirect()->back()->withErrors('Duyệt thất bại');
+        } else {
+            for ($i = 0; $i < $count; $i++) {
+                $item_details = ItemDetail::find($inventory_detail[$i]->itemdetail_id);
+                $item_difference = $inventory_detail[$i]->item_difference;
+                $item_details->update([
+                    'item_quantity' => $item_details->item_quantity - $item_difference,
+                ]);
+            }
+            $inventory->update([
+                'inventory_status' => 1,
+            ]);
+        }
+        return redirect()->route('inventory.index')->with('success', ' Duyệt thành công');
     }
 
     /**
@@ -197,11 +266,19 @@ class InventoryController extends Controller
             ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
             ->join('units', 'units.id', '=', 'items.item_unit')
             ->select(
-                'items.*','item_details.id as itemdetail_id',
+                'items.*',
+                'item_details.id as itemdetail_id',
                 'item_details.item_quantity as item_detail_quantity',
-                'warehouse_id','supplier_id','shelf_id',
-                'floor_id','cell_id','item_details.id as itemdetail_id',
-                'shelf_name','warehouse_name','category_name','supplier_name',
+                'warehouse_id',
+                'supplier_id',
+                'shelf_id',
+                'floor_id',
+                'cell_id',
+                'item_details.id as itemdetail_id',
+                'shelf_name',
+                'warehouse_name',
+                'category_name',
+                'supplier_name',
                 'unit_name'
             )
             ->where('item_details.item_quantity', '>', 0)

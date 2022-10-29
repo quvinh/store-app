@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Export
+    Adjust
 @endsection
 
 @section('css')
@@ -55,20 +55,21 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-
                         <form class="needs-validation" novalidate action="{{ route('inventory.store') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
+                            <div id="participants"></div>
                             <div class="row">
                                 <div class="col">
                                     <div class="text-sm-start">
-                                    <a href="{{ route('inventory.index') }}" class="btn btn-primary mb-2 me-1"><i
-                                            class="mdi mdi-backburger"></i> Back</a>
+                                        <a href="{{ route('inventory.index') }}" class="btn btn-primary mb-2 me-1"><i
+                                                class="mdi mdi-backburger"></i> Back</a>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="text-sm-end">
-                                        <button type="submit" class="btn btn-success mb-2 me-1" disabled id="save-list">Lưu</button>
+                                        <button type="submit" class="btn btn-success mb-2 me-1" disabled
+                                            id="save-list">Lưu</button>
                                     </div>
                                 </div>
                             </div>
@@ -120,43 +121,45 @@
                                     <label for="select2">Người tham gia:</label>
                                     <select data-toggle="select2" name="people[]" id="people" multiple required>
                                         @foreach ($user as $user)
-                                            <option  value="{{ $user->name }}">{{ $user->id }} - {{ $user->name }}   </option>
+                                            <option value="{{ $user->name }}">{{ $user->id }} -
+                                                {{ $user->name }} </option>
                                         @endforeach
                                     </select>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3">
-                                    <label for="inventory_note" class="form-label">Mô tả:</label>
-                                    <input type="text" class="form-control" name="" id="inventory_note" aria-describedby="helpId" placeholder="Nhập mô tả">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="text-sm-end">
-                                    <button type="button" class="btn btn-primary" id="btnAdd">Thêm</button>
+                                <div class="row">
+                                    <div class="mb-3">
+                                        <label for="inventory_note" class="form-label">Mô tả:</label>
+                                        <input type="text" class="form-control" name="" id="inventory_note"
+                                            aria-describedby="helpId" placeholder="Nhập mô tả">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="text-sm-end">
+                                        <button type="button" class="btn btn-primary" id="btnAdd">Thêm</button>
 
-                                    <button type="button" class="btn btn-danger" id="destroy-list">Hủy</button>
+                                        <button type="button" class="btn btn-danger" id="destroy-list">Hủy</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <br><br>
-                            <table id="export-datatable" class="table dt-responsive nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Vật tư</th>
-                                        <th>Nhà sản xuất</th>
-                                        <th>Kho</th>
-                                        <th>Giá/Kệ</th>
-                                        <th>Tầng</th>
-                                        <th>Ô</th>
-                                        <th>Số lượng</th>
-                                        <th>Số lượng thực tế</th>
-                                        <th>Hao tổn</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="list_export">
-                                </tbody>
-                            </table>
+                                <br><br>
+                                <table id="inventory-datatable" class="table dt-responsive nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Vật tư</th>
+                                            <th>Nhà sản xuất</th>
+                                            <th>Kho</th>
+                                            <th>Giá/Kệ</th>
+                                            <th>Tầng</th>
+                                            <th>Ô</th>
+                                            <th>Số lượng</th>
+                                            <th>Số lượng thực tế</th>
+                                            <th>Hao tổn</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                         </form>
                     </div>
                 </div>
@@ -185,14 +188,25 @@
     <script>
         let list = [];
         $(document).ready(function() {
+            $('#people').on('change', function() {
+                var participants = ''
+                var people = $('#people option:selected').text().toString();
+                participants += `<input name="people" value="${people}" hidden>`
+                $('#participants').html(participants);
 
+            });
+            $('#warehouse').on('change', function() {
+                document.getElementById("btnFilter").click();
+            })
+            $('#btnFilter').on('click', function() {
+                var warehouse = $('#warehouse').val();
+                window.location.href = (warehouse) ? ('?warehouse_id=' + warehouse) : '';
+            })
             $('#btnAdd').on('click', function() {
                 var a = [],
                     b = [];
                 var html = '';
                 var text = $("#itemdetail_id option:selected").text();
-                var people = $('#people option:selected').text();
-                console.log(people);
                 var c = text.split('-');
                 a = [...c.slice(4)];
                 for (var val of a) {
@@ -212,7 +226,7 @@
                 console.log(floor_id, item_valid)
                 var item_quantity = $("#item_quantity").val();
                 if (item_name !== '' && supplier_name !== '' && item_quantity > 0) {
-                    if (list.filter(item => item.id == item_detail).length > 0  ) {
+                    if (list.filter(item => item.id == item_detail).length > 0) {
                         var data = [...list];
                         var newdata = [];
                         list.map(item => {
@@ -260,7 +274,6 @@
                                         <input name="warehouse_id" value="${warehouse_id}" hidden>
                                         <input name="item_difference[]" value="${parseInt(item.item_valid) - parseInt(item.quantity)}" hidden>
                                         <input name="item_valid[]" value="${item.item_valid}" hidden>
-                                        <input name="people" value="${people}" hidden>
                                     </td>
                                     <td><b>${item.supplier_name}</b></td>
                                     <td><b>${item.warehouse_name}</b></td>
@@ -278,7 +291,7 @@
                     })
                     $('#item_quantity').val(0);
                     // $('#export_price').val(0);
-                    $('#export-datatable tbody').html(html);
+                    $('#inventory-datatable tbody').html(html);
                     $('#warehouse').attr('disabled', true);
                     $('#save-list').attr('disabled', false);
                 } else {
@@ -287,12 +300,12 @@
                 $('#destroy-list').on('click', function() {
                     $('#warehouse').attr('disabled', false);
                     $('#save-list').attr('disabled', true);
-                    $('#export-datatable tbody').html('');
+                    $('#inventory-datatable tbody').html('');
                     list = [];
                 })
             })
 
-            // $("#export-datatable").DataTable({
+            // $("#inventory-datatable").DataTable({
             //     language: {
             //         paginate: {
             //             previous: "<i class='mdi mdi-chevron-left'>",
@@ -331,10 +344,11 @@
             //     // ],
             //     drawCallback: function() {
             //         $(".dataTables_paginate > .pagination").addClass("pagination-rounded"), $(
-            //             "#export-datatable_length label").addClass("form-label")
+            //             "#inventory-datatable_length label").addClass("form-label")
             //     },
             // })
         });
+
         function remove_button(id) {
             $('#' + id).closest('tr').remove();
             var getId = parseInt(id.replace('btn', ''));

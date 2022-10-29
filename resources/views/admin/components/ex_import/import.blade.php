@@ -233,7 +233,7 @@
                 var supplier = $("#supplier option:selected").text();
                 var warehouse_id = parseInt($("#warehouse").val());
                 var warehouse = $("#warehouse option:selected").text();
-                if (name !== '' && supplier !== '' && price > 0 && quantity > 0) {
+                if (name !== '' && supplier_id !== '' && price > 0 && quantity > 0) {
                     // if (list.filter(item => item.id === id && item.supplier_id === supplier_id).length > 0)
                     // {
                     //     var data = [...list];
@@ -295,7 +295,7 @@
                                         <th><input type="text" name="price[]" value="${item.price}" hidden>${item.price}</th>
                                         <th class="table-action"><a type="button" class="action-icon text-warning"
                                                 id="btn${item.line}" data-id="${item.id}"
-                                                onclick="remove('btn${item.line}')">Hủy</a></th>
+                                                onclick="remove('btn${item.line}')"><i class="mdi mdi-close-circle"></i></a></th>
                                     </tr>`
                     });
                     $('#quantity').val(0);
@@ -335,79 +335,5 @@
                 $('#save-list').attr('disabled', true);
             }
         }
-    </script>
-    <script>
-        var i = 2;
-        $(document).ready(function() {
-            $('#btnAdd').on('click', function(){
-                $('#list-import').append(
-                    '<tr id="tr'+(i++)+'">\
-                        <td hidden><input type="text" name="id[]" id="id'+i+'"></td>\
-                                        @if (count($warehouses) > 1)\
-                                            <td>\
-                                                <select data-toggle="select2" title="Warehouse" id="warehouse'+i+'"\
-                                                    name="warehouse[]">\
-                                                    <option value=""></option>\
-                                                    @foreach ($warehouses as $warehouse)
-                                                        <option value="{{ $warehouse->id }}">\
-                                                            {{ $warehouse->warehouse_name }}
-                                                        </option>\
-                                                    @endforeach\
-                                                </select>\
-                                            </td>\
-                                        @else\
-                                            <td hidden><input type="text" name="warehouse[]" id="warehouse'+i+'"\
-                                                    value={{ $warehouses->first()->id }}></td>\
-                                        @endif\
-
-                                        <td>\
-                                            <input id="item'+i+'" class="form-control auto" name="item[]">\
-                                        </td>\
-
-                                        <td>\
-                                            <input type="text" id="code'+i+'" class="form-control" name="code[]">\
-                                        </td>\
-
-                                        <td>\
-                                            <select data-toggle="select2" title="Supplier" id="supplier'+i+'" name="supplier[]">\
-                                                <option value=""></option>\
-                                                @foreach ($suppliers as $supplier)\
-                                                    <option value="{{ $supplier->id }}">\
-                                                        {{ $supplier->supplier_name }}\
-                                                    </option>\
-                                                @endforeach\
-                                            </select>\
-                                        </td>\
-
-                                        <td>\
-                                            <select data-toggle="select2" title="Category" id="category'+i+'" name="category[]">\
-                                                <option value=""></option>\
-                                                @foreach ($categories as $category)\
-                                                    <option value="{{ $category->id }}">\
-                                                        {{ $category->category_name }}\
-                                                    </option>\
-                                                @endforeach\
-                                            </select>\
-                                        </td>\
-
-                                        <td>\
-                                            <select data-toggle="select2" title="Supplier" id="unit'+i+'" name="unit[]">\
-                                                <option value=""></option>\
-                                                @foreach ($units as $unit)\
-                                                    <option value="{{ $unit->id }}">\
-                                                        {{ $unit->unit_name }}\
-                                                    </option>\
-                                                @endforeach\
-                                            </select>\
-                                        </td>\
-                                        <td><input type="number" min="1" id="quantity'+i+'" name="quantity[]"\
-                                                value="" class="form-control"></td>\
-                                        <td><input type="text" value="0" class="form-control"id="price"\
-                                                name="price[]"></td>\
-                                        <td><button class="btn btn-danger" id="cancel'+i+'">Hủy</button></td>\
-                                    </tr>'
-                )
-            })
-        });
     </script>
 @endsection

@@ -15,7 +15,7 @@ class Inventory extends Model
         'inventory_status',
         'inventory_note',
         'invoice_id',
-        'user_id',
+        'created_by',
         'warehouse_id',
         'participants',
     ];

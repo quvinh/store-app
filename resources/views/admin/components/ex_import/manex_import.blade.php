@@ -86,14 +86,23 @@
                                                         {{ $vt->item }} <br>
                                                     @endforeach
                                                 </th>
-                                                <th>{{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</th>
+                                                <th>
+                                                    <span style="font-size: 15px"
+                                                        class="badge badge-{{ $item->exim_status == '0' ? 'info-lighten' : 'success-lighten' }}">
+                                                        {{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</span>
+                                                </th>
                                                 <td>{{ $item->created_at }}</td>
                                                 <td class="table-action">
                                                     <a href="{{ route('import.edit', $item->id) }}" class="action-icon">
-                                                        <i class="mdi mdi-eye-outline"></i></a>
+                                                        <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" title="Sửa phiếu"></i></a>
+                                                    <a href="{{ route('import.confirm', $item->id) }}" class="action-icon">
+                                                        <i class="mdi mdi-clipboard-edit-outline" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" title="Duyệt phiếu"></i></a>
                                                     <a href="{{ route('ex_import.delete', $item->id) }}"
                                                         class="action-icon">
-                                                        <i class="mdi mdi-delete"></i></a>
+                                                        <i class="mdi mdi-delete" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" title="Xóa phiếu"></i></a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -206,11 +215,11 @@
                 },
                 pageLength: 50,
                 columns: [{
-                    orderable: !0
+                    orderable: !1
                 }, {
-                    orderable: !0
+                    orderable: !1
                 }, {
-                    orderable: !0
+                    orderable: !1
                 }, {
                     orderable: !1
                 }, {
@@ -218,12 +227,10 @@
                 }, {
                     orderable: !1
                 }],
-                select: {
-                    style: "multi"
-                },
-                // order: [
-                //     [1, "asc"]
-                // ],
+                // select: {
+                //     style: "multi"
+                // },
+                order: true,
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded"), $(
                         "#import-datatable_length label").addClass("form-label")
@@ -252,9 +259,9 @@
                 }, {
                     orderable: !1
                 }],
-                select: {
-                    style: "multi"
-                },
+                // select: {
+                //     style: "multi"
+                // },
                 // order: [
                 //     [1, "asc"]
                 // ],
