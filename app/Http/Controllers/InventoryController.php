@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Inventory;
+use App\Models\InventoryDetail;
+use App\Models\User;
+use Carbon\Carbon;
 
 class InventoryController extends Controller
 {
@@ -15,6 +18,7 @@ class InventoryController extends Controller
     {
         Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
         Route::get('adjust-device', [InventoryController::class, 'create'])->name('inventory.create');
+        Route::post('inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
 
         Route::get('inventory-item', [InventoryController::class, 'iventory'])->name('inventory-item.index');
         Route::get('inventory-item/{id}', [InventoryController::class, 'inventoryDetail'])->name('inventory-item.show');
@@ -37,6 +41,7 @@ class InventoryController extends Controller
      */
     public function create(Request $request)
     {
+        $user = User::all();
         $warehouses = DB::table('warehouse_managers')
             ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
             ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
@@ -62,7 +67,7 @@ class InventoryController extends Controller
             ->where('item_details.item_quantity','>',0)
             ->where('item_details.warehouse_id', $warehouse_id)
             ->get();
-        return view('admin.components.inventory.adjust.addinventory', compact('warehouses', 'items'));
+        return view('admin.components.inventory.adjust.addinventory', compact('warehouses', 'items', 'user'));
     }
 
     /**
@@ -73,7 +78,40 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        if($request->itemdetail_id !=null){
+            $count = count($request->itemdetail_id);
+        }
+        // dd($request->itemdetail_id[0]);
+        $date = date('dmY');
+        $stt = DB::table('inventories')->whereDate('created_at', '=', Carbon::now()->toDateString())->count();
+        $inventory = Inventory::create([
+            'inventory_code' => 'IVT_' . $date . '_' . ($stt + 1),
+            'inventory_status' => 0,
+            'inventory_note' => $request->note,
+            'invoice_id'=> 0,
+            'created_by' => Auth::user()->id,
+            'warehouse_id' => $request->warehouse_id,
+            'participants' => $request->people,
+        ]);
+
+
+
+        for ($i = 0; $i < $count; $i++) {
+            if ($request->item_difference[$i] < 0) {
+                $last3 = DB::table('inventories')->orderBy('id', 'DESC')->first();
+                Inventory::find($last3->id)->forceDelete();
+                return redirect()->back()->withErrors('Tạo phiếu thất bại, Số lượng nhập không thể lớn hơn số lượng khả dụng');
+            }
+
+            InventoryDetail::create([
+                'inventory_id' => $inventory->id,
+                'itemdetail_id' =>(int)($request->itemdetail_id[$i]),
+                'item_difference' =>(int)($request->item_difference[$i])
+            ]);
+        };
+        return redirect()->route('inventory.index')->with(['success', 'Tạo phiếu thành công.']);
+
     }
 
     /**
@@ -159,19 +197,11 @@ class InventoryController extends Controller
             ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
             ->join('units', 'units.id', '=', 'items.item_unit')
             ->select(
-                'items.*',
-                'item_details.id as itemdetail_id',
+                'items.*','item_details.id as itemdetail_id',
                 'item_details.item_quantity as item_detail_quantity',
-                'warehouse_id',
-                'supplier_id',
-                'shelf_id',
-                'floor_id',
-                'cell_id',
-                'item_details.id as itemdetail_id',
-                'shelf_name',
-                'warehouse_name',
-                'category_name',
-                'supplier_name',
+                'warehouse_id','supplier_id','shelf_id',
+                'floor_id','cell_id','item_details.id as itemdetail_id',
+                'shelf_name','warehouse_name','category_name','supplier_name',
                 'unit_name'
             )
             ->where('item_details.item_quantity', '>', 0)

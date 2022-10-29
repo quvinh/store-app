@@ -37,26 +37,41 @@
                 </div>
             </div>
         </div>
+        @if (session()->has('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {{ session()->get('success') }}
+            </div>
+        @endif
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    {{ $error }}
+                </div>
+            @endforeach
+        @endif
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <div class="text-sm-start">
-                                <a href="{{ route('inventory.index') }}" class="btn btn-primary mb-2 me-1"><i
-                                        class="mdi mdi-backburger"></i> Back</a>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-sm-end">
-                                    <button type="submit" class="btn btn-success mb-2 me-1" id="save-list">Lưu</button>
-                                </div>
-                            </div>
-                        </div>
-                        <form class="needs-validation" novalidate action="#" method="POST"
+
+                        <form class="needs-validation" novalidate action="{{ route('inventory.store') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
+                            <div class="row">
+                                <div class="col">
+                                    <div class="text-sm-start">
+                                    <a href="{{ route('inventory.index') }}" class="btn btn-primary mb-2 me-1"><i
+                                            class="mdi mdi-backburger"></i> Back</a>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="text-sm-end">
+                                        <button type="submit" class="btn btn-success mb-2 me-1" disabled id="save-list">Lưu</button>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col">
                                     <input type="text" name="id" id="id" hidden>
@@ -95,9 +110,24 @@
                                     <div class="mb-3">
                                         <label for="item_quantity" class="form-label">Số lượng thực tế:</label>
                                         <input class="form-control" id="item_quantity" data-toggle="touchspin"
-                                            value="0" type="text" data-bts-button-down-class="btn btn-danger"
+                                            value="0" type="number" data-bts-button-down-class="btn btn-danger"
                                             data-bts-button-up-class="btn btn-info"><br>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label for="select2">Người tham gia:</label>
+                                    <select data-toggle="select2" name="people[]" id="people" multiple required>
+                                        @foreach ($user as $user)
+                                            <option  value="{{ $user->name }}">{{ $user->id }} - {{ $user->name }}   </option>
+                                        @endforeach
+                                    </select>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label for="inventory_note" class="form-label">Mô tả:</label>
+                                    <input type="text" class="form-control" name="" id="inventory_note" aria-describedby="helpId" placeholder="Nhập mô tả">
                                 </div>
                             </div>
                             <div class="row">
@@ -160,7 +190,9 @@
                 var a = [],
                     b = [];
                 var html = '';
-                var text = $("#itemdetail_id option:selected").text()
+                var text = $("#itemdetail_id option:selected").text();
+                var people = $('#people option:selected').text();
+                console.log(people);
                 var c = text.split('-');
                 a = [...c.slice(4)];
                 for (var val of a) {
@@ -226,8 +258,9 @@
                                         <span style="color: blue">${item.name}</span>
                                         <input name="itemdetail_id[]" value="${item.id}" hidden>
                                         <input name="warehouse_id" value="${warehouse_id}" hidden>
-                                        <input name="item_quantity[]" value="${item.quantity}" hidden>
+                                        <input name="item_difference[]" value="${parseInt(item.item_valid) - parseInt(item.quantity)}" hidden>
                                         <input name="item_valid[]" value="${item.item_valid}" hidden>
+                                        <input name="people" value="${people}" hidden>
                                     </td>
                                     <td><b>${item.supplier_name}</b></td>
                                     <td><b>${item.warehouse_name}</b></td>
@@ -252,8 +285,7 @@
                     alert('Chọn kho, phụ tùng và số lượng lớn hơn 0');
                 }
                 $('#destroy-list').on('click', function() {
-                    $('#warehouse_from').attr('disabled', false);
-                    $('#warehouse_to').attr('disabled', false);
+                    $('#warehouse').attr('disabled', false);
                     $('#save-list').attr('disabled', true);
                     $('#export-datatable tbody').html('');
                     list = [];

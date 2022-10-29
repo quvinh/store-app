@@ -16,5 +16,7 @@ class Inventory extends Model
         'inventory_note',
         'invoice_id',
         'user_id',
+        'warehouse_id',
+        'participants',
     ];
 }

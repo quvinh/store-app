@@ -11,7 +11,7 @@ class InventoryDetail extends Model
 
     protected $fillable = [
         'inventory_id',
-        'item_id',
+        'itemdetail_id',
         'item_difference',
     ];
 
