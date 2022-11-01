@@ -166,4 +166,18 @@ class ItemController extends Controller
         Item::find($id)->forceDelete();
         return redirect()->back()->with('success', 'Xóa vĩnh viễn nhà cung cấp thành công.');
     }
+
+    // public function detailItems($id) {
+    //     $items = DB::table('items')
+    //     ->join('item_details', 'item_details.item_id', '=', 'items.id')
+    //     ->join('categories', 'categories.id', '=', 'item_details.category_id')
+    //     ->join('unit_details', 'unit_details.item_id', '=', 'item_details.item_id')
+    //     ->join('unit', 'unit.id', '=', 'unit_details.unit_id')
+    //     ->join('suppliers', 'suppliers.id', '=','item_details.supplier_id')
+    //     ->select('items.*', 'supplier_name', 'category_name', 'unit_name')
+    //     ->where('items.id', $id)
+    //     ->get();
+
+    //     return $items;
+    // }
 }

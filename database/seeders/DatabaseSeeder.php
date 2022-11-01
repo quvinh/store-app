@@ -121,17 +121,65 @@ class DatabaseSeeder extends Seeder
         DB::table('items')->insert([
             [
                 'item_name' => 'Bánh xe',
-                'item_code' => rand(100000,999999),
+                'item_code' => rand(100000, 999999),
                 'item_unit' => 1,
                 'category_id' => 2,
                 'item_status' => 1,
             ],
             [
                 'item_name' => 'Bánh lái',
-                'item_code' => rand(100000,999999),
+                'item_code' => rand(100000, 999999),
                 'item_unit' => 1,
                 'category_id' => 1,
                 'item_status' => 1,
+            ]
+        ]);
+        DB::table('item_details')->insert([
+            [
+                'item_id' => 1,
+                'warehouse_id' => 1,
+                'supplier_id' => 1,
+                'shelf_id' => 1,
+                'floor_id' => 1,
+                'cell_id' => 1,
+                'item_quantity' => 20
+            ],
+            [
+                'item_id' => 1,
+                'warehouse_id' => 1,
+                'supplier_id' => 1,
+                'shelf_id' => 1,
+                'floor_id' => 1,
+                'cell_id' => 2,
+                'item_quantity' => 25
+            ],
+            [
+                'item_id' => 2,
+                'warehouse_id' => 1,
+                'supplier_id' => 2,
+                'shelf_id' => 2,
+                'floor_id' => 4,
+                'cell_id' => 10,
+                'item_quantity' => 23
+            ],
+            [
+                'item_id' => 1,
+                'warehouse_id' => 1,
+                'supplier_id' => 1,
+                'shelf_id' => 2,
+                'floor_id' => 4,
+                'cell_id' => 24,
+                'item_quantity' => 26
+            ]
+        ]);
+        DB::table('unit_details')->insert([
+            [
+                'unit_id' => 1,
+                'item_id' => 1,
+            ],
+            [
+                'unit_id' => 2,
+                'item_id' => 2,
             ]
         ]);
     }

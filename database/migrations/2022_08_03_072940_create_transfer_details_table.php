@@ -14,7 +14,7 @@ class CreateTransferDetailsTable extends Migration
     public function up()
     {
         Schema::create('transfer_details', function (Blueprint $table) {
-            // $table->id();
+            $table->id();
             // $table->timestamps();
             $table->bigInteger('transfer_id');
             $table->bigInteger('itemdetail_id');

@@ -138,8 +138,6 @@ class WarehouseController extends Controller
             'warehouse_code' => 'required|unique:warehouses,warehouse_code,' . $id,
             'warehouse_contact' => 'required',
             'warehouse_street' => 'required',
-            // 'country_id' => 'required',
-            // 'city_id' => 'required',
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);

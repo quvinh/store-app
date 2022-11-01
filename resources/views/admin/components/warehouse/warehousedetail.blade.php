@@ -30,11 +30,25 @@
                             <li class="breadcrumb-item active">Kho vật tư</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">{{ $warehouse->warehouse_name }}</h4>
+                    <h4 class="page-title">{{ $warehouse->warehouse_name }} <small>xem chi tiết</small> </h4>
                 </div>
             </div>
         </div>
         <!-- end page title -->
+        @if (session()->has('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {{ session()->get('success') }}
+            </div>
+        @endif
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    {{ $error }}
+                </div>
+            @endforeach
+        @endif
 
         <div class="row">
             <div class="col-12">

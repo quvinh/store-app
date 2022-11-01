@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Add
+    Add Transfer
 @endsection
 
 @section('css')
@@ -48,10 +48,10 @@
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
                             <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">ABC</li>
+                            <li class="breadcrumb-item active">Add Transfer</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">ABC</h4>
+                    <h4 class="page-title">Add Transfer</h4>
                 </div>
             </div>
         </div>
@@ -76,6 +76,7 @@
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane show active" id="custom-styles-preview">
+                                <a href="{{route('transfer.index')}}" class="btn btn-info">Quay lại</a><br><br>
                                 <form action="{{ route('transfer.store') }}" method="post">
                                     @csrf
                                     <div class="row mb-2">
@@ -85,12 +86,13 @@
                                                     <span class="text-danger">(*)</span> <span class="text-primary">Kho xuất
                                                         hàng</span>
                                                 </label>
-                                                <select class="form-control select2" data-toggle="select2" id="warehouse_from">
+                                                <select class="form-control select2" data-toggle="select2"  onchange="filter()"
+                                                    id="warehouse_from">
                                                     <option value="">Chọn kho xuất</option>
-                                                    <option value="CA">California</option>
-                                                    <option value="NV">Nevada</option>
-                                                    <option value="OR">Oregon</option>
-                                                    <option value="WA">Washington</option>
+                                                    @foreach ($warehouses as $warehouse)
+                                                        <option value="{{ $warehouse->id }}" {{app('request')->input('warehouse_id') == $warehouse->id ? 'selected' : ''}}>
+                                                            {{ $warehouse->warehouse_name }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <div class="col-md-12 ms-1 me-1 mb-1">
@@ -98,12 +100,13 @@
                                                     <span class="text-danger">(*)</span> <span class="text-primary">Kho nhận
                                                         hàng</span>
                                                 </label>
-                                                <select class="form-control select2" data-toggle="select2" id="warehouse_to">
+                                                <select class="form-control select2" data-toggle="select2"
+                                                    id="warehouse_to">
                                                     <option value="">Chọn kho nhận</option>
-                                                    <option value="CA">California</option>
-                                                    <option value="NV">Nevada</option>
-                                                    <option value="OR">Oregon</option>
-                                                    <option value="WA">Washington</option>
+                                                    @foreach ($warehouses as $warehouse)
+                                                        <option value="{{ $warehouse->id }}">
+                                                            {{ $warehouse->warehouse_name }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <div class="col-md-12 ms-1 me-1 mb-1">
@@ -118,21 +121,24 @@
                                                 <select class="form-control select2" data-toggle="select2"
                                                     id="itemdetail_id">
                                                     <option value="">Chọn phụ tùng</option>
-                                                    <option value="1">Phụ tùng A (Tổng: 2 - Khả dụng: 2)</option>
-                                                    <option value="2">Phụ tùng B (Tổng: 1 - Khả dụng: 1)</option>
-                                                    <option value="3">Phụ tùng C (Tổng: 0 - Khả dụng: 0)</option>
-                                                    <option value="1">Phụ tùng D (Tổng: 5 - Khả dụng: 2)</option>
+                                                    @foreach ($items as $item)
+                                                        <option value="{{ $item->itemdetail_id }}">{{ $item->item_name }}
+                                                            - {{ $item->item_code }} - {{ $item->supplier_name }} -
+                                                            {{ $item->shelf_name }} - Tầng {{ $item->floor_id }} - Ô
+                                                            {{ $item->cell_id }} - SLKD:{{ $item->item_quantity[0] }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <div class="col-md-12 ms-1 me-1 mb-3">
                                                 <div class="row">
                                                     <div class="col-md-6 mb-1">
-                                                        <label class="form-label"><span class="text-danger">(*)</span> <span
-                                                                class="text-primary">Số lượng</span></label>
+                                                        <label class="form-label" for="item_quantity"><span
+                                                                class="text-danger">(*)</span> <span class="text-primary">Số
+                                                                lượng</span></label>
                                                         <div class="mb-3">
                                                             <input class="form-control form-control-sm" id="item_quantity"
-                                                                data-toggle="touchspin" value="0"
-                                                                type="text"
+                                                                data-toggle="touchspin" value="0" type="text"
                                                                 data-bts-button-down-class="btn btn-danger btn-sm"
                                                                 data-bts-button-up-class="btn btn-info btn-sm">
                                                         </div>
@@ -147,16 +153,17 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                            <div class="col-md-6">
-                                                <label class="form-label">&nbsp;</label>
-                                                <button type="button" class="btn btn-secondary" id="destroy-list"><i
-                                                        class="mdi mdi-close-circle"></i> Xóa danh sánh</button>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">&nbsp;</label>
+                                                    <button type="button" class="btn btn-secondary" id="destroy-list"><i
+                                                            class="mdi mdi-close-circle"></i> Xóa danh sánh</button>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">&nbsp;</label>
+                                                    <button type="submit" class="btn btn-info" id="save-list"
+                                                        disabled><i class="mdi mdi-content-save"></i> Xác nhận lưu</button>
+                                                </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">&nbsp;</label>
-                                                <button type="submit" class="btn btn-info" id="save-list" disabled><i
-                                                        class="mdi mdi-content-save"></i> Xác nhận lưu</button>
-                                            </div></div>
                                         </div>
                                     </div>
                                     <div class="separator mb-2"><b class="text-dark">DANH SÁCH PHỤ TÙNG</b></div>
@@ -204,6 +211,7 @@
     <script>
         let list = [];
         $(document).ready(function() {
+            $('input[name="warehouse_from"]').val($('#warehouse_from').val());
             $('#warehouse_from').on('change', function() {
                 $('input[name="warehouse_from"]').val($(this).val());
             })
@@ -214,6 +222,15 @@
 
             $('#add-row').on('click', function() {
                 var html = '';
+                var a = [],
+                    b = [];
+                var text = $("#itemdetail_id option:selected").text()
+                var c = text.split('-');
+                a = [...c.slice(4)];
+                for (var val of a) {
+                    b.push(val.replace(/\D/g, ' ').trim().replace(/\s+/g, ' '))
+                }
+                console.log('a', a); console.log('b', b); console.log('c', c);
                 var from = $('#warehouse_from').val();
                 var to = $('#warehouse_to').val();
                 var item_detail = $('#itemdetail_id').val();
@@ -224,7 +241,8 @@
                         var data = [...list];
                         var newdata = [];
                         list.map(item => {
-                            if (item.id === parseInt(item_detail)) {
+                            if (item.id === parseInt(item_detail) && item_quantity <= (b[2] - item
+                                    .quantity)) {
                                 console.log(item.id, item.quantity, item.quantity + parseInt(
                                     item_quantity));
                                 newdata.push(...data.filter(value => value.id !== item.id), {
@@ -232,15 +250,17 @@
                                     name: item.name,
                                     quantity: item.quantity + parseInt(item_quantity),
                                 });
-                            }
+                                list = [...newdata];
+                            } else alert('Số lượng vượt quá số khả dụng.');
                         });
-                        list = [...newdata];
                     } else {
-                        list.push({
-                            id: parseInt(item_detail),
-                            name: item_name,
-                            quantity: parseInt(item_quantity),
-                        })
+                        if (item_quantity <= b[2])
+                            list.push({
+                                id: parseInt(item_detail),
+                                name: item_name,
+                                quantity: parseInt(item_quantity),
+                            })
+                        else alert('Số lượng vượt quá số khả dụng.');
                     }
                     list.map((item, index) => {
                         html += `<tr>
@@ -255,8 +275,8 @@
                     })
                     $('#item_quantity').val(0);
                     $('#list-item tbody').html(html);
-                    $('#warehouse_from').attr('disabled', true);
-                    $('#warehouse_to').attr('disabled', true);
+                    // $('#warehouse_from').attr('disabled', true);
+                    // $('#warehouse_to').attr('disabled', true);
                     $('#save-list').attr('disabled', false);
                 } else {
                     alert('Chọn kho, phụ tùng và số lượng lớn hơn 0');
@@ -277,11 +297,23 @@
             var getId = parseInt(id.replace('btn', ''));
             var data = [...list.filter(item => item.id !== getId)];
             list = [...data];
-            if(list.length === 0) {
-                $('#warehouse_from').attr('disabled', false);
-                $('#warehouse_to').attr('disabled', false);
+            if (list.length === 0) {
+                // $('#warehouse_from').attr('disabled', false);
+                // $('#warehouse_to').attr('disabled', false);
                 $('#save-list').attr('disabled', true);
             }
+        }
+
+        function filter() {
+            var warehouseVal = $('#warehouse_from').val();
+            const paramsObj = {
+                warehouse_id: warehouseVal,
+            };
+            if (warehouseVal === '') delete paramsObj.warehouse_id;
+            const searchParams = new URLSearchParams(paramsObj);
+            let url = new URL(window.location.href);
+            url.search = searchParams;
+            window.location.href = url;
         }
     </script>
 @endsection

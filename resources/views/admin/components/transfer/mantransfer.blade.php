@@ -28,10 +28,10 @@
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
                             <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">ABC</li>
+                            <li class="breadcrumb-item active">Transfer</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">ABC</h4>
+                    <h4 class="page-title">Transfer</h4>
                 </div>
             </div>
         </div>
@@ -39,8 +39,8 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="text-sm-start">
-                    <a href="{{ route('transfer.add') }}" class="btn btn-primary btn-rounded mb-3"><i
-                            class="mdi mdi-plus"></i> @lang('station.create')</a>
+                    <a href="{{ route('transfer.add') }}" class="btn btn-danger mb-3"><i
+                            class="mdi mdi-plus"></i> Thêm mới</a>
                 </div>
             </div>
             <div class="col-12">
@@ -64,21 +64,27 @@
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $transfer->transfer_code }}</td>
-                                        <td>{{ $transfer->created_by }}</td>
+                                        <td>{{ $transfer->name }}</td>
                                         <td>{{ $transfer->transfer_note }}</td>
                                         <td>
                                             @if ($transfer->transfer_status == '1')
-                                                <span class="badge bg-success">Active</span>
+                                                <span class="badge bg-success">Đã duyệt</span>
                                             @else
-                                                <span class="badge bg-danger">Deactive</span>
+                                                <span class="badge bg-info">Chưa duyệt</span>
                                             @endif
                                         </td>
                                         <td>{{ $transfer->created_at }}</td>
                                         <td class="table-action">
                                             <a href="{{ route('transfer.edit', $transfer->id) }}" class="action-icon">
-                                                <i class="mdi mdi-square-edit-outline"></i></a>
-                                            <a href="{{ route('transfer.destroy', $transfer->id) }}" class="action-icon">
-                                                <i class="mdi mdi-delete"></i></a>
+                                                <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Sửa phiếu"></i></a>
+                                            <a href="{{ route('transfer.confirm', $transfer->id) }}" class="action-icon">
+                                                <i class="mdi mdi-clipboard-edit-outline" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Duyệt phiếu"></i></a>
+                                            <a href="{{ route('transfer.delete', $transfer->id) }}"
+                                                class="action-icon">
+                                                <i class="mdi mdi-delete" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Xóa phiếu"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach

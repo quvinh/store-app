@@ -17,7 +17,7 @@ class CreateInventoryDetailsTable extends Migration
             // $table->id();
             // $table->timestamps();
             $table->bigInteger('inventory_id');
-            $table->bigInteger('item_id');
+            $table->bigInteger('itemdetail_id');
             $table->float('item_difference');
         });
     }

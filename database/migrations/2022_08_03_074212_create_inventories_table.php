@@ -21,6 +21,7 @@ class CreateInventoriesTable extends Migration
             $table->bigInteger('invoice_id');
             $table->bigInteger('created_by');
             $table->bigInteger('warehouse_id');
+            $table->string('participants')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
