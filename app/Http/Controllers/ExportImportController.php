@@ -243,6 +243,7 @@ class ExportImportController extends Controller
             ->join('warehouse_details', 'warehouse_details.shelf_id', '=', 'shelves.id')
             ->select('shelves.*')
             ->where('warehouse_details.warehouse_id', $im_items->first()->warehouse_id)->get();
+            dd($im_items->first()->warehouse_id);
         return view('admin.components.ex_import.confirmimport', compact('im_items', 'shelves'));
     }
 

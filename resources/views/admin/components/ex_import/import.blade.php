@@ -68,10 +68,22 @@
                         <form class="needs-validation" novalidate action="{{ route('import.store') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
+                            <div class="row mb-1">
+                                <div class="col s12">
+                                    <label for="">Kho vật tư</label>
+                                    <select data-toggle="select2" title="Warehouse" id="warehouse">
+                                        @foreach ($warehouses as $warehouse)
+                                            <option value="{{ $warehouse->id }}">
+                                                {{ $warehouse->warehouse_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col s6">
                                     <input type="text"id="id" hidden>
-                                    <div {{ count($warehouses) > 1 ? '' : 'hidden' }}>
+                                    {{-- <div {{ count($warehouses) > 1 ? '' : 'hidden' }}>
                                         <select data-toggle="select2" title="Warehouse" id="warehouse">
                                             @foreach ($warehouses as $warehouse)
                                                 <option value="{{ $warehouse->id }}">
@@ -80,12 +92,12 @@
                                             @endforeach
                                         </select>
                                         <br>
-                                    </div>
+                                    </div> --}}
 
                                     <label for="item">Tên vật tư</label>
-                                    <input id="item" class="form-control"><br>
+                                    <input id="item" class="form-control mb-1">
                                     <label for="code">Mã vật tư</label>
-                                    <input type="text" id="code" class="form-control"><br>
+                                    <input type="text" id="code" class="form-control mb-1">
 
                                     <div class="row">
                                         <div class="col s6">
