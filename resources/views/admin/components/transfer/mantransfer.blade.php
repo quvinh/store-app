@@ -46,6 +46,42 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        <div class="row mb-3 mt-3">
+                            <div {{ count($warehouses) > 1 ? '' : 'hidden' }} class="col-3">
+                                <select data-toggle="select2" title="Warehouse" id="warehouse">
+                                    @foreach ($warehouses as $warehouse)
+                                        <option value="{{ $warehouse->id }}"
+                                            {{ app('request')->input('warehouse') == $warehouse->id ? 'selected' : '' }}>
+                                            {{ $warehouse->warehouse_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <select data-toggle="select2" title="Status" id="status">
+                                    <option value="">Hiển thị tất cả</option>
+                                    <option value="cduyet"
+                                        {{ app('request')->input('status') == 'cduyet' ? 'selected' : '' }}>
+                                        Hiển thị phiếu chưa duyệt</option>
+                                    <option value="duyet"
+                                        {{ app('request')->input('status') == 'duyet' ? 'selected' : '' }}>
+                                        Hiển thị phiếu đã duyệt</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="mb-3 input-group">
+                                    <span class="input-group-text"><i
+                                            class="mdi mdi-calendar text-primary"></i></span>
+                                    <input type="text" class="form-control date" id="date_change"
+                                        data-toggle="date-picker" data-cancel-class="btn-warning"
+                                        name="date_change"
+                                        value="{{ app('request')->input('date') ? str_replace('_', ' - ', str_replace('-', '/', app('request')->input('date'))) : '' }}">
+                                </div>
+                            </div>
+                            <div class="col-3 text-end">
+                                <button type="button" class="btn btn-primary" onclick="filter()">Tìm kiếm</button>
+                            </div>
+                        </div>
                         <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
                             {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
@@ -173,4 +209,25 @@
     <!-- demo app -->
     <script src="{{ asset('assets/js/pages/demo.datatable-init.js') }}"></script>
     <!-- end demo js-->
+    <script>
+        function filter() {
+            var dt = $('#date_change').val();
+            var dateVal = dt.replace(' - ', '_');
+            dateVal = dateVal.replaceAll('/', '-');
+            var statusVal = $('#status').val();
+            var warehouseVal = $('#warehouse').val();
+            const paramsObj = {
+                status: statusVal,
+                warehouse: warehouseVal,
+                date: dateVal,
+            };
+            if (statusVal === '') delete paramsObj.status;
+            if (warehouseVal === '') delete paramsObj.warehouse;
+            if (dateVal === '') delete paramsObj.date;
+            const searchParams = new URLSearchParams(paramsObj);
+            let url = new URL(window.location.href);
+            url.search = searchParams;
+            window.location.href = url;
+        }
+    </script>
 @endsection

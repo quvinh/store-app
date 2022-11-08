@@ -11,6 +11,7 @@ use App\Models\InventoryDetail;
 use App\Models\ItemDetail;
 use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 
 class InventoryController extends Controller
 {
@@ -33,20 +34,35 @@ class InventoryController extends Controller
      */
     public function index(Request $request)
     {
-        $warehouses = DB::table('warehouse_managers')
+        $inventories = DB::table('inventories')
+            ->join('users', 'users.id', '=', 'inventories.created_by')
+            ->select('inventories.*', 'users.name');
+            $warehouses = DB::table('warehouse_managers')
             ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
             ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
             ->select('warehouses.*')
             ->where('user_id', '=', Auth::user()->id)
             ->get();
-        if (isset($request->warehouse_id)) {
-            $warehouse_id = $request->warehouse_id;
-        } else $warehouse_id = $warehouses[0]->id;
-        $inventories = DB::table('inventories')
-            ->join('users', 'users.id', '=', 'inventories.created_by')
-            ->where('warehouse_id', $warehouse_id)
-            ->select('inventories.*', 'users.name')
-            ->get();
+        if (isset($request->warehouse)) {
+            $inventories->where('inventories.warehouse_id', $request->warehouse);
+        } else $inventories->where('inventories.warehouse_id', $warehouses[0]->id);
+        if (isset($request->status)) {
+            if ($request->status == 'duyet') $inventories->where('inventories.transfer_status', 1);
+            if ($request->status == 'cduyet') $inventories->where('inventories.transfer_status', 0);
+        }
+        if (isset($request->date)) {
+            $date = explode('_', $request->date);
+            try {
+                $from = DateTime::createFromFormat('m-d-Y', $date[0])->format('Y-m-d');
+                $to = DateTime::createFromFormat('m-d-Y', $date[1])->format('Y-m-d');
+
+                $inventories->whereDate('inventories.created_at', '>=', $from)
+                    ->whereDate('inventories.created_at', '<=', $to);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+        $inventories = $inventories->get();
         return view('admin.components.inventory.adjust.maninventory', compact('inventories', 'warehouses'));
     }
 
