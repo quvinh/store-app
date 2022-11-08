@@ -15,12 +15,12 @@ class WarehouseController extends Controller
 {
     public static function Routes()
     {
-        Route::get('warehouse', [WarehouseController::class, 'index'])->name('warehouse.index');
+        Route::get('warehouse', [WarehouseController::class, 'index'])->name('warehouse.index');// ???
         Route::post('warehouse', [WarehouseController::class, 'store'])->name('warehouse.store');
         Route::get('warehouse/edit/{id}', [WarehouseController::class, 'edit'])->name('warehouse.edit');
         Route::get('warehouse/destroy/{id}', [WarehouseController::class, 'destroy'])->name('warehouse.destroy');
         Route::put('warehouse/update/{id}', [WarehouseController::class, 'update'])->name('warehouse.update');
-        Route::get('warehouse', [WarehouseController::class, 'warehouseById'])->name('warehouse.warehouse-by-id');
+        Route::get('warehouse', [WarehouseController::class, 'warehouseById'])->name('warehouse.warehouse-by-id');// ???
     }
     /**
      * Display a listing of the resource.

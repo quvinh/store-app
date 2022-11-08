@@ -2,6 +2,19 @@
 return [
     'dashboard' => 'Bản tin',
     'calendar' => 'Lịch',
+    'warehouse' => [
+        'warehouse' => 'Kho vật tư',
+        'create' => 'Tạo kho vật tư',
+        'edit' => 'Sửa kho vật tư',
+    ],
+    'ex_import' => [
+        'ex_import' => 'Quản lý Nhập/Xuất',
+    ],
+    'transfer' => [
+        'transfer' => 'Điều chuyển vật tư',
+        'create' => 'Tạo phiếu điều chuyển',
+        'edit' => 'Sửa phiếu điều chuyển',
+    ],
     'patient' => [
         'patient' => 'Người đăng ký',
         'edit' => 'Sửa người đăng ký',
