@@ -17,6 +17,7 @@ use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\WarehouseController;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     SupplierController::Routes();
     SearchController::Routes();
     RoleController::Routes();
+    StatisticController::Routes();
 });
 
 // Route::get('/admin/example', function (){

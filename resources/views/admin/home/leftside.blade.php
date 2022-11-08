@@ -82,7 +82,13 @@
                 <div class="collapse" id="sideStatistic">
                     <ul class="side-nav-second-level">
                         <li>
-                            <a href="#">Thống kê thiết bị</a>
+                            <a href="{{route('statistic.import')}}">Thống kê nhập</a>
+                        </li>
+                        <li>
+                            <a href="{{route('statistic.export')}}">Thống kê xuất</a>
+                        </li>
+                        <li>
+                            <a href="{{route('statistic.transfer')}}">Thống kê điều chuyển</a>
                         </li>
                     </ul>
                 </div>

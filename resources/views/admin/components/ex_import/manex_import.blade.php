@@ -91,7 +91,7 @@
                                                         class="badge badge-{{ $item->exim_status == '0' ? 'info-lighten' : 'success-lighten' }}">
                                                         {{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</span>
                                                 </th>
-                                                <td>{{ $item->created_at }}</td>
+                                                <td>{{ $item->created }}</td>
                                                 <td class="table-action">
                                                     <a href="{{ route('import.edit', $item->id) }}" class="action-icon">
                                                         <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
@@ -150,21 +150,21 @@
                                                     @endforeach
                                                 </th>
                                                 <th>
-                                                    @if ($item->exim_status == '0' && $item->deleted_at == null)
-                                                        Chờ duyệt
-                                                    @elseif ($item->exim_status == '1' && $item->deleted_at == null)
-                                                        Đã duyệt
-                                                    @else
-                                                        Đã xóa
-                                                    @endif
+                                                    <span style="font-size: 15px"
+                                                        class="badge badge-{{ $item->exim_status == '0' ? 'info-lighten' : 'success-lighten' }}">
+                                                        {{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</span>
                                                 </th>
-                                                <td>{{ $item->created_at }}</td>
+                                                <td>{{ $item->created }}</td>
                                                 <td class="table-action">
                                                     <a href="{{ route('export.edit', $item->id) }}" class="action-icon">
-                                                        <i class="mdi mdi-eye-outline"></i></a>
+                                                        <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" title="Sửa phiếu"></i></a>
+                                                    <a href="{{ route('export.confirm', $item->id) }}" class="action-icon">
+                                                        <i class="mdi mdi-clipboard-edit-outline" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" title="Duyệt phiếu"></i></a>
                                                     <a href="{{ route('ex_import.delete', $item->id) }}"
-                                                        class="action-icon">
-                                                        <i class="mdi mdi-delete"></i></a>
+                                                        class="action-icon"> <i class="mdi mdi-delete" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" title="Xóa phiếu"></i></a>
                                                 </td>
                                             </tr>
                                         @endforeach

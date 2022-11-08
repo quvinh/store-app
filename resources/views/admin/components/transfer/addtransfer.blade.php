@@ -137,15 +137,15 @@
                                                                 class="text-danger">(*)</span> <span class="text-primary">Số
                                                                 lượng</span></label>
                                                         <div class="mb-3">
-                                                            <input class="form-control form-control-sm" id="item_quantity"
+                                                            <input class="form-control" id="item_quantity"
                                                                 data-toggle="touchspin" value="0" type="text"
-                                                                data-bts-button-down-class="btn btn-danger btn-sm"
-                                                                data-bts-button-up-class="btn btn-info btn-sm">
+                                                                data-bts-button-down-class="btn btn-danger"
+                                                                data-bts-button-up-class="btn btn-info">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 mb-1">
                                                         <label class="form-label">&nbsp;</label>
-                                                        <div><button type="button" class="btn btn-sm btn-success"
+                                                        <div><button type="button" class="btn btn-success"
                                                                 id="add-row"><i class="mdi mdi-chevron-double-down"></i>
                                                                 Thêm vào DS</button>
                                                         </div>
