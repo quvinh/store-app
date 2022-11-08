@@ -40,7 +40,25 @@ Breadcrumbs::for('transfer', function (BreadcrumbTrail $trail) {
 });
 
 // Dashboard > Inventory
+Breadcrumbs::for('inventory-item', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push(Lang::get('breadcrumb.inventory.inventory'), route('inventory-item.index'));
+});
+
+// Dashboard > AdjustItem
 Breadcrumbs::for('inventory', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
-    $trail->push(Lang::get('breadcrumb.inventory.inventory'), route('inventory.index'));
+    $trail->push(Lang::get('breadcrumb.adjust.adjust'), route('inventory.index'));
+});
+
+// Dashboard > AdjustItem > Add
+Breadcrumbs::for('adjust-device', function (BreadcrumbTrail $trail) {
+    $trail->parent('inventory');
+    $trail->push(Lang::get('breadcrumb.adjust.create'), route('inventory.create'));
+});
+
+// Dashboard > AdjustItem > edit
+Breadcrumbs::for('inventoryconfirm', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('inventory');
+    $trail->push(Lang::get('breadcrumb.adjust.edit'), route('inventory.edit', $id));
 });

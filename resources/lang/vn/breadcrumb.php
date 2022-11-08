@@ -15,32 +15,14 @@ return [
         'create' => 'Tạo phiếu điều chuyển',
         'edit' => 'Sửa phiếu điều chuyển',
     ],
-    'patient' => [
-        'patient' => 'Người đăng ký',
-        'edit' => 'Sửa người đăng ký',
+    'inventory' => [
+        'inventory' => 'Tồn kho',
     ],
-    'group' => [
-        'group' => 'Nhóm gom',
-        'create' => 'Tạo nhóm',
-        'sameprice' => 'Tạo nhóm đồng giá',
-        'edit' => 'Sửa nhóm',
-        'action' => 'Thao tác nhóm',
-        'list-header' => 'Header TP'
+    'adjust' => [
+        'adjust' => 'Điều chỉnh vật tư',
+        'create' => 'Tạo phiếu điều chỉnh',
+        'edit' => 'Sửa phiếu điều chỉnh',
     ],
-    'station' => [
-        'station' => 'Trạm',
-        'create' => 'Tạo trạm',
-        'edit' => 'Sửa trạm',
-    ],
-    'testtype' => [
-        'testtype' => 'Loại xét nghiệm',
-        'create' => 'Tạo loại xét nghiệm',
-        'edit' => 'Sửa loại xét nghiệm',
-    ],
-    'printbill' => 'In phiếu thu',
-    'listbill' => 'Danh sách phiếu thu',
-    'listpatient' => 'Danh sách đăng ký',
-    'excel' => 'Nhập liệu Excel',
     'account' => [
         'account' => 'Tài khoản',
         'create' => 'Tạo tài khoản',
@@ -58,19 +40,6 @@ return [
     ],
     'profile' => [
         'profile' => 'Thông tin tài khoản',
-    ],
-    'sample' => [
-        'sample' => 'Phiếu in',
-    ],
-    'doctor' => [
-        'doctor' => 'Bác sĩ',
-        'create' => 'Thêm bác sĩ',
-        'edit' => 'Sửa bác sĩ'
-    ],
-    'price' => [
-        'price' => 'Bảng giá',
-        'create' => 'Thêm giá',
-        'edit' => 'Sửa giá'
     ],
 ];
 ?>

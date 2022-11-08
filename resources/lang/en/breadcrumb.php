@@ -15,6 +15,14 @@ return [
         'create' => 'Create Transfer',
         'edit' => 'Edit Transfer',
     ],
+    'inventory' => [
+        'inventory' => 'Inventory',
+    ],
+    'adjust' => [
+        'adjust' => 'Item adjustment',
+        'create' => 'Create adjustment ticket',
+        'edit' => 'Edit adjustment ticket',
+    ],
     'patient' => [
         'patient' => 'Registrant',
         'edit' => 'Edit registrant',
