@@ -93,6 +93,60 @@
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col -->
+            @if($trashes->count() >0)
+                <hr>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h3 class="text-center">Danh sách phiếu đã xóa</h3>
+                            </div>
+                            <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
+                                {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã điều chuyển</th>
+                                        <th>Người tạo</th>
+                                        <th>Mô tả</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thời gian tạo</th>
+                                        <th style="width: 10%">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($trashes as $key => $transfer)
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>{{ $transfer->transfer_code }}</td>
+                                            <td>{{ $transfer->name }}</td>
+                                            <td>{{ $transfer->transfer_note }}</td>
+                                            <td>
+                                                @if ($transfer->transfer_status == '1')
+                                                    <span class="badge bg-success">Đã duyệt</span>
+                                                @else
+                                                    <span class="badge bg-info">Chưa duyệt</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ $transfer->created_at }}</td>
+                                            <td class="table-action">
+                                                <a href="{{ route('transfer.restore', $transfer->id) }}"
+                                                    class="action-icon">
+                                                    <i class="mdi mdi-delete-restore" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" title="Khôi phục"></i></a>
+                                                <a href="{{ route('transfer.destroy', $transfer->id) }}"
+                                                    class="action-icon">
+                                                    <i class="mdi mdi-delete-forever" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" title="Xóa vĩnh viễn"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+                </div> <!-- end col -->
+            @endisset
         </div>
         <!-- end row -->
     </div> <!-- container -->

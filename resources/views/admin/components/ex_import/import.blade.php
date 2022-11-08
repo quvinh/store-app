@@ -64,26 +64,15 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <a href="{{route('ex_import.index')}}" class="btn btn-info">Quay lại</a><br><br>
+                        <a href="{{ route('ex_import.index') }}" class="btn btn-info">Quay lại</a><br><br>
                         <form class="needs-validation" novalidate action="{{ route('import.store') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
-                            <div class="row mb-1">
-                                <div class="col s12">
-                                    <label for="">Kho vật tư</label>
-                                    <select data-toggle="select2" title="Warehouse" id="warehouse">
-                                        @foreach ($warehouses as $warehouse)
-                                            <option value="{{ $warehouse->id }}">
-                                                {{ $warehouse->warehouse_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col s6">
                                     <input type="text"id="id" hidden>
-                                    {{-- <div {{ count($warehouses) > 1 ? '' : 'hidden' }}>
+                                    <div {{ count($warehouses) > 1 ? '' : 'hidden' }}>
+                                        <label for="warehouse">Kho</label>
                                         <select data-toggle="select2" title="Warehouse" id="warehouse">
                                             @foreach ($warehouses as $warehouse)
                                                 <option value="{{ $warehouse->id }}">
@@ -91,13 +80,12 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <br>
-                                    </div> --}}
-
+                                        <br><br>
+                                    </div>
                                     <label for="item">Tên vật tư</label>
-                                    <input id="item" class="form-control mb-1">
+                                    <input id="item" class="form-control"><br>
                                     <label for="code">Mã vật tư</label>
-                                    <input type="text" id="code" class="form-control mb-1">
+                                    <input type="text" id="code" class="form-control"><br>
 
                                     <div class="row">
                                         <div class="col s6">
@@ -108,11 +96,11 @@
                                         </div>
                                         <div class="col s6">
                                             <label for="price">Giá nhập</label>
-                                            <input type="text" value="0" class="form-control" id="price">
+                                            <input type="text" value="" data-toggle="input-mask"
+                                                data-mask-format="000.000.000.000.000" data-reverse="true"
+                                                class="form-control" id="price">
                                         </div>
                                     </div>
-
-
                                 </div>
                                 <div class="col s6">
                                     <div><label for="supplier">Nhà cung cấp</label>
@@ -153,14 +141,12 @@
                             </div>
                             <div class="text-end">
                                 <button class="btn btn-info mb-2" id="btnAdd" type="button"><i
-                                        class="mdi mdi-chevron-double-down"></i> Thêm vào danh
-                                    sách</button>
+                                        class="mdi mdi-chevron-double-down"></i> Thêm vào phiếu</button>
                                 <button class="btn btn-danger mb-2" id="btnDelete" type="button"><i
-                                        class="mdi mdi-close-circle"></i> Hủy danh
-                                    sách</button>
+                                        class="mdi mdi-close-circle"></i> Hủy phiếu</button>
                                 <button class="btn btn-success mb-2" id="btnSave" type="submit" disabled><i
-                                        class="mdi mdi-content-save"></i>
-                                    Lưu</button>
+                                        class="mdi mdi-content-save"></i> Lưu phiếu</button>
+
                             </div>
                             <table class="table dt-responsive nowrap text-center">
                                 {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
@@ -277,34 +263,34 @@
                     //     console.log(' += ',list);
 
                     // } else {
-                        list.push({
-                            line: i,
-                            id: id,
-                            name: name,
-                            quantity: quantity,
-                            code: code,
-                            unit: unit,
-                            unit_id: unit_id,
-                            price: price,
-                            supplier: supplier,
-                            supplier_id: supplier_id,
-                            warehouse: warehouse,
-                            warehouse_id: warehouse_id,
-                            category: category,
-                            category_id: category_id,
-                        });
+                    list.push({
+                        line: i,
+                        id: id,
+                        name: name,
+                        quantity: quantity,
+                        code: code,
+                        unit: unit,
+                        unit_id: unit_id,
+                        price: price,
+                        supplier: supplier,
+                        supplier_id: supplier_id,
+                        warehouse: warehouse,
+                        warehouse_id: warehouse_id,
+                        category: category,
+                        category_id: category_id,
+                    });
                     // }
                     list.map((item, index) => {
                         html += `<tr>
                                         <th><input type="text" name="id[]" value="${item.id}" hidden>${item.name}</th>
                                         <th {{ count($warehouses) > 1 ? '' : 'hidden' }}><input type="text"
-                                                name="warehouse[]" value="${item.warehouse_id}">${item.warehouse}</th>
+                                                name="warehouse[]" value="${item.warehouse_id}" hidden>${item.warehouse}</th>
                                         <th><input type="text" name="code[]" value="${item.code}" hidden>${item.code}</th>
                                         <th><input type="text" name="supplier[]" value="${item.supplier_id}" hidden>${item.supplier}</th>
                                         <th><input type="text" name="category[]" value="${item.category_id}" hidden>${item.category}</th>
                                         <th><input type="text" name="unit[]" value="${item.unit_id}" hidden>${item.unit}</th>
                                         <th><input type="text" name="quantity[]" value="${item.quantity}" hidden>${item.quantity}</th>
-                                        <th><input type="text" name="price[]" value="${item.price}" hidden>${item.price}</th>
+                                        <th><input type="text" name="price[]" value="${item.price}" hidden>${item.price} VND</th>
                                         <th class="table-action"><a type="button" class="action-icon text-warning"
                                                 id="btn${item.line}" data-id="${item.id}"
                                                 onclick="remove('btn${item.line}')"><i class="mdi mdi-close-circle"></i></a></th>
@@ -320,19 +306,19 @@
                 }
             })
             $('#btnDelete').on('click', function() {
-                    $('#save-list').attr('disabled', true);
-                    $('#list-import').html('');
-                    i = 1;
-                    list = [];
-                    $("#item").val('');
-                    $("#id").val('');
-                    $("#code").val('');
-                    $("#category").val('').trigger('change');
-                    $("#unit").val('').trigger('change');
-                    $("#price").val(0);
-                    $("#quantity").val(0);
-                    $("#supplier").val('').trigger('change');
-                    $("#warehouse").val('').trigger('change');
+                $('#save-list').attr('disabled', true);
+                $('#list-import').html('');
+                i = 1;
+                list = [];
+                $("#item").val('');
+                $("#id").val('');
+                $("#code").val('');
+                $("#category").val('').trigger('change');
+                $("#unit").val('').trigger('change');
+                $("#price").val(0);
+                $("#quantity").val(0);
+                $("#supplier").val('').trigger('change');
+                $("#warehouse").val('').trigger('change');
             })
         });
 

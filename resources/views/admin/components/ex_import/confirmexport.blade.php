@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Edit Export
+    Confirm Export
 @endsection
 
 @section('css')
@@ -52,28 +52,29 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-6">
-                                <a href="{{ route('ex_import.index') }}" class="btn btn-info">Quay lại</a>
-                            </div>
-                            <div class="col-6 text-end">
-                                <button type="submit" class="btn btn-primary">Lưu</button>
-                            </div>
-                        </div><br>
-                        <div class="row">
-                            <div class="col-3 text-end">
-                                <label for="" class="form-control">Mã phiếu</label><br>
-                                <label for="" class="form-control">Trạng thái</label><br>
-                                <label for="" class="form-control">Người tạo</label><br>
-                            </div>
-                            <div class="col-9">
-                                <input type="text" class="form-control" readonly
-                                    value="{{ $export[0]->exim_code }}"><br>
-                                <input type="text" class="form-control" readonly
-                                    value="{{ $export[0]->exim_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}"><br>
-                                <input type="text" class="form-control" readonly value="{{ $export[0]->name }}"><br>
-                            </div>
+                        <div class="text-sm-start">
+                            <a href="{{ route('ex_import.index') }}" class="btn btn-info mb-2 me-1">Quay lại</a>
                         </div>
+                        <br>
+                        <h5 class="card-title">Thông tin</h5>
+                        <form action="" class="px-5">
+                            <div class="row">
+                                <div class="col-3 text-end">
+                                    <label for="" class="form-control">Mã phiếu</label><br>
+                                    <label for="" class="form-control">Trạng thái</label><br>
+                                    <label for="" class="form-control">Người tạo</label><br>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ $export[0]->exim_code }}"><br>
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ $export[0]->exim_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}"><br>
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ $export[0]->name }}"><br>
+                                </div>
+                            </div>
+
+                        </form>
                     </div>
                 </div>
             </div>
@@ -99,7 +100,12 @@
                             <tbody>
 
                                 @foreach ($export_details as $key => $item)
-                                    <form action="{{ route('export.update', $item->exim_id) }}" method="POST">
+                                    <form
+                                        action="{{ route('export.update-status', [
+                                            'id' => $item->itemdetail_id,
+                                            'exim_id' => $item->exim_id,
+                                        ]) }}"
+                                        method="POST">
                                         @csrf
                                         @method('PUT')
                                         <tr>
@@ -107,17 +113,13 @@
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $item->item_name }}</td>
                                             <td>{{ $item->supplier_name }}</td>
-                                            <td><input type="number" name="quantity[]"
-                                                    value="{{ $item->ex_item_quantity }}" class="form-control"
-                                                    id="quantity"></td>
-                                            <td><input type="text" name="price[]" value="{{ $item->item_price }}"
-                                                    data-toggle="input-mask" data-mask-format="000.000.000.000.000"
-                                                    data-reverse="true" class="form-control" id="price"></td>
+                                            <td>{{ $item->ex_item_quantity }}</td>
+                                            <td>{{ $item->item_price }}</td>
                                             <td>{{ $item->exim_detail_status == 1 ? 'Đã duyệt' : 'Chờ duyệt' }}</td>
                                             <td>
+
                                                 <button type="button" title="Chi tiết" class="view-item btn btn-warning"
-                                                    data-name="{{ $item->item_name }}"
-                                                    data-unit="{{ $item->unit_name }}"
+                                                    data-name="{{ $item->item_name }}" data-unit="{{ $item->unit_name }}"
                                                     data-supplier="{{ $item->supplier_name }}"
                                                     data-category="{{ $item->category_name }}"
                                                     data-price="{{ $item->item_price }}"
@@ -134,6 +136,13 @@
                                                     data-warehouse-name="{{ $item->warehouse_name }}" id="view">
                                                     Chi tiết
                                                 </button>
+
+                                                <button class="btn btn-primary"
+                                                    {{ $item->exim_detail_status == 1 ? 'hidden' : '' }}
+                                                    type="submit">duyệt</button>
+                                                {{-- <a
+                                                    class="action-icon" title="Duyệt" type="submit"><i
+                                                        class="uil-file-check"></i></a> --}}
                                             </td>
 
                                         </tr>

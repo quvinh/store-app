@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Edit Import
+    Edit transfer
 @endsection
 
 @section('css')
@@ -16,6 +16,29 @@
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="light-style">
     <link href="{{ asset('assets/css/app-dark.min.css') }}" rel="stylesheet" type="text/css" id="dark-style">
+    <style>
+        .autocomplete-suggestions {
+            border: 1px solid #999;
+            background: #FFF;
+            cursor: default;
+            overflow: auto;
+        }
+
+        .autocomplete-suggestion {
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .autocomplete-selected {
+            background: #F0F0F0;
+        }
+
+        .autocomplete-suggestions strong {
+            font-weight: normal;
+            color: #3399FF;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -29,10 +52,10 @@
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
                             <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Danh mục vật tư</li>
+                            <li class="breadcrumb-item active">Duyệt luân chuyển</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">Danh mục vật tư</h4>
+                    <h4 class="page-title">Duyệt luân chuyển</h4>
                 </div>
             </div>
         </div>
@@ -41,15 +64,17 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('import.update', $im_items[0]->exim_id) }}" method="POST">
+                        <form class="needs-validation" novalidate
+                            action="{{ route('transfer.update', $transfers->first()->id) }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
-                            @method('put')
+                            @method('PUT')
                             <div class="row">
                                 <div class="col-6">
-                                    <a href="{{ route('ex_import.index') }}" class="btn btn-info">Quay lại</a>
+                                    <a href="{{ route('transfer.index') }}" class="btn btn-info">Quay lại</a>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                    <button class="btn btn-primary" type="submit">Lưu</button>
                                 </div>
                             </div><br>
                             <div class="row">
@@ -60,43 +85,61 @@
                                 </div>
                                 <div class="col-9">
                                     <input type="text" class="form-control" readonly
-                                        value="{{ $im_items[0]->exim_code }}"><br>
+                                        value="{{ $transfers[0]->transfer_code }}"><br>
                                     <input type="text" class="form-control" readonly
-                                        value="{{ $im_items[0]->exim_status == 0 ? 'Chưa duyệt' : 'Đã duyệt' }}"><br>
+                                        value="{{ $transfers[0]->transfer_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}"><br>
                                     <input type="text" class="form-control" readonly
-                                        value="{{ $im_items[0]->name }}"><br>
+                                        value="{{ $transfers[0]->name }}"><br>
                                 </div>
                             </div>
-
                             <table class="table dt-responsive nowrap text-center">
                                 {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                                 <thead>
                                     <tr>
-                                        <th width="">Phụ tùng/ Vật tư</th>
-                                        <th width="">Nhà cung cấp</th>
+                                        <th width="15%">Phụ tùng/ Vật tư</th>
                                         <th width="10%">Số lượng</th>
-                                        <th width="15%">Đơn giá</th>
-                                        <th width="">Trạng thái</th>
+                                        <th width="15%">Kho</th>
+                                        <th width="10%">Chọn Kệ</th>
+                                        <th width="7%">Chọn Tầng</th>
+                                        <th width="7%">Chọn Ô</th>
                                     </tr>
                                 </thead>
-                                <tbody id="list-import">
-                                    @foreach ($im_items as $item)
-                                        <tr class="text-center">
-                                            <td hidden><input type="text" name="id[]" value="{{ $item->id }}">
+                                <tbody id="list-transfer">
+                                    @foreach ($transfers as $key => $item)
+                                        <tr>
+                                            <td><input type="text" value="{{ $item->item }}"
+                                                    class="form-control text-center" readonly>
+                                                <input type="text" value="{{ $item->id }}"
+                                                    name="id[]" class="form-control text-center" hidden>
                                             </td>
-                                            <td>{{ $item->item }}</td>
-                                            <th>{{ $item->supplier_name }}</th>
                                             <th><input type="number" name="quantity[]" value="{{ $item->item_quantity }}"
-                                                    class="form-control" id="quantity"></th>
-                                            <th><input type="text" name="price[]" value="{{ $item->item_price }}"
-                                                    data-toggle="input-mask" data-mask-format="000.000.000.000.000"
-                                                    data-reverse="true" class="form-control" id="price"></th>
-                                            <th>{{ $item->exim_detail_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}</th>
+                                                    class="form-control text-center"></th>
+                                            <th><input type="text" value="{{ $item->warehouse_name }}"
+                                                    class="form-control text-center" readonly></th>
+                                            <th>
+                                                <select data-toggle="select2" title="Shelf" id="{{ 'shelf' . $key }}" disabled>
+                                                    @foreach ($shelves as $shelf)
+                                                        <option
+                                                            value="{{ $shelf->id }} {{ $shelf->id == $item->shelf_to ? 'selected' : '' }}">
+                                                            {{ $shelf->shelf_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </th>
+                                            <th><input type="number" id="{{ $key }}"
+                                                    class="form-control text-center" readonly
+                                                    value="{{ $item->floor_to ? $item->floor_to : '' }}" min="0">
+                                            </th>
+                                            <th><input type="number" id="{{ $key }}"
+                                                    class="form-control text-center" readonly
+                                                    value="{{ $item->cell_to ? $item->cell_to : '' }}" min="0">
+                                            </th>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </form>
+
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col -->
@@ -128,4 +171,9 @@
     <!-- demo app -->
     <script src="{{ asset('assets/js/pages/demo.datatable-init.js') }}"></script>
     <!-- end demo js-->
+    <script>
+        $(document).ready(function() {
+
+        });
+    </script>
 @endsection

@@ -22,10 +22,11 @@ class TransferController extends Controller
             Route::get('/add', [TransferController::class, 'create'])->name('transfer.add');
             Route::post('/store', [TransferController::class, 'store'])->name('transfer.store');
             Route::get('/edit/{id}', [TransferController::class, 'edit'])->name('transfer.edit');
-            Route::put('/update', [TransferController::class, 'update'])->name('transfer.update');
+            Route::put('/update/{id}', [TransferController::class, 'update'])->name('transfer.update');
             Route::get('/confirm/{id}', [TransferController::class, 'confirm'])->name('transfer.confirm');
             Route::put('/update-status/{id}', [TransferController::class, 'update_status'])->name('transfer.update-status');
             Route::get('/delete/{id}', [TransferController::class, 'delete'])->name('transfer.delete');
+            Route::get('/restore/{id}', [TransferController::class, 'restore'])->name('transfer.restore');
             Route::get('/destroy/{id}', [TransferController::class, 'destroy'])->name('transfer.destroy');
         });
     }
@@ -39,9 +40,14 @@ class TransferController extends Controller
         $transfers = DB::table('transfers')
             ->join('users', 'users.id', '=', 'transfers.created_by')
             ->select('transfers.*', 'users.name')
+            ->whereNull('deleted_at')
             ->get();
-
-        return view('admin.components.transfer.mantransfer', compact('transfers'));
+        $trashes = DB::table('transfers')
+            ->join('users', 'users.id', '=', 'transfers.created_by')
+            ->select('transfers.*', 'users.name')
+            ->whereNotNull('deleted_at')
+            ->get();
+        return view('admin.components.transfer.mantransfer', compact('transfers', 'trashes'));
     }
 
     /**
@@ -243,7 +249,28 @@ class TransferController extends Controller
 
     public function edit($id)
     {
-        //
+        $transfers = DB::table('item_details')
+            ->join('items', 'items.id', '=', 'item_details.item_id')
+            ->join('transfer_details', 'transfer_details.itemdetail_id', '=', 'item_details.id')
+            ->join('transfers', 'transfers.id', '=', 'transfer_details.transfer_id')
+            ->join('users', 'users.id', '=', 'transfers.created_by')
+            ->join('warehouses', 'warehouses.id', '=', 'transfers.warehouse_to')
+            ->where('transfers.id', $id)
+            ->select(
+                'transfer_details.*',
+                'items.item_name as item',
+                'transfers.transfer_code',
+                'transfers.transfer_status',
+                'transfers.warehouse_to',
+                'warehouses.warehouse_name',
+                'users.name',
+            )
+            ->get();
+        $shelves = DB::table('shelves')
+            ->join('warehouse_details', 'warehouse_details.shelf_id', '=', 'shelves.id')
+            ->select('shelves.*')
+            ->where('warehouse_details.warehouse_id', $transfers->first()->warehouse_to)->get();
+        return view('admin.components.transfer.edittransfer', compact('transfers', 'shelves'));
     }
 
     /**
@@ -255,7 +282,28 @@ class TransferController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $tf = Transfer::find($id);
+        foreach ($request->id as $key => $val) {
+            $transfer = TransferDetail::find($val);
+            $old_quantity = $transfer->item_quantity;
+            $transfer->update([
+                'item_quantity' => $request->quantity[$key],
+            ]);
+
+            if ($tf->transfer_status == 1) {
+                $item_from = ItemDetail::find($transfer->itemdetail_id);
+                $item_from->update([
+                    'item_quantity' => ($item_from->item_quantity - $transfer->item_quantity + $old_quantity),
+                ]);
+                $item_to = ItemDetail::where([
+                    ['item_id', $item_from->item_id], ['warehouse_id', $tf->warehouse_to],
+                    ['supplier_id', $item_from->supplier_id], ['shelf_id', $transfer->shelf_to],
+                    ['floor_id', $transfer->floor_to], ['cell_id', $transfer->cell_to],
+                ]);
+                $item_to->update(['item_quantity' => $transfer->item_quantity - $old_quantity + $item_to->first()->item_quantity]);
+            };
+        };
+        return redirect()->route('transfer.index')->with(['success', 'Sửa phiếu điều chuyển thành công.']);
     }
 
     /**
@@ -266,17 +314,19 @@ class TransferController extends Controller
      */
     public function delete($id)
     {
-        //
+        Transfer::find($id)->delete();
+        return redirect()->back()->with('success', 'Xóa thành công.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function restore($id)
+    {
+        Transfer::where('id', $id)->restore();
+        return redirect()->back()->with('success', 'Khôi phục thành công.');
+    }
+
     public function destroy($id)
     {
-        //
+        Transfer::find($id)->forceDelete();
+        return redirect()->back()->with('success', 'Xóa vĩnh viễn thành công.');
     }
 }
