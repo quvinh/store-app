@@ -20,6 +20,12 @@
 @section('content')
     <!-- Start Content-->
     <div class="container-fluid">
+        <!-- start page title -->
+        @php
+            $route = preg_replace('/(admin)|\d/i', '', str_replace('/', '', Request::getPathInfo()));
+        @endphp
+        {{ Breadcrumbs::render($route) }}
+        <!-- end page title -->
         @if (session()->has('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
