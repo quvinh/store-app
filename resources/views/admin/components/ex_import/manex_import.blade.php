@@ -122,7 +122,8 @@
                                     <tbody>
                                         @foreach ($im_items as $key => $item)
                                             <tr>
-                                                <td>{{ $item->exim_code }}</td>
+                                                <td><a href="{{ route('import.edit', $item->id) }}">
+                                                   <span class="text-info">{{ $item->exim_code }}</span></a></td>
                                                 <td>{{ $item->created_by }}</td>
                                                 <th>
                                                     @foreach ($item->item as $vt)
@@ -223,7 +224,8 @@
                                     <tbody>
                                         @foreach ($ex_items as $key => $item)
                                             <tr>
-                                                <td>{{ $item->exim_code }}</td>
+                                                <td><a href="{{ route('export.edit', $item->id) }}" >
+                                                    <span class="text-info">{{ $item->exim_code }}</span></a></td>
                                                 <td>{{ $item->created_by }}</td>
                                                 <th>
                                                     @foreach ($item->item as $vt)

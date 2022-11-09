@@ -102,7 +102,7 @@
                                 @foreach ($inventories as $key => $item)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $item->inventory_code }}</td>
+                                        <td><a href="{{ route('inventory.edit', $item->id) }}"><span class="text-info">{{ $item->inventory_code }}</span></a></td>
                                         <td><span class="badge bg-primary">{{ $item->name }}</span></td>
                                         <td>{{ $item->created_at }}</td>
                                         <td>

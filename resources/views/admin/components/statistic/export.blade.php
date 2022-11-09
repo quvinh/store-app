@@ -91,7 +91,8 @@
                             <tbody>
                                 @foreach ($ex as $key => $item)
                                     <tr>
-                                        <td>{{ $item->exim_code }}</td>
+                                        <td><a href="{{ route('export.edit', $item->id) }}">
+                                            <span class="text-info">{{ $item->exim_code }}</span></a></td>
                                         <td>{{ $item->created_by }}</td>
                                         <th>
                                             <span style="font-size: 15px"

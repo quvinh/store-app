@@ -89,7 +89,8 @@
                                 @foreach ($transfers as $key => $transfer)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $transfer->transfer_code }}</td>
+                                        <td><a href="{{ route('transfer.edit', $transfer->id) }}">
+                                            <span class="text-info">{{ $transfer->transfer_code }}</span></a></td>
                                         <td>{{ $transfer->name }}</td>
                                         <td>{{ $transfer->transfer_note }}</td>
                                         <td>

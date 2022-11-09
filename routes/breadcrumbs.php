@@ -27,11 +27,11 @@ Breadcrumbs::for('warehouse', function (BreadcrumbTrail $trail) {
     $trail->push(Lang::get('breadcrumb.warehouse.warehouse'), route('warehouse.warehouse-by-id'));
 });
 
-// Dashboard > Warehouse > Show
-Breadcrumbs::for('warehouse', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('dashboard');
-    $trail->push(Lang::get('breadcrumb.warehouse.show'), route('warehouse.warehouse-by-id'));
-});
+// // Dashboard > Warehouse > Show
+// Breadcrumbs::for('warehouse', function (BreadcrumbTrail $trail, $id) {
+//     $trail->parent('dashboard');
+//     $trail->push(Lang::get('breadcrumb.warehouse.show'), route('warehouse.warehouse-by-id'));
+// });
 
 // Dashboard > ExIm
 Breadcrumbs::for('ex_import', function (BreadcrumbTrail $trail) {

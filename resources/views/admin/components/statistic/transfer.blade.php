@@ -92,7 +92,8 @@
                             <tbody>
                                 @foreach ($transfers as $key => $item)
                                     <tr>
-                                        <td>{{ $item->transfer_code }}</td>
+                                        <td><a href="{{ route('transfer.edit', $item->id) }}">
+                                            <span class="text-info">{{ $item->transfer_code }}</span></a></td>
                                         <td>{{ $item->name }}</td>
                                         <th>{{$item->warehouse_name}}</th>
                                         <th>
@@ -157,6 +158,8 @@
                 },
                 pageLength: 50,
                 columns: [{
+                    orderable: !1
+                }, {
                     orderable: !1
                 }, {
                     orderable: !1
