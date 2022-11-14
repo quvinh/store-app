@@ -10,6 +10,16 @@ return [
     'ex_import' => [
         'ex_import' => 'Quản lý Nhập/Xuất',
     ],
+    'import' => [
+        'import' => 'Nhập vật tư',
+        'importconfirm' => 'Duyệt phiếu nhập',
+        'importedit' => 'Sửa phiếu nhập',
+    ],
+    'export' => [
+        'export' => 'Xuất vật tư',
+        'exportconfirm' => 'Duyệt phiếu xuât',
+        'exportedit' => 'Sửa phiếu xuất',
+    ],
     'transfer' => [
         'transfer' => 'Điều chuyển vật tư',
         'create' => 'Tạo phiếu điều chuyển',
@@ -23,10 +33,28 @@ return [
         'create' => 'Tạo phiếu điều chỉnh',
         'edit' => 'Sửa phiếu điều chỉnh',
     ],
+    'item' => [
+        'item' => 'Vật tư',
+        'create' => 'Thêm vật tư',
+        'edit' => 'Sửa vật tư',
+    ],
+    'category' => [
+        'category' => 'Loại vật tư',
+        'edit' => 'Sửa loại vật tư',
+    ],
+    'unit' => [
+        'unit' => 'Đơn vị tính',
+        'edit' => 'Sửa đơn vị tính',
+    ],
+    'supplier' => [
+        'supplier' => 'Nhà cung cấp',
+        'create' => 'Tạo nhà cung cấp',
+        'edit' => 'Sửa nhà cung cấp',
+    ],
     'account' => [
         'account' => 'Tài khoản',
         'create' => 'Tạo tài khoản',
-        'edit' => 'Sửa tài khoản',
+        'show' => 'Sửa tài khoản',
     ],
     'role' => [
         'role' => 'Chức vụ',

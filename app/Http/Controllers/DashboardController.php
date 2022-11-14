@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,11 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $warehosues = Warehouse::where('warehouse_status', 1)
+            ->join('ex_imports', 'warehouses.id', '=', 'ex_imports.warehouse_id')
+            ->join('ex_import_details', 'ex_imports.id', '=', 'ex_import_details.exim_id')
+            ->get();
+        dd($warehosues);
         return view('admin.home.dashboard');
     }
 

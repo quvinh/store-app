@@ -21,20 +21,10 @@
     <!-- Start Content-->
     <div class="container-fluid">
         <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box">
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Danh mục vật tư</li>
-                        </ol>
-                    </div>
-                    <h4 class="page-title">Danh mục vật tư</h4>
-                </div>
-            </div>
-        </div>
+        @php
+            $route = preg_replace('/(admin)|\d/i', '', str_replace('/', '', Request::getPathInfo()));
+        @endphp
+        {{ Breadcrumbs::render($route) }}
         <!-- end page title -->
         <form class="needs-validation" novalidate action="{{ route('item.store') }}" method="POST"
             enctype="multipart/form-data">

@@ -20,20 +20,11 @@
 @section('content')
     <div class="container-fluid">
         <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box">
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Phiếu xuất</li>
-                        </ol>
-                    </div>
-                    <h4 class="page-title">Chi tiết phiếu xuất</h4>
-                </div>
-            </div>
-        </div>
+        @php
+            $route = preg_replace('/(admin)|\d/i', '', str_replace('/', '', Request::getPathInfo()));
+        @endphp
+        {{ Breadcrumbs::render($route, $export_details[0]->exim_id) }}
+        <!-- end page title -->
         @if (session()->has('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

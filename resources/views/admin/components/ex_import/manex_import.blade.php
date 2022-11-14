@@ -102,7 +102,7 @@
                                 <div class="row mb-2">
                                     <div class="col-sm-4">
                                         <a href="{{ route('import.index') }}" class="btn btn-danger mb-2">
-                                            Thêm mới
+                                            Thêm mới phiếu nhập
                                         </a>
                                     </div>
                                 </div>
@@ -203,7 +203,7 @@
                                 <div class="row mb-2">
                                     <div class="col-sm-4">
                                         <a href="{{ route('export.index') }}" class="btn btn-danger mb-2">
-                                            Thêm mới
+                                            Thêm mới phiếu xuất
                                         </a>
                                     </div>
                                 </div>

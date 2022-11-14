@@ -10,6 +10,16 @@ return [
     'ex_import' => [
         'ex_import' => 'Export/Import',
     ],
+    'import' => [
+        'import' => 'Import',
+        'importconfirm' => 'Confirm import',
+        'importedit' => 'Edit import',
+    ],
+    'export' => [
+        'export' => 'Export',
+        'exportconfirm' => 'Confirm export',
+        'exportedit' => 'Edit export',
+    ],
     'transfer' => [
         'transfer' => 'Transfer management',
         'create' => 'Create Transfer',
@@ -22,6 +32,28 @@ return [
         'adjust' => 'Item adjustment',
         'create' => 'Create adjustment ticket',
         'edit' => 'Edit adjustment ticket',
+    ],
+    'item' => [
+        'item' => 'Item',
+        'create' => 'Create item',
+        'edit' => 'Edit item',
+    ],
+    'category' => [
+        'category' => 'Category',
+        'edit' => 'Edit category',
+    ],
+    'unit' => [
+        'unit' => 'Unit',
+        'edit' => 'Edit unit',
+    ],
+    'supplier' => [
+        'supplier' => 'Supplier',
+        'create' => 'Create supplier',
+        'edit' => 'Edit supplier',
+    ],'account' => [
+        'account' => 'Account',
+        'create' => 'Create account',
+        'show' => 'Edit account',
     ],
     'patient' => [
         'patient' => 'Registrant',

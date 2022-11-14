@@ -25,12 +25,12 @@
                 <div class="page-title-box">
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Kho vật tư</li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Bản tin</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('warehouse.warehouse-by-id') }}">Kho vật tư</a></li>
+                            <li class="breadcrumb-item active">{{ $warehouse->warehouse_name }}</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">{{ $warehouse->warehouse_name }} <small>xem chi tiết</small> </h4>
+                    <h4 class="page-title">{{ $warehouse->warehouse_name }}</h4>
                 </div>
             </div>
         </div>

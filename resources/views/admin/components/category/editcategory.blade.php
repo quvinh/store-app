@@ -14,20 +14,10 @@
 @section('content')
     <div class="container-fluid">
         <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box">
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Kho vật tư</li>
-                        </ol>
-                    </div>
-                    <h4 class="page-title">{{ $category->category_name }}</h4>
-                </div>
-            </div>
-        </div>
+        @php
+            $route = preg_replace('/(admin)|\d/i', '', str_replace('/', '', Request::getPathInfo()));
+        @endphp
+        {{ Breadcrumbs::render($route, $category->id) }}
         <!-- end page title -->
         <div class="row">
             <div class="col-12">
