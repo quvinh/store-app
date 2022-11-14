@@ -2,6 +2,27 @@
 return [
     'dashboard' => 'Dashboard',
     'calendar' => 'Calendar',
+    'warehouse' => [
+        'warehouse' => 'Warehouse',
+        'create' => 'Create Warehouse',
+        'edit' => 'Edit Warehouse',
+    ],
+    'ex_import' => [
+        'ex_import' => 'Export/Import',
+    ],
+    'transfer' => [
+        'transfer' => 'Transfer management',
+        'create' => 'Create Transfer',
+        'edit' => 'Edit Transfer',
+    ],
+    'inventory' => [
+        'inventory' => 'Inventory',
+    ],
+    'adjust' => [
+        'adjust' => 'Item adjustment',
+        'create' => 'Create adjustment ticket',
+        'edit' => 'Edit adjustment ticket',
+    ],
     'patient' => [
         'patient' => 'Registrant',
         'edit' => 'Edit registrant',

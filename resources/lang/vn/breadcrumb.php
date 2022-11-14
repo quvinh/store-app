@@ -2,32 +2,27 @@
 return [
     'dashboard' => 'Bản tin',
     'calendar' => 'Lịch',
-    'patient' => [
-        'patient' => 'Người đăng ký',
-        'edit' => 'Sửa người đăng ký',
+    'warehouse' => [
+        'warehouse' => 'Kho vật tư',
+        'create' => 'Tạo kho vật tư',
+        'edit' => 'Sửa kho vật tư',
     ],
-    'group' => [
-        'group' => 'Nhóm gom',
-        'create' => 'Tạo nhóm',
-        'sameprice' => 'Tạo nhóm đồng giá',
-        'edit' => 'Sửa nhóm',
-        'action' => 'Thao tác nhóm',
-        'list-header' => 'Header TP'
+    'ex_import' => [
+        'ex_import' => 'Quản lý Nhập/Xuất',
     ],
-    'station' => [
-        'station' => 'Trạm',
-        'create' => 'Tạo trạm',
-        'edit' => 'Sửa trạm',
+    'transfer' => [
+        'transfer' => 'Điều chuyển vật tư',
+        'create' => 'Tạo phiếu điều chuyển',
+        'edit' => 'Sửa phiếu điều chuyển',
     ],
-    'testtype' => [
-        'testtype' => 'Loại xét nghiệm',
-        'create' => 'Tạo loại xét nghiệm',
-        'edit' => 'Sửa loại xét nghiệm',
+    'inventory' => [
+        'inventory' => 'Tồn kho',
     ],
-    'printbill' => 'In phiếu thu',
-    'listbill' => 'Danh sách phiếu thu',
-    'listpatient' => 'Danh sách đăng ký',
-    'excel' => 'Nhập liệu Excel',
+    'adjust' => [
+        'adjust' => 'Điều chỉnh vật tư',
+        'create' => 'Tạo phiếu điều chỉnh',
+        'edit' => 'Sửa phiếu điều chỉnh',
+    ],
     'account' => [
         'account' => 'Tài khoản',
         'create' => 'Tạo tài khoản',
@@ -45,19 +40,6 @@ return [
     ],
     'profile' => [
         'profile' => 'Thông tin tài khoản',
-    ],
-    'sample' => [
-        'sample' => 'Phiếu in',
-    ],
-    'doctor' => [
-        'doctor' => 'Bác sĩ',
-        'create' => 'Thêm bác sĩ',
-        'edit' => 'Sửa bác sĩ'
-    ],
-    'price' => [
-        'price' => 'Bảng giá',
-        'create' => 'Thêm giá',
-        'edit' => 'Sửa giá'
     ],
 ];
 ?>

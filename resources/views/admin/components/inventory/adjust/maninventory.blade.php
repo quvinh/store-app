@@ -19,20 +19,11 @@
 @section('content')
     <div class="container-fluid">
         <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box">
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Điều chỉnh thiết bị</li>
-                        </ol>
-                    </div>
-                    <h4 class="page-title">Điều chỉnh thiết bị</h4>
-                </div>
-            </div>
-        </div>
+        @php
+            $route = preg_replace('/(admin)|\d/i', '', str_replace('/', '', Request::getPathInfo()));
+        @endphp
+        {{ Breadcrumbs::render($route) }}
+        <!-- end page title -->
         @if (session()->has('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -51,6 +42,42 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        <div class="row mb-3 mt-3">
+                            <div {{ count($warehouses) > 1 ? '' : 'hidden' }} class="col-3">
+                                <select data-toggle="select2" title="Warehouse" id="warehouse">
+                                    @foreach ($warehouses as $warehouse)
+                                        <option value="{{ $warehouse->id }}"
+                                            {{ app('request')->input('warehouse') == $warehouse->id ? 'selected' : '' }}>
+                                            {{ $warehouse->warehouse_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <select data-toggle="select2" title="Status" id="status">
+                                    <option value="">Hiển thị tất cả</option>
+                                    <option value="cduyet"
+                                        {{ app('request')->input('status') == 'cduyet' ? 'selected' : '' }}>
+                                        Hiển thị phiếu chưa duyệt</option>
+                                    <option value="duyet"
+                                        {{ app('request')->input('status') == 'duyet' ? 'selected' : '' }}>
+                                        Hiển thị phiếu đã duyệt</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="mb-3 input-group">
+                                    <span class="input-group-text"><i
+                                            class="mdi mdi-calendar text-primary"></i></span>
+                                    <input type="text" class="form-control date" id="date_change"
+                                        data-toggle="date-picker" data-cancel-class="btn-warning"
+                                        name="date_change"
+                                        value="{{ app('request')->input('date') ? str_replace('_', ' - ', str_replace('-', '/', app('request')->input('date'))) : '' }}">
+                                </div>
+                            </div>
+                            <div class="col-3 text-end">
+                                <button type="button" class="btn btn-primary" onclick="filter()">Tìm kiếm</button>
+                            </div>
+                        </div>
                         <div class="row mb-2">
                             <div class="col-sm-4">
                                 <a href="{{ route('inventory.create') }}" class="btn btn-danger mb-2">
@@ -59,33 +86,6 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="row">
-                            <div {{ count($warehouses) > 1 ? '' : 'hidden' }}>
-                                <div class="col s8">
-                                    <input type="text" name="id" id="id" hidden>
-                                    <div class="mb-3">
-                                        <label for="warehouse" class="form-label">Kho:</label>
-                                        <div class="row">
-                                            <div class="col">
-                                                <select data-toggle="select2" title="Warehouse" id="warehouse"
-                                                    name="warehouse">
-                                                    @foreach ($warehouses as $warehouse)
-                                                        <option value="{{ $warehouse->id }}"
-                                                            {{ app('request')->input('warehouse_id') == $warehouse->id ? 'selected' : '' }}>
-                                                            {{ $warehouse->id }} - {{ $warehouse->warehouse_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                <br>
-                                            </div>
-                                            <div class="col">
-                                                <input type="button" class="btn btn-success" value="Filter" id="btnFilter">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         {{-- <div class="col s4"></div> --}}
                         <table id="adjust-item-datatable" class="table table-striped dt-responsive nowrap w-100">
                             <thead>
@@ -102,7 +102,7 @@
                                 @foreach ($inventories as $key => $item)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $item->inventory_code }}</td>
+                                        <td><a href="{{ route('inventory.edit', $item->id) }}"><span class="text-info">{{ $item->inventory_code }}</span></a></td>
                                         <td><span class="badge bg-primary">{{ $item->name }}</span></td>
                                         <td>{{ $item->created_at }}</td>
                                         <td>
@@ -177,5 +177,24 @@
                 },
             })
         });
+        function filter() {
+            var dt = $('#date_change').val();
+            var dateVal = dt.replace(' - ', '_');
+            dateVal = dateVal.replaceAll('/', '-');
+            var statusVal = $('#status').val();
+            var warehouseVal = $('#warehouse').val();
+            const paramsObj = {
+                status: statusVal,
+                warehouse: warehouseVal,
+                date: dateVal,
+            };
+            if (statusVal === '') delete paramsObj.status;
+            if (warehouseVal === '') delete paramsObj.warehouse;
+            if (dateVal === '') delete paramsObj.date;
+            const searchParams = new URLSearchParams(paramsObj);
+            let url = new URL(window.location.href);
+            url.search = searchParams;
+            window.location.href = url;
+        }
     </script>
 @endsection

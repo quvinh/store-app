@@ -22,7 +22,7 @@
         @php
             $route = preg_replace('/(admin)|\d/i', '', str_replace('/', '', Request::getPathInfo()));
         @endphp
-        {{-- {{ Breadcrumbs::render($route) }} --}}
+        {{ Breadcrumbs::render($route) }}
         <!-- end page title -->
 
         <div class="row">

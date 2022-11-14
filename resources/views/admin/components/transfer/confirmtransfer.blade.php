@@ -98,7 +98,7 @@
                                     <tr>
                                         <th width="15%">Phụ tùng/ Vật tư</th>
                                         <th width="10%">Số lượng</th>
-                                        <th width="15%">Kho</th>
+                                        <th width="15%">Chuyển đến kho</th>
                                         <th width="10%">Chọn Kệ</th>
                                         <th width="7%">Chọn Tầng</th>
                                         <th width="7%">Chọn Ô</th>

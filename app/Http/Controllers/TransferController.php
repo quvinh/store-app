@@ -7,6 +7,7 @@ use App\Models\Transfer;
 use App\Models\TransferDetail;
 use App\Models\Warehouse;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,19 +36,44 @@ class TransferController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $transfers = DB::table('transfers')
             ->join('users', 'users.id', '=', 'transfers.created_by')
             ->select('transfers.*', 'users.name')
-            ->whereNull('deleted_at')
+            ->whereNull('deleted_at');
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
+            ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
+            ->select('warehouses.*')
+            ->where('user_id', '=', Auth::user()->id)
             ->get();
+        if (isset($request->warehouse)) {
+            $transfers->where('transfers.warehouse_from', $request->warehouse);
+        } else $transfers->where('transfers.warehouse_from', $warehouses[0]->id);
+        if (isset($request->status)) {
+            if ($request->status == 'duyet') $transfers->where('transfers.transfer_status', 1);
+            if ($request->status == 'cduyet') $transfers->where('transfers.transfer_status', 0);
+        }
+        if (isset($request->date)) {
+            $date = explode('_', $request->date);
+            try {
+                $from = DateTime::createFromFormat('m-d-Y', $date[0])->format('Y-m-d');
+                $to = DateTime::createFromFormat('m-d-Y', $date[1])->format('Y-m-d');
+
+                $transfers->whereDate('transfers.created_at', '>=', $from)
+                    ->whereDate('transfers.created_at', '<=', $to);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+        $transfers = $transfers->get();
         $trashes = DB::table('transfers')
             ->join('users', 'users.id', '=', 'transfers.created_by')
             ->select('transfers.*', 'users.name')
             ->whereNotNull('deleted_at')
             ->get();
-        return view('admin.components.transfer.mantransfer', compact('transfers', 'trashes'));
+        return view('admin.components.transfer.mantransfer', compact('transfers', 'trashes', 'warehouses'));
     }
 
     /**

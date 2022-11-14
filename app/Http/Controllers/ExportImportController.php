@@ -11,6 +11,7 @@ use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\Warehouse;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -51,18 +52,60 @@ class ExportImportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouse_managers.warehouse_id', '=', 'warehouses.id')
+            ->where('warehouse_managers.user_id', Auth::user()->id)
+            ->select('warehouses.*')->get();
+
+        if (isset($request->warehouse)) {
+            $warehouse_id = $request->warehouse;
+        } else {
+            $warehouse_id = $warehouses[0]->id;
+        }
         $im_items = DB::table('items')
             ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
             ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
             ->join('users', 'users.id', '=', 'ex_imports.created_by')
-            ->where([['ex_imports.exim_type', 1],['ex_imports.deleted_at', null]])
+            ->where([['ex_imports.exim_type', 1], ['ex_imports.deleted_at', null], ['ex_imports.warehouse_id', $warehouse_id]])
             ->select('ex_imports.*', 'items.item_name as item', 'users.name as created_by', DB::raw('date_format(ex_imports.created_at, "%d-%m-%Y %H:%i:%s") as created'))
             ->groupBy('exim_code')
             ->orderByDesc('created_at')
-            ->orderBy('exim_status', 'asc')
-            ->get();
+            ->orderBy('exim_status', 'asc');
+        $ex_items = DB::table('items')
+            ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
+            ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
+            ->join('users', 'users.id', '=', 'ex_imports.created_by')
+            ->where([['ex_imports.exim_type', 0], ['ex_imports.deleted_at', null], ['ex_imports.warehouse_id', $warehouse_id]])
+            ->groupBy('ex_imports.exim_code')
+            ->select('ex_imports.*', 'items.item_name as item', 'users.name as created_by', DB::raw('date_format(ex_imports.created_at, "%d-%m-%Y %H:%i:%s") as created'))
+            ->orderByDesc('created_at');
+        if (isset($request->status)) {
+            if ($request->type == 1 && $request->status == 'duyet') $im_items->where('ex_imports.exim_status', 1);
+            if ($request->type == 1 && $request->status == 'cduyet') $im_items->where('ex_imports.exim_status', 0);
+            if ($request->type == 0 && $request->status == 'duyet') $ex_items->where('ex_imports.exim_status', 1);
+            if ($request->type == 0 && $request->status == 'cduyet') $ex_items->where('ex_imports.exim_status', 0);
+        }
+        if (isset($request->date)) {
+            $date = explode('_', $request->date);
+            try {
+                $from = DateTime::createFromFormat('m-d-Y', $date[0])->format('Y-m-d');
+                $to = DateTime::createFromFormat('m-d-Y', $date[1])->format('Y-m-d');
+                if ($request->type == 1) {
+                    $im_items->whereDate('ex_imports.created_at', '>=', $from)
+                        ->whereDate('ex_imports.created_at', '<=', $to);
+                }
+                if ($request->type == 0) {
+                    $ex_items->whereDate('ex_imports.created_at', '>=', $from)
+                        ->whereDate('ex_imports.created_at', '<=', $to);
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+        $im_items = $im_items->get();
+        $ex_items = $ex_items->get();
         foreach ($im_items as $val) {
             $val->item = DB::table('items')
                 ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
@@ -72,15 +115,7 @@ class ExportImportController extends Controller
                 ->select('items.item_name as item')
                 ->get();
         }
-        $ex_items = DB::table('items')
-            ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
-            ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
-            ->join('users', 'users.id', '=', 'ex_imports.created_by')
-            ->where([['ex_imports.exim_type', 0],['ex_imports.deleted_at', null]])
-            ->groupBy('ex_imports.exim_code')
-            ->select('ex_imports.*', 'items.item_name as item', 'users.name as created_by', DB::raw('date_format(ex_imports.created_at, "%d-%m-%Y %H:%i:%s") as created'))
-            ->orderByDesc('created_at')
-            ->get();
+
         foreach ($ex_items as $val) {
             $val->item = DB::table('items')
                 ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
@@ -91,7 +126,8 @@ class ExportImportController extends Controller
                 ->groupBy('items.item_name')
                 ->get();
         }
-        return view('admin.components.ex_import.manex_import', compact('im_items', 'ex_items'));
+
+        return view('admin.components.ex_import.manex_import', compact('im_items', 'ex_items', 'warehouses'));
     }
 
     /**
@@ -152,13 +188,13 @@ class ExportImportController extends Controller
                 'supplier_id' => $request->supplier[$i],
                 'warehouse_id' => $request->warehouse[$i],
                 'item_quantity' => $request->quantity[$i],
-                'item_price' => str_replace('.','',$request->price[$i]),
+                'item_price' => str_replace('.', '', $request->price[$i]),
                 'item_total' => 0,
                 'itemdetail_id' => 0,
                 'item_vat' => 0
             ]);
         }
-        return redirect()->route('ex_import.index')->with(['success', 'Tạo phiếu nhập thành công.']);
+        return redirect()->route('ex_import.index', ['#export'])->with(['success', 'Tạo phiếu nhập thành công.']);
     }
 
     /**
@@ -192,7 +228,7 @@ class ExportImportController extends Controller
 
     public function im_update(Request $request, $id)
     {
-        foreach ($request->id as $key => $val){
+        foreach ($request->id as $key => $val) {
             $import = ExImportDetail::find($val);
             $old_quantity = $import->item_quantity;
             $import->update([
@@ -200,7 +236,7 @@ class ExportImportController extends Controller
                 'item_price' => str_replace('.', '', $request->price[$key]),
             ]);
 
-            if($import->itemdetail_id != 0 && $import->itemdetail_id != null){
+            if ($import->itemdetail_id != 0 && $import->itemdetail_id != null) {
                 $item = ItemDetail::find($import->itemdetail_id);
                 $item->update([
                     'item_quantity' => ($item->item_quantity + $import->item_quantity - $old_quantity),
@@ -294,14 +330,22 @@ class ExportImportController extends Controller
             ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
             ->select(
-                'items.*','item_details.id as itemdetail_id',
+                'items.*',
+                'item_details.id as itemdetail_id',
                 'item_details.item_quantity as item_detail_quantity',
-                'warehouse_id','supplier_id','shelf_id','floor_id','cell_id',
-                'shelf_name','warehouse_name','category_name','supplier_name'
+                'warehouse_id',
+                'supplier_id',
+                'shelf_id',
+                'floor_id',
+                'cell_id',
+                'shelf_name',
+                'warehouse_name',
+                'category_name',
+                'supplier_name'
             )
 
             ->whereNull('items.deleted_at')
-            ->where('item_details.item_quantity','>',0)
+            ->where('item_details.item_quantity', '>', 0)
             ->where('item_details.warehouse_id', $warehouse_id)
             ->get();
         foreach ($items as $val) {
@@ -372,7 +416,7 @@ class ExportImportController extends Controller
                 'supplier_id' => $items[0]->supplier_id,
                 'warehouse_id' => $items[0]->warehouse_id,
                 'item_quantity' => $request->item_quantity[$i],
-                'item_price' => str_replace('.','',$request->export_price[$i]),
+                'item_price' => str_replace('.', '', $request->export_price[$i]),
                 'item_total' => 0,
                 'itemdetail_id' => $items[0]->id,
                 'item_vat' => 0
@@ -405,12 +449,24 @@ class ExportImportController extends Controller
             ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
             ->join('units', 'units.id', '=', 'items.item_unit')
             ->select(
-                'ex_import_details.id as ex_import_details_id','exim_id','itemdetail_id',
-                'item_price','item_total','item_vat','exim_detail_status',
-                'ex_import_details.supplier_id','shelf_name','warehouse_name',
-                'floor_id','cell_id','ex_import_details.item_quantity as ex_item_quantity',
+                'ex_import_details.id as ex_import_details_id',
+                'exim_id',
+                'itemdetail_id',
+                'item_price',
+                'item_total',
+                'item_vat',
+                'exim_detail_status',
+                'ex_import_details.supplier_id',
+                'shelf_name',
+                'warehouse_name',
+                'floor_id',
+                'cell_id',
+                'ex_import_details.item_quantity as ex_item_quantity',
                 // DB::raw('SUM(ex_import_details.item_quantity) as ex_item_quantity'),
-                'items.*','supplier_name','unit_name','category_name',
+                'items.*',
+                'supplier_name',
+                'unit_name',
+                'category_name',
             )
             ->where('exim_id', $id)
             ->get();
@@ -418,7 +474,7 @@ class ExportImportController extends Controller
     }
     public function ex_update(Request $request, $id)
     {
-        foreach ($request->id as $key => $val){
+        foreach ($request->id as $key => $val) {
             $export = ExImportDetail::find($val);
             $old_quantity = $export->item_quantity;
             $export->update([
@@ -426,12 +482,12 @@ class ExportImportController extends Controller
                 'item_price' => str_replace('.', '', $request->price[$key]),
             ]);
 
-            if($export->itemdetail_id != 0 && $export->itemdetail_id != null){
+            if ($export->exim_detail_status == 0) {
                 $item = ItemDetail::find($export->itemdetail_id);
                 $item->update([
                     'item_quantity' => ($item->item_quantity - $export->item_quantity + $old_quantity),
                 ]);
-            };
+            }
         };
         return redirect()->route('ex_import.index')->with(['success', 'Sửa phiếu nhập thành công.']);
     }
@@ -482,12 +538,24 @@ class ExportImportController extends Controller
             ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
             ->join('units', 'units.id', '=', 'items.item_unit')
             ->select(
-                'ex_import_details.id as ex_import_details_id','exim_id','itemdetail_id',
-                'item_price','item_total','item_vat','exim_detail_status',
-                'ex_import_details.supplier_id','shelf_name','warehouse_name',
-                'floor_id','cell_id','ex_import_details.item_quantity as ex_item_quantity',
+                'ex_import_details.id as ex_import_details_id',
+                'exim_id',
+                'itemdetail_id',
+                'item_price',
+                'item_total',
+                'item_vat',
+                'exim_detail_status',
+                'ex_import_details.supplier_id',
+                'shelf_name',
+                'warehouse_name',
+                'floor_id',
+                'cell_id',
+                'ex_import_details.item_quantity as ex_item_quantity',
                 // DB::raw('SUM(ex_import_details.item_quantity) as ex_item_quantity'),
-                'items.*','supplier_name','unit_name','category_name',
+                'items.*',
+                'supplier_name',
+                'unit_name',
+                'category_name',
             )
             ->where('exim_id', $id)
             ->get();
