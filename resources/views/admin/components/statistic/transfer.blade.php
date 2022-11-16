@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Statistic Transfer
+    Thống kê Điều chuyển
 @endsection
 
 @section('css')

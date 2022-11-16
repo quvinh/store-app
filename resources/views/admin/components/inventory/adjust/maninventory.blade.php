@@ -1,7 +1,7 @@
-a@extends('admin.home.master')
+@extends('admin.home.master')
 
 @section('title')
-    Inventory
+    Điều chỉnh
 @endsection
 
 @section('css')

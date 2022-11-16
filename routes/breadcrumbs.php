@@ -27,6 +27,12 @@ Breadcrumbs::for('warehouse', function (BreadcrumbTrail $trail) {
     $trail->push(Lang::get('breadcrumb.warehouse.warehouse'), route('warehouse.warehouse-by-id'));
 });
 
+// Dashboard > Warehouse > Edit shelf
+Breadcrumbs::for('edit-shelf', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('warehouse');
+    $trail->push(Lang::get('breadcrumb.shelf.edit'), route('shelf.edit', $id));
+});
+
 // Dashboard > ExIm
 Breadcrumbs::for('ex_import', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');

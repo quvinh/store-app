@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Confirm Export
+    Xác nhận Xuất
 @endsection
 
 @section('css')

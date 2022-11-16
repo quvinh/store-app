@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Edit Import
+    Sửa phiếu Nhập
 @endsection
 
 @section('css')

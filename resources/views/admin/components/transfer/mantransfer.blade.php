@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Admin | Điều chuyển
+    Điều chuyển
 @endsection
 
 @section('css')

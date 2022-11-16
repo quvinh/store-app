@@ -7,6 +7,11 @@ return [
         'create' => 'Create Warehouse',
         'edit' => 'Edit Warehouse',
     ],
+    'shelf' => [
+        'shelf' => 'Shelf',
+        'create' => 'Create shelf',
+        'edit' => 'Edit shelf',
+    ],
     'ex_import' => [
         'ex_import' => 'Export/Import',
     ],

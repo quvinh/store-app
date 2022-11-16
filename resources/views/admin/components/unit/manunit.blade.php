@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Unit
+    Đơn vị tính
 @endsection
 
 @section('css')

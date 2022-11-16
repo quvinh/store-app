@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Adjust
+    Thêm phiếu điều chỉnh
 @endsection
 
 @section('css')

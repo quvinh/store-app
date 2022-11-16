@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Export
+    Xuất vật tư
 @endsection
 
 @section('css')

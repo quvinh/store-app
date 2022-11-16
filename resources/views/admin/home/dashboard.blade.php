@@ -1,6 +1,6 @@
 @extends('admin.home.master')
 @section('title')
-    Admin | Bản tin
+    Bản tin
 @endsection
 @section('css')
     <!-- App css -->

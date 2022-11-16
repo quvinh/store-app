@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Inventory
+    Tồn kho
 @endsection
 
 @section('css')

@@ -95,19 +95,18 @@ class RoleController extends Controller
     public function edit($id)
     {
         $groups = array(
-            'pat' => Lang::get('components/role.patient'),
-            'gro' => Lang::get('components/role.group'),
-            'sta' => Lang::get('components/role.station'),
-            'typ' => Lang::get('components/role.type'),
-            'inv' => Lang::get('components/role.invoice'),
-            'not' => Lang::get('components/role.notify'),
-            'acc' => Lang::get('components/role.account'),
-            'print' => Lang::get('components/role.print'),
-            'price' => Lang::get('components/role.price'),
-            'exc' => Lang::get('components/role.excel'),
-            'doc' => Lang::get('components/role.doctor'),
-            'sam' => Lang::get('components/role.sample'),
-            'rep' => Lang::get('components/role.report'),
+            'ite' => Lang::get('components/role.ite'),
+            'war' => Lang::get('components/role.war'),
+            'she' => Lang::get('components/role.she'),
+            'cat' => Lang::get('components/role.cat'),
+            'eim' => Lang::get('components/role.eim'),
+            'tra' => Lang::get('components/role.tra'),
+            'inv' => Lang::get('components/role.inv'),
+            'acc' => Lang::get('components/role.acc'),
+            'uni' => Lang::get('components/role.uni'),
+            'sup' => Lang::get('components/role.sup'),
+            'sys' => Lang::get('components/role.sys'),
+            'sta' => Lang::get('components/role.sta'),
             'log' => Lang::get('components/role.log'),
         );
         $role = Role::findById($id);

@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Confirm transfer
+    Xác nhận Điều chuyển
 @endsection
 
 @section('css')

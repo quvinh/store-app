@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Supplier
+    Nhà cung cấp
 @endsection
 
 @section('css')

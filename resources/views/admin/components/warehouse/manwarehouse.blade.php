@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Kho vật tư | Admin
+    Kho vật tư
 @endsection
 
 @section('css')

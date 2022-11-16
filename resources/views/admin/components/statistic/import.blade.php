@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Statistic Import
+    Thống kê Nhập
 @endsection
 
 @section('css')

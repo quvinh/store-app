@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Edit Item
+    Sửa vật tư
 @endsection
 
 @section('css')

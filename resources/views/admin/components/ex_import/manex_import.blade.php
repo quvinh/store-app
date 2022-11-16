@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Ex_Import
+    Quản lý Nhập - Xuất
 @endsection
 
 @section('css')

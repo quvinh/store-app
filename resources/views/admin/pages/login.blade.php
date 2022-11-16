@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Log In | Hyper - Responsive Bootstrap 5 Admin Dashboard</title>
+    <title>Log In | 3vsoft</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
     <meta content="Coderthemes" name="author" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('images/3v.png') }}">
 
     <!-- App css -->
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
@@ -29,7 +29,7 @@
                         <!-- Logo -->
                         <div class="card-header pt-2 pb-2 text-center bg-primary">
                             <a href="">
-                                <span><img src="{{ asset('assets/images/bvy.png') }}" alt="LOGO"
+                                <span><img src="{{ asset('images/3v.png') }}" alt="LOGO"
                                         height="60"></span>
                             </a>
                         </div>
@@ -125,7 +125,7 @@
     <!-- end page -->
 
     <footer class="footer footer-alt">
-        2022 © Dailythue - thuemienbac.vn
+        2022 © 3vsoft.net
     </footer>
 
     <!-- bundle -->

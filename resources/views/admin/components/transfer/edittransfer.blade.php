@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Edit transfer
+    Sửa phiếu Điều chuyển
 @endsection
 
 @section('css')

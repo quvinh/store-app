@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Add account
+    Sửa tài khoản
 @endsection
 
 @section('css')

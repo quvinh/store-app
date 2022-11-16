@@ -7,6 +7,11 @@ return [
         'create' => 'Tạo kho vật tư',
         'edit' => 'Sửa kho vật tư',
     ],
+    'shelf' => [
+        'shelf' => 'Giá/kệ',
+        'create' => 'Tạo mới kệ',
+        'edit' => 'Sửa kệ',
+    ],
     'ex_import' => [
         'ex_import' => 'Quản lý Nhập/Xuất',
     ],

@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Role
+    Quyền hạn
 @endsection
 
 @section('css')

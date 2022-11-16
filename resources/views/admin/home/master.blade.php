@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <title>@yield('title')</title>
+    <title>Admin | @yield('title')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="LAB" name="description">
     <meta content="V" name="author">
     <meta http-equiv="refresh" content="1800">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('images/3v.png') }}">
 
     @yield('css')
     <link href="{{ asset('assets/css/vendor/jquery-jvectormap-1.2.2.css') }}" rel="stylesheet" type="text/css">

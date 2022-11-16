@@ -89,9 +89,6 @@ class PermissionSeeder extends Seeder
             ['name' => 'sta.view', 'guard_name' => 'web'],
 
             // Log system
-            ['name' => 'log.add', 'guard_name' => 'web'],
-            ['name' => 'log.edit', 'guard_name' => 'web'],
-            ['name' => 'log.delete', 'guard_name' => 'web'],
             ['name' => 'log.view', 'guard_name' => 'web'],
         ]);
 

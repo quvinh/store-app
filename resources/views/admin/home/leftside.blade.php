@@ -4,7 +4,7 @@
     <!-- LOGO -->
     <a href="{{ route('dashboard.index') }}" class="logo text-center logo-light">
         <span class="logo-lg">
-            <img src="{{ asset('assets/images/logo.png') }}" alt="" height="16">
+            <img src="{{ asset('images/3v.png') }}" alt="" height="64">
         </span>
         <span class="logo-sm">
             <img src="{{ asset('assets/images/logo_sm.png') }}" alt="" height="16">
@@ -30,7 +30,7 @@
 
             <li class="side-nav-item">
                 <a href="{{ route('dashboard.index') }}" class="side-nav-link">
-                    <i class="uil-calender"></i>
+                    <i class="uil-home-alt"></i>
                     <span> Dashboard </span>
                 </a>
             </li>
@@ -85,7 +85,7 @@
                 <li class="side-nav-item">
                     <a data-bs-toggle="collapse" href="#sideStatistic" aria-expanded="false" aria-controls="sideStatistic"
                         class="side-nav-link">
-                        <i class="uil-store"></i>
+                        <i class="uil-layer-group"></i>
                         <span> Thống kê </span>
                         <span class="menu-arrow"></span>
                     </a>
@@ -108,7 +108,7 @@
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#sideGroup" aria-expanded="false" aria-controls="sideGroup"
                     class="side-nav-link">
-                    <i class="uil-store"></i>
+                    <i class="uil-list-ul"></i>
                     <span> Danh mục </span>
                     <span class="menu-arrow"></span>
                 </a>
@@ -153,9 +153,6 @@
                             </li>
                             <li>
                                 <a href="{{ route('admin.role') }}">@lang('leftside.system.role')</a>
-                            </li>
-                            <li>
-                                <a href="#">@lang('leftside.system.invoice')</a>
                             </li>
                             <li>
                                 <a href="{{ url('/log-viewer') }}" target="_blank" rel="noopener noreferrer">Logs</a>

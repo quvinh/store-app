@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Warehouse | Admin
+    Sửa kho vật tư
 @endsection
 
 @section('css')

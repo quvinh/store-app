@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Category
+    Loại vật tư
 @endsection
 
 @section('css')

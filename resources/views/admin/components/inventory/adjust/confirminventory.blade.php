@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Confirm
+    Xác nhận điều chỉnh
 @endsection
 
 @section('css')

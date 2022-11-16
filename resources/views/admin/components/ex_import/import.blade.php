@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Import
+    Nhập vật tư
 @endsection
 
 @section('css')

@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Calendar
+    Lịch và sự kiện
 @endsection
 
 @section('css')
