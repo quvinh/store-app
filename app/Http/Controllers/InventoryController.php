@@ -18,14 +18,19 @@ class InventoryController extends Controller
 
     public static function Routes()
     {
-        Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
-        Route::get('adjust-device', [InventoryController::class, 'create'])->name('inventory.create');
-        Route::post('inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
-        Route::get('inventory/confirm/{id}', [InventoryController::class, 'edit'])->name('inventory.edit');
-        Route::put('inventory/confirm/{id}', [InventoryController::class, 'update'])->name('inventory.update');
-
-        Route::get('inventory-item', [InventoryController::class, 'iventory'])->name('inventory-item.index');
-        Route::get('inventory-item/{id}', [InventoryController::class, 'inventoryDetail'])->name('inventory-item.show');
+        Route::group(['middleware' => ['can:inv.view']], function () {
+            Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
+            Route::get('inventory-item', [InventoryController::class, 'iventory'])->name('inventory-item.index');
+            Route::get('inventory-item/{id}', [InventoryController::class, 'inventoryDetail'])->name('inventory-item.show');
+        });
+        Route::group(['middleware' => ['can:inv.add']], function () {
+            Route::get('adjust-device', [InventoryController::class, 'create'])->name('inventory.create');
+            Route::post('inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
+        });
+        Route::group(['middleware' => ['can:inv.edit']], function () {
+            Route::get('inventory/confirm/{id}', [InventoryController::class, 'edit'])->name('inventory.edit');
+            Route::put('inventory/confirm/{id}', [InventoryController::class, 'update'])->name('inventory.update');
+        });
     }
     /**
      * Display a listing of the resource.
@@ -37,7 +42,7 @@ class InventoryController extends Controller
         $inventories = DB::table('inventories')
             ->join('users', 'users.id', '=', 'inventories.created_by')
             ->select('inventories.*', 'users.name');
-            $warehouses = DB::table('warehouse_managers')
+        $warehouses = DB::table('warehouse_managers')
             ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
             ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
             ->select('warehouses.*')
@@ -120,7 +125,7 @@ class InventoryController extends Controller
     {
         $participants = '';
         for ($i = 0; $i < count($request->people); $i++) {
-            $participants = $participants.$request->people[$i].'   ';
+            $participants = $participants . $request->people[$i] . '   ';
         }
         if ($request->itemdetail_id != null) {
             $count = count($request->itemdetail_id);
@@ -266,9 +271,12 @@ class InventoryController extends Controller
         // dd($item);
         $imports = $this->getExim(1, $id);
         $exports = $this->getExim(0, $id);
-        // $transfer = DB::table('items')
+        $transfers = DB::table('transfers')
+            ->join('users', 'users.id', '=', 'transfers.created_by')
+            ->select('transfers.*', 'users.name')
+            ->whereNull('deleted_at')->get();
 
-        return view('admin.components.inventory.inven.detailinventory', compact('item', 'imports', 'exports'));
+        return view('admin.components.inventory.inven.detailinventory', compact('item', 'imports', 'exports', 'transfers'));
     }
 
     public function getItem($text, $id)

@@ -103,8 +103,10 @@
                                         </td>
                                         <td>{{ $item->item_note ? $item->item_note : '----- ' }}</td>
                                         <td class="table-action">
-                                            <a href="{{ route('inventory-item.show', $item->itemdetail_id) }}" class="action-icon" title="Xem chi tiết">
+                                            @can('inv.view')
+                                                <a href="{{ route('inventory-item.show', $item->itemdetail_id) }}" class="action-icon" title="Xem chi tiết">
                                                 <i class="mdi mdi-eye-outline"></i></a>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

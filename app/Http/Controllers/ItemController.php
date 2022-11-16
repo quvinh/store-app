@@ -15,16 +15,21 @@ class ItemController extends Controller
 
     public static function Routes()
     {
-        Route::get('/detail_item', [ItemController::class, 'detail'])->name('detail_item.index');
         Route::group(['prefix' => 'item'], function () {
-            Route::get('', [ItemController::class, 'index'])->name('item.index');
-            Route::get('/create', [ItemController::class, 'create'])->name('item.create');
-            Route::post('/store', [ItemController::class, 'store'])->name('item.store');
-            Route::get('/edit/{id}', [ItemController::class, 'edit'])->name('item.edit');
-            Route::put('/update/{id}', [ItemController::class, 'update'])->name('item.update');
-            Route::get('/delete/{id}', [ItemController::class, 'delete'])->name('item.delete');
-            Route::get('/restore/{id}', [ItemController::class, 'restore'])->name('item.restore');
-            Route::get('/destroy/{id}', [ItemController::class, 'destroy'])->name('item.destroy');
+            Route::get('', [ItemController::class, 'index'])->name('item.index')->middleware(['can:ite.view']);
+            Route::group(['middleware' => ['can:ite.add']], function () {
+                Route::get('/create', [ItemController::class, 'create'])->name('item.create');
+                Route::post('/store', [ItemController::class, 'store'])->name('item.store');
+            });
+            Route::group(['middleware' => ['can:ite.edit']], function () {
+                Route::get('/edit/{id}', [ItemController::class, 'edit'])->name('item.edit');
+                Route::put('/update/{id}', [ItemController::class, 'update'])->name('item.update');
+            });
+            Route::group(['middleware' => ['can:ite.delete']], function () {
+                Route::get('/delete/{id}', [ItemController::class, 'delete'])->name('item.delete');
+                Route::get('/restore/{id}', [ItemController::class, 'restore'])->name('item.restore');
+                Route::get('/destroy/{id}', [ItemController::class, 'destroy'])->name('item.destroy');
+            });
         });
     }
     /**
@@ -46,9 +51,6 @@ class ItemController extends Controller
             ->select('items.*', 'units.unit_name as unit', 'categories.category_name as category')
             ->get();
         return view('admin.components.item.manitem', compact('data', 'dataTrash'));
-    }
-    public function detail() {
-        return view('admin.components.item.detail_item');
     }
 
     /**

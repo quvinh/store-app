@@ -30,16 +30,19 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-sm-4">
-                                <a href="{{ route('item.create') }}" class="btn btn-danger mb-2">
-                                    Tạo mới vật tư
-                                </a>
+                        @can('ite.add')
+                            <div class="row mb-2">
+                                <div class="col-sm-4">
+                                    <a href="{{ route('item.create') }}" class="btn btn-danger mb-2">
+                                        Tạo mới vật tư
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <hr>
-                        </div>
+                            <div>
+                                <hr>
+                            </div>
+                        @endcan
+
                         <table id="scroll-vertical-datatable" class="table dt-responsive nowrap text-center">
                             {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
@@ -67,10 +70,14 @@
                                         <th>{{ $item->updated_at }}</th>
                                         <td>{{ $item->item_note }}</td>
                                         <td class="table-action">
-                                            <a href="{{ route('item.edit', $item->id) }}" class="action-icon">
-                                                <i class="mdi mdi-square-edit-outline"></i></a>
-                                            <a href="{{ route('item.delete', $item->id) }}" class="action-icon">
-                                                <i class="mdi mdi-delete"></i></a>
+                                            @can('ite.edit')
+                                                <a href="{{ route('item.edit', $item->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-square-edit-outline"></i></a>
+                                            @endcan
+                                            @can('ite.delete')
+                                                <a href="{{ route('item.delete', $item->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-delete"></i></a>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

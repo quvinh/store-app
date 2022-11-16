@@ -1,22 +1,24 @@
+@can('she.add')
+    <div class="row mb-2">
+        <div class="col-sm-4">
+            <a data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                class="btn btn-danger mb-2 collapsed">
+                Tạo mới giá/kệ
+            </a>
+        </div>
+    </div>
+    <div class="collapse" id="collapseExample">
+        <div class="tab-pane show active" id="custom-styles-preview">
+            @include('admin.components.shelf.addshelf')
+        </div>
+    </div>
+    <div>
+        <hr>
+    </div>
+@endcan
 
-<div class="row mb-2">
-    <div class="col-sm-4">
-        <a data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-            class="btn btn-danger mb-2 collapsed">
-            Tạo mới giá/kệ
-        </a>
-    </div>
-</div>
-<div class="collapse" id="collapseExample">
-    <div class="tab-pane show active" id="custom-styles-preview">
-        @include('admin.components.shelf.addshelf')
-    </div>
-</div>
-<div>
-    <hr>
-</div>
 {{-- <table id="scroll-vertical-datatable" class="table dt-responsive nowrap"> --}}
-    <table id="basic-datatable" class="table dt-responsive nowrap w-100">
+<table id="basic-datatable" class="table dt-responsive nowrap w-100">
     <thead>
         <tr>
             <th>STT</th>
@@ -42,9 +44,14 @@
                     @endif
                 </td>
                 <td class="table-action">
-                    <a href="{{ route('shelf.edit', $shelf->id) }}" class="action-icon">
-                        <i class="mdi mdi-square-edit-outline"></i></a>
-                    <a href="{{ route('shelf.destroy', $shelf->id) }}" class="action-icon"><i class="mdi mdi-delete"></i></a>
+                    @can('she.edit')
+                        <a href="{{ route('shelf.edit', $shelf->id) }}" class="action-icon">
+                            <i class="mdi mdi-square-edit-outline"></i></a>
+                    @endcan
+                    @can('she.delete')
+                        <a href="{{ route('shelf.destroy', $shelf->id) }}" class="action-icon"><i
+                                class="mdi mdi-delete"></i></a>
+                    @endcan
                 </td>
             </tr>
         @endforeach

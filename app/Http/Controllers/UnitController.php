@@ -13,13 +13,17 @@ class UnitController extends Controller
 
     public static function Routes()
     {
-        Route::get('unit', [UnitController::class, 'index'])->name('unit.index');
-        Route::post('unit', [UnitController::class, 'store'])->name('unit.store');
-        Route::get('unit/edit/{id}', [UnitController::class, 'edit'])->name('unit.edit');
-        Route::put('unit/update/{id}', [UnitController::class, 'update'])->name('unit.update');
-        Route::get('unit/destroy/{id}', [UnitController::class, 'destroy'])->name('unit.destroy');
-        Route::get('unit/delete/{id}', [UnitController::class, 'delete'])->name('unit.delete');
-        Route::get('unit/restore/{id}', [UnitController::class, 'restore'])->name('unit.restore');
+        Route::get('unit', [UnitController::class, 'index'])->name('unit.index')->middleware(['can:uni.view']);
+        Route::post('unit', [UnitController::class, 'store'])->name('unit.store')->middleware(['can:uni.add']);
+        Route::group(['middleware' => ['can:uni.edit']], function () {
+            Route::get('unit/edit/{id}', [UnitController::class, 'edit'])->name('unit.edit');
+            Route::put('unit/update/{id}', [UnitController::class, 'update'])->name('unit.update');
+        });
+        Route::group(['middleware' => ['can:uni.delete']], function () {
+            Route::get('unit/destroy/{id}', [UnitController::class, 'destroy'])->name('unit.destroy');
+            Route::get('unit/delete/{id}', [UnitController::class, 'delete'])->name('unit.delete');
+            Route::get('unit/restore/{id}', [UnitController::class, 'restore'])->name('unit.restore');
+        });
     }
     /**
      * Display a listing of the resource.

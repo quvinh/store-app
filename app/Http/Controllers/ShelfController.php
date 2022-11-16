@@ -15,11 +15,13 @@ class ShelfController extends Controller
     public static function Routes()
     {
         // Route::get('shelf', [ShelfController::class, 'index' ])->name('shelf.index');
-        Route::get('warehouse/{id}', [ShelfController::class, 'warehouseDetail'])->name('shelf.warehouse-details');
-        Route::post('warehouse/{warehouse_id}/add-shelf', [ShelfController::class, 'addShelf'])->name('shelf.add-shelf');
-        Route::get('edit-shelf/{id}', [ShelfController::class, 'edit'])->name('shelf.edit');
-        Route::put('update-shelf/{id}', [ShelfController::class, 'update'])->name('shelf.update');
-        Route::get('delete-shelf/{id}', [ShelfController::class, 'destroy'])->name('shelf.destroy');
+        Route::get('warehouse/{id}', [ShelfController::class, 'warehouseDetail'])->name('shelf.warehouse-details')->middleware(['can:war.view']);
+        Route::post('warehouse/{warehouse_id}/add-shelf', [ShelfController::class, 'addShelf'])->name('shelf.add-shelf')->middleware(['can:she.add']);
+        Route::group(['middleware' => ['can:she.edit']], function () {
+            Route::get('edit-shelf/{id}', [ShelfController::class, 'edit'])->name('shelf.edit');
+            Route::put('update-shelf/{id}', [ShelfController::class, 'update'])->name('shelf.update');
+        });
+        Route::get('delete-shelf/{id}', [ShelfController::class, 'destroy'])->name('shelf.destroy')->middleware(['can:she.delete']);
         // Route::get('shelf/{id}', [ShelfController::class, 'shelfDetail'])->name('shelf.shelf-detail');
     }
     /**
@@ -190,7 +192,6 @@ class ShelfController extends Controller
                 $val->item_detail_quantity - $exim_invalid[0]->quantity - $trans_invalid[0]->quantity,
                 $exim_invalid[0]->quantity +  $trans_invalid[0]->quantity
             ];
-
         }
         return view('admin.components.warehouse.warehousedetail', compact('shelf', 'warehouse_id', 'warehouse', 'items'));
     }

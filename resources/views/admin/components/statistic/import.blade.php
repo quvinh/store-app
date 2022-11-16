@@ -42,7 +42,8 @@
                     <div {{ count($warehouses) > 1 ? '' : 'hidden' }} class="col-2">
                         <select data-toggle="select2" title="Warehouse" id="warehouse">
                             @foreach ($warehouses as $warehouse)
-                                <option value="{{ $warehouse->id }}" {{ app('request')->input('warehouse') == $warehouse->id ? 'selected' : '' }}>
+                                <option value="{{ $warehouse->id }}"
+                                    {{ app('request')->input('warehouse') == $warehouse->id ? 'selected' : '' }}>
                                     {{ $warehouse->warehouse_name }}
                                 </option>
                             @endforeach
@@ -52,7 +53,9 @@
                         <select data-toggle="select2" title="Month" id="month">
                             <option value="">Chọn tháng</option>
                             @for ($i = 0; $i < 12; $i++)
-                                <option value={{$i+1}} {{ app('request')->input('month') == ($i+1) ? 'selected' : '' }}>Tháng {{$i+1}}</option>
+                                <option value={{ $i + 1 }}
+                                    {{ app('request')->input('month') == $i + 1 ? 'selected' : '' }}>Tháng
+                                    {{ $i + 1 }}</option>
                             @endfor
                         </select>
                     </div>
@@ -60,15 +63,18 @@
                         <select data-toggle="select2" title="Quarter" id="quarter">
                             <option value="">Chọn quý</option>
                             @for ($i = 0; $i < 4; $i++)
-                                <option value={{$i+1}} {{ app('request')->input('quarter') == ($i+1) ? 'selected' : '' }}>Quý {{$i+1}}</option>
+                                <option value={{ $i + 1 }}
+                                    {{ app('request')->input('quarter') == $i + 1 ? 'selected' : '' }}>Quý
+                                    {{ $i + 1 }}</option>
                             @endfor
                         </select>
                     </div>
                     <div class="col-2">
                         <div class="mb-3 position-relative" id="yearpicker">
-                            <input type="text" id="year" class="form-control" placeholder="Chọn năm" data-date-format="yyyy"
-                            data-provide="datepicker" data-date-min-view-mode="2" data-date-container="#yearpicker"
-                            value="{{ app('request')->input('year') ? app('request')->input('year') : '' }}">
+                            <input type="text" id="year" class="form-control" placeholder="Chọn năm"
+                                data-date-format="yyyy" data-provide="datepicker" data-date-min-view-mode="2"
+                                data-date-container="#yearpicker"
+                                value="{{ app('request')->input('year') ? app('request')->input('year') : '' }}">
                         </div>
                     </div>
                     <div class="col-2"></div>
@@ -91,8 +97,13 @@
                             <tbody>
                                 @foreach ($im as $key => $item)
                                     <tr>
-                                        <td><a href="{{ route('import.edit', $item->id) }}">
-                                            <span class="text-info">{{ $item->exim_code }}</span></a></td>
+                                        @can('eim.edit')
+                                            <td><a href="{{ route('import.edit', $item->id) }}">
+                                                    <span class="text-info">{{ $item->exim_code }}</span></a></td>
+                                        @endcan
+                                        @cannot('eim.edit')
+                                            <td><span class="text-info">{{ $item->exim_code }}</span></td>
+                                        @endcannot
                                         <td>{{ $item->created_by }}</td>
                                         <th>
                                             <span style="font-size: 15px"
@@ -101,12 +112,16 @@
                                         </th>
                                         <td>{{ $item->created }}</td>
                                         <td class="table-action">
-                                            <a href="{{ route('import.edit', $item->id) }}" class="action-icon">
-                                                <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" title="Sửa phiếu"></i></a>
-                                            <a href="{{ route('ex_import.delete', $item->id) }}" class="action-icon">
-                                                <i class="mdi mdi-delete" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Xóa phiếu"></i></a>
+                                            @can('eim.edit')
+                                                <a href="{{ route('import.edit', $item->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" title="Sửa phiếu"></i></a>
+                                            @endcan
+                                            @can('eim.delete')
+                                                <a href="{{ route('ex_import.delete', $item->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-delete" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        title="Xóa phiếu"></i></a>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
@@ -176,6 +191,7 @@
                 },
             })
         });
+
         function filter() {
             var warehouse = $('#warehouse').val();
             var month = $('#month').val();

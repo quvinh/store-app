@@ -23,12 +23,17 @@ class AccountController extends Controller
     public static function Routes()
     {
         Route::group(['prefix' => 'account'], function () {
-            Route::get('/', [AccountController::class, 'index'])->name('account.index');
-            Route::get('/create', [AccountController::class, 'create'])->name('account.create');
-            Route::post('/store', [AccountController::class, 'store'])->name('account.store');
-            Route::get('/show/{id}', [AccountController::class, 'show'])->name('account.show');
-            Route::put('/edit/{id}', [AccountController::class, 'edit'])->name('account.edit');
-            Route::get('/delete/{id}', [AccountController::class, 'destroy'])->name('account.destroy');
+            Route::group(['middleware' => ['can:acc.edit']], function () {
+                Route::get('/show/{id}', [AccountController::class, 'show'])->name('account.show');
+                Route::put('/edit/{id}', [AccountController::class, 'edit'])->name('account.edit');
+            });
+            Route::get('/', [AccountController::class, 'index'])->name('account.index')->middleware(['can:acc.view']);
+            Route::group(['middleware' => ['can:acc.add']], function () {
+                Route::get('/create', [AccountController::class, 'create'])->name('account.create');
+                Route::post('/store', [AccountController::class, 'store'])->name('account.store');
+            });
+            Route::get('/delete/{id}', [AccountController::class, 'destroy'])->name('account.destroy')->middleware(['can:acc.delete']);
+
             Route::put('/update/{id}', [AccountController::class, 'update'])->name('account.profile.update');
             Route::get('/profile', [AccountController::class, 'profile'])->name('account.profile');
             Route::put('/change-password/{id}', [AccountController::class, 'changePassword'])->name('account.change-password');

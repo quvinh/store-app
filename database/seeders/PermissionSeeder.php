@@ -67,11 +67,17 @@ class PermissionSeeder extends Seeder
             ['name' => 'acc.delete', 'guard_name' => 'web'],
             ['name' => 'acc.view', 'guard_name' => 'web'],
 
-            // Group
-            // ['name' => 'gro.add', 'guard_name' => 'web'],
-            // ['name' => 'gro.edit', 'guard_name' => 'web'],
-            // ['name' => 'gro.delete', 'guard_name' => 'web'],
-            // ['name' => 'gro.view', 'guard_name' => 'web'],
+            // Unit
+            ['name' => 'uni.add', 'guard_name' => 'web'],
+            ['name' => 'uni.edit', 'guard_name' => 'web'],
+            ['name' => 'uni.delete', 'guard_name' => 'web'],
+            ['name' => 'uni.view', 'guard_name' => 'web'],
+
+            // Supplier
+            ['name' => 'sup.add', 'guard_name' => 'web'],
+            ['name' => 'sup.edit', 'guard_name' => 'web'],
+            ['name' => 'sup.delete', 'guard_name' => 'web'],
+            ['name' => 'sup.view', 'guard_name' => 'web'],
 
             // System
             ['name' => 'sys.add', 'guard_name' => 'web'],
@@ -79,8 +85,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'sys.delete', 'guard_name' => 'web'],
             ['name' => 'sys.view', 'guard_name' => 'web'],
 
-            // Report
-            ['name' => 'rep.view', 'guard_name' => 'web'],
+            // Statistic
+            ['name' => 'sta.view', 'guard_name' => 'web'],
 
             // Log system
             ['name' => 'log.add', 'guard_name' => 'web'],

@@ -123,10 +123,14 @@
                                                 {{ $account->created_at }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('account.show', $account->id) }}"
-                                                    class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                                <a href="{{ route('account.destroy', $account->id) }}"
-                                                    class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                                @can('acc.edit')
+                                                    <a href="{{ route('account.show', $account->id) }}" class="action-icon"> <i
+                                                            class="mdi mdi-square-edit-outline"></i></a>
+                                                @endcan
+                                                @can('acc.delete')
+                                                    <a href="{{ route('account.destroy', $account->id) }}" class="action-icon">
+                                                        <i class="mdi mdi-delete"></i></a>
+                                                @endcan
                                             </td>
                                         </tr>
                                     @endforeach
@@ -143,7 +147,6 @@
 @endsection
 
 @section('script')
-
     <!-- bundle -->
     <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
@@ -168,7 +171,7 @@
                         next: "<i class='mdi mdi-chevron-right'>"
                     },
                     info: "Showing accounts _START_ to _END_ of _TOTAL_",
-                    lengthMenu: 'Display <select class="form-select form-select-sm ms-1 me-1"><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="-1">All</option></select> <a href="{{ route("account.create") }}" class="btn btn-primary btn-sm"><i class="mdi mdi-plus-circle me-2"></i> Add Account</a>'
+                    lengthMenu: 'Display <select class="form-select form-select-sm ms-1 me-1"><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="-1">All</option></select> <a href="{{ route('account.create') }}" class="btn btn-primary btn-sm"><i class="mdi mdi-plus-circle me-2"></i> Add Account</a>'
                 },
                 pageLength: 50,
                 columns: [{

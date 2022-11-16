@@ -16,11 +16,13 @@ class WarehouseController extends Controller
     public static function Routes()
     {
         // Route::get('warehouse', [WarehouseController::class, 'index'])->name('warehouse.index');// ???
-        Route::post('warehouse', [WarehouseController::class, 'store'])->name('warehouse.store');
-        Route::get('warehouse/edit/{id}', [WarehouseController::class, 'edit'])->name('warehouse.edit');
-        Route::get('warehouse/destroy/{id}', [WarehouseController::class, 'destroy'])->name('warehouse.destroy');
-        Route::put('warehouse/update/{id}', [WarehouseController::class, 'update'])->name('warehouse.update');
-        Route::get('warehouse', [WarehouseController::class, 'warehouseById'])->name('warehouse.warehouse-by-id');// ???
+        Route::post('warehouse', [WarehouseController::class, 'store'])->name('warehouse.store')->middleware(['can:war.add']);
+        Route::group(['middleware' => ['can:war.edit']], function () {
+            Route::get('warehouse/edit/{id}', [WarehouseController::class, 'edit'])->name('warehouse.edit');
+            Route::put('warehouse/update/{id}', [WarehouseController::class, 'update'])->name('warehouse.update');
+        });
+        Route::get('warehouse/destroy/{id}', [WarehouseController::class, 'destroy'])->name('warehouse.destroy')->middleware(['can:war.delete']);
+        Route::get('warehouse', [WarehouseController::class, 'warehouseById'])->name('warehouse.warehouse-by-id')->middleware(['can:war.view']); // ???
     }
     /**
      * Display a listing of the resource.

@@ -99,13 +99,16 @@
                                         <button type="button" class="btn btn-primary" onclick="filter1()">Tìm kiếm</button>
                                     </div>
                                 </div>
-                                <div class="row mb-2">
-                                    <div class="col-sm-4">
-                                        <a href="{{ route('import.index') }}" class="btn btn-danger mb-2">
-                                            Thêm mới phiếu nhập
-                                        </a>
+                                @can('eim.add')
+                                    <div class="row mb-2">
+                                        <div class="col-sm-4">
+                                            <a href="{{ route('import.index') }}" class="btn btn-danger mb-2">
+                                                Thêm mới phiếu nhập
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
+                                @endcan
+
                                 <hr>
                                 <table id="import-datatable"
                                     class="table table-centered table-striped dt-responsive nowrap w-100">
@@ -122,8 +125,13 @@
                                     <tbody>
                                         @foreach ($im_items as $key => $item)
                                             <tr>
-                                                <td><a href="{{ route('import.edit', $item->id) }}">
-                                                   <span class="text-info">{{ $item->exim_code }}</span></a></td>
+                                                @can('eim.edit')
+                                                    <td><a href="{{ route('import.edit', $item->id) }}">
+                                                            <span class="text-info">{{ $item->exim_code }}</span></a></td>
+                                                @endcan
+                                                @cannot('eim.edit')
+                                                    <td><span class="text-info">{{ $item->exim_code }}</span></td>
+                                                @endcannot
                                                 <td>{{ $item->created_by }}</td>
                                                 <th>
                                                     @foreach ($item->item as $vt)
@@ -137,17 +145,21 @@
                                                 </th>
                                                 <td>{{ $item->created }}</td>
                                                 <td class="table-action">
-                                                    <a href="{{ route('import.edit', $item->id) }}" class="action-icon">
-                                                        <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" title="Sửa phiếu"></i></a>
-                                                    <a href="{{ route('import.confirm', $item->id) }}"
-                                                        class="action-icon">
-                                                        <i class="mdi mdi-clipboard-edit-outline" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" title="Duyệt phiếu"></i></a>
-                                                    <a href="{{ route('ex_import.delete', $item->id) }}"
-                                                        class="action-icon">
-                                                        <i class="mdi mdi-delete" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" title="Xóa phiếu"></i></a>
+                                                    @can('eim.edit')
+                                                        <a href="{{ route('import.edit', $item->id) }}" class="action-icon">
+                                                            <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top" title="Sửa phiếu"></i></a>
+                                                        <a href="{{ route('import.confirm', $item->id) }}"
+                                                            class="action-icon">
+                                                            <i class="mdi mdi-clipboard-edit-outline" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top" title="Duyệt phiếu"></i></a>
+                                                    @endcan
+                                                    @can('eim.delete')
+                                                        <a href="{{ route('ex_import.delete', $item->id) }}"
+                                                            class="action-icon">
+                                                            <i class="mdi mdi-delete" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top" title="Xóa phiếu"></i></a>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -200,13 +212,16 @@
                                             kiếm</button>
                                     </div>
                                 </div>
-                                <div class="row mb-2">
-                                    <div class="col-sm-4">
-                                        <a href="{{ route('export.index') }}" class="btn btn-danger mb-2">
-                                            Thêm mới phiếu xuất
-                                        </a>
+                                @can('eim.add')
+                                    <div class="row mb-2">
+                                        <div class="col-sm-4">
+                                            <a href="{{ route('export.index') }}" class="btn btn-danger mb-2">
+                                                Thêm mới phiếu xuất
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
+                                @endcan
+
                                 <hr>
                                 <table id="export-datatable"
                                     class="table table-centered table-striped dt-responsive nowrap w-100">
@@ -224,8 +239,13 @@
                                     <tbody>
                                         @foreach ($ex_items as $key => $item)
                                             <tr>
-                                                <td><a href="{{ route('export.edit', $item->id) }}" >
-                                                    <span class="text-info">{{ $item->exim_code }}</span></a></td>
+                                                @can('eim.edit')
+                                                    <td><a href="{{ route('export.edit', $item->id) }}">
+                                                            <span class="text-info">{{ $item->exim_code }}</span></a></td>
+                                                @endcan
+                                                @cannot('eim.edit')
+                                                    <td><span class="text-info">{{ $item->exim_code }}</span></td>
+                                                @endcannot
                                                 <td>{{ $item->created_by }}</td>
                                                 <th>
                                                     @foreach ($item->item as $vt)
@@ -239,17 +259,21 @@
                                                 </th>
                                                 <td>{{ $item->created }}</td>
                                                 <td class="table-action">
-                                                    <a href="{{ route('export.edit', $item->id) }}" class="action-icon">
-                                                        <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" title="Sửa phiếu"></i></a>
-                                                    <a href="{{ route('export.confirm', $item->id) }}"
-                                                        class="action-icon">
-                                                        <i class="mdi mdi-clipboard-edit-outline" data-bs-toggle="tooltip"
-                                                            data-bs-placement="top" title="Duyệt phiếu"></i></a>
-                                                    <a href="{{ route('ex_import.delete', $item->id) }}"
-                                                        class="action-icon"> <i class="mdi mdi-delete"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            title="Xóa phiếu"></i></a>
+                                                    @can('eim.edit')
+                                                        <a href="{{ route('export.edit', $item->id) }}" class="action-icon">
+                                                            <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top" title="Sửa phiếu"></i></a>
+                                                        <a href="{{ route('export.confirm', $item->id) }}"
+                                                            class="action-icon">
+                                                            <i class="mdi mdi-clipboard-edit-outline" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top" title="Duyệt phiếu"></i></a>
+                                                    @endcan
+                                                    @can('eim.delete')
+                                                        <a href="{{ route('ex_import.delete', $item->id) }}"
+                                                            class="action-icon"> <i class="mdi mdi-delete"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="Xóa phiếu"></i></a>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                         @endforeach

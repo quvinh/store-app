@@ -42,7 +42,8 @@
                     <div {{ count($warehouses) > 1 ? '' : 'hidden' }} class="col-2">
                         <select data-toggle="select2" title="Warehouse" id="warehouse">
                             @foreach ($warehouses as $warehouse)
-                                <option value="{{ $warehouse->id }}" {{ app('request')->input('warehouse') == $warehouse->id ? 'selected' : '' }}>
+                                <option value="{{ $warehouse->id }}"
+                                    {{ app('request')->input('warehouse') == $warehouse->id ? 'selected' : '' }}>
                                     {{ $warehouse->warehouse_name }}
                                 </option>
                             @endforeach
@@ -52,7 +53,9 @@
                         <select data-toggle="select2" title="Month" id="month">
                             <option value="">Chọn tháng</option>
                             @for ($i = 0; $i < 12; $i++)
-                                <option value={{$i+1}} {{ app('request')->input('month') == ($i+1) ? 'selected' : '' }}>Tháng {{$i+1}}</option>
+                                <option value={{ $i + 1 }}
+                                    {{ app('request')->input('month') == $i + 1 ? 'selected' : '' }}>Tháng
+                                    {{ $i + 1 }}</option>
                             @endfor
                         </select>
                     </div>
@@ -60,15 +63,18 @@
                         <select data-toggle="select2" title="Quarter" id="quarter">
                             <option value="">Chọn quý</option>
                             @for ($i = 0; $i < 4; $i++)
-                                <option value={{$i+1}} {{ app('request')->input('quarter') == ($i+1) ? 'selected' : '' }}>Quý {{$i+1}}</option>
+                                <option value={{ $i + 1 }}
+                                    {{ app('request')->input('quarter') == $i + 1 ? 'selected' : '' }}>Quý
+                                    {{ $i + 1 }}</option>
                             @endfor
                         </select>
                     </div>
                     <div class="col-2">
                         <div class="mb-3 position-relative" id="yearpicker">
-                            <input type="text" id="year" class="form-control" placeholder="Chọn năm" data-date-format="yyyy"
-                            data-provide="datepicker" data-date-min-view-mode="2" data-date-container="#yearpicker"
-                            value="{{ app('request')->input('year') ? app('request')->input('year') : '' }}">
+                            <input type="text" id="year" class="form-control" placeholder="Chọn năm"
+                                data-date-format="yyyy" data-provide="datepicker" data-date-min-view-mode="2"
+                                data-date-container="#yearpicker"
+                                value="{{ app('request')->input('year') ? app('request')->input('year') : '' }}">
                         </div>
                     </div>
                     <div class="col-2"></div>
@@ -78,7 +84,8 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <table id="transfer-datatable" class="table table-centered table-striped dt-responsive nowrap w-100">
+                        <table id="transfer-datatable"
+                            class="table table-centered table-striped dt-responsive nowrap w-100">
                             <thead>
                                 <tr>
                                     <th>Mã phiếu nhập</th>
@@ -92,10 +99,16 @@
                             <tbody>
                                 @foreach ($transfers as $key => $item)
                                     <tr>
-                                        <td><a href="{{ route('transfer.edit', $item->id) }}">
-                                            <span class="text-info">{{ $item->transfer_code }}</span></a></td>
+                                        @can('tra.edit')
+                                            <td><a href="{{ route('transfer.edit', $item->id) }}">
+                                                <span class="text-info">{{ $item->transfer_code }}</span></a></td>
+                                        @endcan
+                                        @cannot('tra.edit')
+                                        <td><span class="text-info">{{ $item->transfer_code }}</span></td>
+                                        @endcannot
+
                                         <td>{{ $item->name }}</td>
-                                        <th>{{$item->warehouse_name}}</th>
+                                        <th>{{ $item->warehouse_name }}</th>
                                         <th>
                                             <span style="font-size: 15px"
                                                 class="badge badge-{{ $item->transfer_status == '0' ? 'info-lighten' : 'success-lighten' }}">
@@ -103,12 +116,18 @@
                                         </th>
                                         <td>{{ $item->created }}</td>
                                         <td class="table-action">
-                                            <a href="{{ route('transfer.edit', $item->id) }}" class="action-icon">
-                                                <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" title="Sửa phiếu"></i></a>
-                                            <a href="{{ route('transfer.delete', $item->id) }}" class="action-icon">
-                                                <i class="mdi mdi-delete" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Xóa phiếu"></i></a>
+                                            @can('tra.edit')
+                                                <a href="{{ route('transfer.edit', $item->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" title="Sửa phiếu"></i></a>
+                                            @endcan
+                                            @can('tra.delete')
+                                                <a href="{{ route('transfer.delete', $item->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-delete" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        title="Xóa phiếu"></i></a>
+                                            @endcan
+
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -180,6 +199,7 @@
                 },
             })
         });
+
         function filter() {
             var warehouse = $('#warehouse').val();
             var month = $('#month').val();

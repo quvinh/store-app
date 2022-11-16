@@ -19,16 +19,22 @@ class TransferController extends Controller
     public static function Routes()
     {
         Route::group(['prefix' => 'transfer'], function () {
-            Route::get('/', [TransferController::class, 'index'])->name('transfer.index');
-            Route::get('/add', [TransferController::class, 'create'])->name('transfer.add');
-            Route::post('/store', [TransferController::class, 'store'])->name('transfer.store');
-            Route::get('/edit/{id}', [TransferController::class, 'edit'])->name('transfer.edit');
-            Route::put('/update/{id}', [TransferController::class, 'update'])->name('transfer.update');
-            Route::get('/confirm/{id}', [TransferController::class, 'confirm'])->name('transfer.confirm');
-            Route::put('/update-status/{id}', [TransferController::class, 'update_status'])->name('transfer.update-status');
-            Route::get('/delete/{id}', [TransferController::class, 'delete'])->name('transfer.delete');
-            Route::get('/restore/{id}', [TransferController::class, 'restore'])->name('transfer.restore');
-            Route::get('/destroy/{id}', [TransferController::class, 'destroy'])->name('transfer.destroy');
+            Route::get('/', [TransferController::class, 'index'])->name('transfer.index')->middleware(['can:tra.view']);
+            Route::group(['middleware' => ['can:tra.add']], function () {
+                Route::get('/add', [TransferController::class, 'create'])->name('transfer.add');
+                Route::post('/store', [TransferController::class, 'store'])->name('transfer.store');
+            });
+            Route::group(['middleware' => ['can:tra.edit']], function () {
+                Route::get('/edit/{id}', [TransferController::class, 'edit'])->name('transfer.edit');
+                Route::put('/update/{id}', [TransferController::class, 'update'])->name('transfer.update');
+                Route::get('/confirm/{id}', [TransferController::class, 'confirm'])->name('transfer.confirm');
+                Route::put('/update-status/{id}', [TransferController::class, 'update_status'])->name('transfer.update-status');
+            });
+            Route::group(['middleware' => ['can:tra.delete']], function () {
+                Route::get('/delete/{id}', [TransferController::class, 'delete'])->name('transfer.delete');
+                Route::get('/restore/{id}', [TransferController::class, 'restore'])->name('transfer.restore');
+                Route::get('/destroy/{id}', [TransferController::class, 'destroy'])->name('transfer.destroy');
+            });
         });
     }
     /**

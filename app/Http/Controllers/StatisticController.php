@@ -17,9 +17,11 @@ class StatisticController extends Controller
     public static function Routes()
     {
         Route::group(['prefix' => 'statistic'], function () {
-            Route::get('/import', [StatisticController::class, 'import'])->name('statistic.import');
-            Route::get('/export', [StatisticController::class, 'export'])->name('statistic.export');
-            Route::get('/transfer', [StatisticController::class, 'transfer'])->name('statistic.transfer');
+            Route::group(['middleware' => ['can:sta.view']], function () {
+                Route::get('/import', [StatisticController::class, 'import'])->name('statistic.import');
+                Route::get('/export', [StatisticController::class, 'export'])->name('statistic.export');
+                Route::get('/transfer', [StatisticController::class, 'transfer'])->name('statistic.transfer');
+            });
         });
     }
     public function import(Request $request)

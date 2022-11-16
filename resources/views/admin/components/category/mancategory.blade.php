@@ -45,19 +45,22 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-sm-4">
-                                <a data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false"
-                                    aria-controls="collapseExample" class="btn btn-danger mb-2 collapsed">
-                                    Tạo mới loại vật tư
-                                </a>
+                        @can('cat.add')
+                            <div class="row mb-2">
+                                <div class="col-sm-4">
+                                    <a data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false"
+                                        aria-controls="collapseExample" class="btn btn-danger mb-2 collapsed">
+                                        Tạo mới loại vật tư
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="collapse" id="collapseExample">
-                            <div class="tab-pane show active" id="custom-styles-preview">
-                                @include('admin.components.category.addcategory')
+                            <div class="collapse" id="collapseExample">
+                                <div class="tab-pane show active" id="custom-styles-preview">
+                                    @include('admin.components.category.addcategory')
+                                </div>
                             </div>
-                        </div>
+                        @endcan
+
                         <div>
                             <hr>
                         </div>
@@ -88,10 +91,15 @@
                                             @endif
                                         </td>
                                         <td class="table-action">
-                                            <a href="{{ route('category.edit', $category->id) }}" class="action-icon">
-                                                <i class="mdi mdi-square-edit-outline"></i></a>
-                                            <a href="{{ route('category.destroy', $category->id) }}" class="action-icon">
-                                                <i class="mdi mdi-delete"></i></a>
+                                            @can('cat.edit')
+                                                <a href="{{ route('category.edit', $category->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-square-edit-outline"></i></a>
+                                            @endcan
+                                            @can('cat.delete')
+                                                <a href="{{ route('category.destroy', $category->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-delete"></i></a>
+                                            @endcan
+
                                         </td>
                                     </tr>
                                 @endforeach

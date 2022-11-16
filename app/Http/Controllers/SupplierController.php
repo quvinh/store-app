@@ -11,14 +11,20 @@ class SupplierController extends Controller
 {
     public static function Routes()
     {
-        Route::get('supplier', [SupplierController::class, 'index'])->name('supplier.index');
-        Route::get('supplier/add', [SupplierController::class, 'create'])->name('supplier.add');
-        Route::post('supplier/store', [SupplierController::class, 'store'])->name('supplier.store');
-        Route::get('supplier/edit/{id}', [SupplierController::class, 'edit'])->name('supplier.edit');
-        Route::put('supplier/update/{id}', [SupplierController::class, 'update'])->name('supplier.update');
-        Route::get('supplier/delete/{id}', [SupplierController::class, 'delete'])->name('supplier.delete');
-        Route::get('supplier/restore/{id}', [SupplierController::class, 'restore'])->name('supplier.restore');
-        Route::get('supplier/destroy/{id}', [SupplierController::class, 'destroy'])->name('supplier.destroy');
+        Route::get('supplier', [SupplierController::class, 'index'])->name('supplier.index')->middleware(['can:sup.view']);
+        Route::group(['middleware' => ['can:sup.add']], function () {
+            Route::get('supplier/add', [SupplierController::class, 'create'])->name('supplier.add');
+            Route::post('supplier/store', [SupplierController::class, 'store'])->name('supplier.store');
+        });
+        Route::group(['middleware' => ['can:sup.edit']], function () {
+            Route::get('supplier/edit/{id}', [SupplierController::class, 'edit'])->name('supplier.edit');
+            Route::put('supplier/update/{id}', [SupplierController::class, 'update'])->name('supplier.update');
+        });
+        Route::group(['middleware' => ['can:sup.delete']], function () {
+            Route::get('supplier/delete/{id}', [SupplierController::class, 'delete'])->name('supplier.delete');
+            Route::get('supplier/restore/{id}', [SupplierController::class, 'restore'])->name('supplier.restore');
+            Route::get('supplier/destroy/{id}', [SupplierController::class, 'destroy'])->name('supplier.destroy');
+        });
     }
     /**
      * Display a listing of the resource.

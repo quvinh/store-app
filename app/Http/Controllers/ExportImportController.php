@@ -23,28 +23,38 @@ class ExportImportController extends Controller
     public static function Routes()
     {
 
-        Route::get('ex_import', [ExportImportController::class, 'index'])->name('ex_import.index');
+        Route::get('ex_import', [ExportImportController::class, 'index'])->name('ex_import.index')->middleware(['can:eim.view']);;
         Route::group(['prefix' => 'import'], function () {
-            Route::get('', [ExportImportController::class, 'import'])->name('import.index');
-            Route::post('/store', [ExportImportController::class, 'im_store'])->name('import.store');
-            Route::get('/edit/{id}', [ExportImportController::class, 'im_edit'])->name('import.edit');
-            Route::put('/update/{id}', [ExportImportController::class, 'im_update'])->name('import.update');
-            Route::get('/confirm/{id}', [ExportImportController::class, 'im_confirm'])->name('import.confirm');
-            Route::put('/update-status/{id}', [ExportImportController::class, 'im_update_status'])->name('import.update-status');
+            Route::group(['middleware' => ['can:eim.add']], function () {
+                Route::get('', [ExportImportController::class, 'import'])->name('import.index');
+                Route::post('/store', [ExportImportController::class, 'im_store'])->name('import.store');
+            });
+            Route::group(['middleware' => ['can:eim.edit']], function () {
+                Route::get('/edit/{id}', [ExportImportController::class, 'im_edit'])->name('import.edit');
+                Route::put('/update/{id}', [ExportImportController::class, 'im_update'])->name('import.update');
+                Route::get('/confirm/{id}', [ExportImportController::class, 'im_confirm'])->name('import.confirm');
+                Route::put('/update-status/{id}', [ExportImportController::class, 'im_update_status'])->name('import.update-status');
+            });
         });
 
         Route::group(['prefix' => 'export'], function () {
-            Route::get('/', [ExportImportController::class, 'export'])->name('export.index');
-            Route::post('/store', [ExportImportController::class, 'ex_store'])->name('export.store');
-            Route::get('/edit/{id}', [ExportImportController::class, 'ex_edit'])->name('export.edit');
-            Route::put('/update/{id}', [ExportImportController::class, 'ex_update'])->name('export.update');
-            Route::get('/confirm/{id}', [ExportImportController::class, 'ex_confirm'])->name('export.confirm');
-            Route::put('/update-status/{exim_id}/{id}', [ExportImportController::class, 'ex_update_status'])->name('export.update-status');
+            Route::group(['middleware' => ['can:eim.add']], function () {
+                Route::get('/', [ExportImportController::class, 'export'])->name('export.index');
+                Route::post('/store', [ExportImportController::class, 'ex_store'])->name('export.store');
+            });
+            Route::group(['middleware' => ['can:eim.edit']], function () {
+                Route::get('/edit/{id}', [ExportImportController::class, 'ex_edit'])->name('export.edit');
+                Route::put('/update/{id}', [ExportImportController::class, 'ex_update'])->name('export.update');
+                Route::get('/confirm/{id}', [ExportImportController::class, 'ex_confirm'])->name('export.confirm');
+                Route::put('/update-status/{exim_id}/{id}', [ExportImportController::class, 'ex_update_status'])->name('export.update-status');
+            });
         });
         Route::group(['prefix' => 'ex_import'], function () {
-            Route::get('/delete/{id}', [ExportImportController::class, 'delete'])->name('ex_import.delete');
-            Route::get('/restore/{id}', [ExportImportController::class, 'restore'])->name('ex_import.restore');
-            Route::get('/destroy/{id}', [ExportImportController::class, 'destroy'])->name('ex_import.destroy');
+            Route::group(['middleware' => ['can:eim.delete']], function () {
+                Route::get('/delete/{id}', [ExportImportController::class, 'delete'])->name('ex_import.delete');
+                Route::get('/restore/{id}', [ExportImportController::class, 'restore'])->name('ex_import.restore');
+                Route::get('/destroy/{id}', [ExportImportController::class, 'destroy'])->name('ex_import.destroy');
+            });
         });
     }
     /**

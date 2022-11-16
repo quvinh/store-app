@@ -14,12 +14,14 @@ class RoleController extends Controller
 {
     public static function Routes()
     {
-        Route::group(['prefix' => 'role'], function() {
-            Route::get('/', [RoleController::class, 'index'])->name('admin.role');
-            Route::post('/add', [RoleController::class, 'store'])->name('admin.role.add');
-            Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('admin.role.edit');
-            Route::put('/update/{id}', [RoleController::class, 'update'])->name('admin.role.update');
-            Route::get('/delete/{id}', [RoleController::class, 'destroy'])->name('admin.role.delete');
+        Route::group(['prefix' => 'role'], function () {
+            Route::get('/', [RoleController::class, 'index'])->name('admin.role')->middleware(['can:sys.view']);
+            Route::post('/add', [RoleController::class, 'store'])->name('admin.role.add')->middleware(['can:sys.add']);
+            Route::group(['middleware' => ['can:sys.edit']], function () {
+                Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('admin.role.edit');
+                Route::put('/update/{id}', [RoleController::class, 'update'])->name('admin.role.update');
+            });
+            Route::get('/delete/{id}', [RoleController::class, 'destroy'])->name('admin.role.delete')->middleware(['can:sys.delete']);
         });
     }
     /**
@@ -55,7 +57,7 @@ class RoleController extends Controller
             'name' => 'required|unique:roles',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
 
@@ -127,7 +129,7 @@ class RoleController extends Controller
             'permission' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
 
@@ -135,8 +137,8 @@ class RoleController extends Controller
         $permission = array();
         $permissions = Permission::all('name')->pluck('name');
         $data = explode(',', $request->permission);
-        foreach($data as $value) {
-            if(in_array($value, $permissions->toArray())) {
+        foreach ($data as $value) {
+            if (in_array($value, $permissions->toArray())) {
                 array_push($permission, $value);
             }
         }
@@ -159,7 +161,7 @@ class RoleController extends Controller
     {
         $role = Role::findById($id);
         $userCount = User::role($role->name)->count();
-        if($userCount>0) {
+        if ($userCount > 0) {
             return redirect()->back()->with(['error' => 'Một vài tài khoản đang theo nhóm này, không thể xóa']);
         } else {
             $role->delete();

@@ -35,10 +35,15 @@
                                 </th>
                                 <td>{{ $item->created_at }}</td>
                                 <td class="table-action">
-                                    <a href="{{ route('export.edit', $item->id) }}" class="action-icon">
+                                    @can('eim.edit')
+                                        <a href="{{ route('export.edit', $item->id) }}" class="action-icon">
                                         <i class="mdi mdi-eye-outline"></i></a>
-                                    <a href="{{ route('ex_import.delete', $item->id) }}" class="action-icon">
+                                    @endcan
+                                    @can('eim.delete')
+                                        <a href="{{ route('ex_import.delete', $item->id) }}" class="action-icon">
                                         <i class="mdi mdi-delete"></i></a>
+                                    @endcan
+
                                 </td>
                             </tr>
                         @endforeach

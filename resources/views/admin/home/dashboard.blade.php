@@ -186,7 +186,7 @@
                 // select: {
                 //     style: "multi"
                 // },
-                order: true,
+                // order: true,
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded"), $(
                         "#import-datatable_length label").addClass("form-label")

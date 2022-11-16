@@ -30,9 +30,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-2">
+                        @can('sup.add')
+                            <div class="row mb-2">
                             <div class="col-sm-4">
-                                <a href="{{route('supplier.add')}}" class="btn btn-danger mb-2">
+                                <a href="{{ route('supplier.add') }}" class="btn btn-danger mb-2">
                                     Tạo mới nhà cung cấp
                                 </a>
                             </div>
@@ -40,6 +41,8 @@
                         <div>
                             <hr>
                         </div>
+                        @endcan
+
                         <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
                             {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
@@ -67,10 +70,14 @@
                                             @endif
                                         </td>
                                         <td class="table-action">
-                                            <a href="{{ route('supplier.edit', $supplier->id) }}" class="action-icon">
-                                                <i class="mdi mdi-square-edit-outline"></i></a>
-                                            <a href="{{ route('supplier.delete', $supplier->id) }}" class="action-icon">
-                                                <i class="mdi mdi-delete"></i></a>
+                                            @can('sup.edit')
+                                                <a href="{{ route('supplier.edit', $supplier->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-square-edit-outline"></i></a>
+                                            @endcan
+                                            @can('sup.delete')
+                                                <a href="{{ route('supplier.delete', $supplier->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-delete"></i></a>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
@@ -80,47 +87,55 @@
                 </div> <!-- end card-->
             </div> <!-- end col -->
         </div>
-        @if (count($supplierTrash) > 0)
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-title text-center" style="padding-top: 10px">
-                        <h4>Danh sách nhà cung cấp đã xóa</h4><div align="center"><hr width="95%"></div>
-                    </div>
-                    <div class="card-body">
-                        <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
-                            {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
-                            <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Mã nhà cung cấp</th>
-                                    <th>Tên</th>
-                                    <th>Ghi chú</th>
-                                    <th style="width: 10%">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($supplierTrash as $key => $supplier)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>{{ $supplier->supplier_code }}</td>
-                                        <td>{{ $supplier->supplier_name }}</td>
-                                        <td>{{ $supplier->supplier_note }}</td>
-                                        <td class="table-action">
-                                            <a href="{{ route('supplier.restore', $supplier->id) }}" class="action-icon">
-                                                <i class="mdi mdi-delete-restore"></i></a>
-                                            <a href="{{ route('supplier.destroy', $supplier->id) }}" class="action-icon">
-                                                <i class="mdi mdi-delete-forever"></i></a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div> <!-- end card-body-->
-                </div> <!-- end card-->
-            </div> <!-- end col -->
-        </div>
-        @endif
+        @can('sup.delete')
+            @if (count($supplierTrash) > 0)
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-title text-center" style="padding-top: 10px">
+                                <h4>Danh sách nhà cung cấp đã xóa</h4>
+                                <div align="center">
+                                    <hr width="95%">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
+                                    {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã nhà cung cấp</th>
+                                            <th>Tên</th>
+                                            <th>Ghi chú</th>
+                                            <th style="width: 10%">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($supplierTrash as $key => $supplier)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $supplier->supplier_code }}</td>
+                                                <td>{{ $supplier->supplier_name }}</td>
+                                                <td>{{ $supplier->supplier_note }}</td>
+                                                <td class="table-action">
+                                                    <a href="{{ route('supplier.restore', $supplier->id) }}"
+                                                        class="action-icon">
+                                                        <i class="mdi mdi-delete-restore"></i></a>
+                                                    <a href="{{ route('supplier.destroy', $supplier->id) }}"
+                                                        class="action-icon">
+                                                        <i class="mdi mdi-delete-forever"></i></a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div> <!-- end card-body-->
+                        </div> <!-- end card-->
+                    </div> <!-- end col -->
+                </div>
+            @endif
+        @endcan
+
         <!-- end row -->
     </div> <!-- container -->
 @endsection

@@ -32,22 +32,25 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-sm-4">
-                                <a data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false"
-                                    aria-controls="collapseExample" class="btn btn-danger mb-2 collapsed">
-                                    Tạo mới kho vật tư
-                                </a>
+                        @can('war.add')
+                            <div class="row mb-2">
+                                <div class="col-sm-4">
+                                    <a data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false"
+                                        aria-controls="collapseExample" class="btn btn-danger mb-2 collapsed">
+                                        Tạo mới kho vật tư
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="collapse" id="collapseExample">
-                            <div class="tab-pane show active" id="custom-styles-preview">
-                                @include('admin.components.warehouse.addwarehouse')
+                            <div class="collapse" id="collapseExample">
+                                <div class="tab-pane show active" id="custom-styles-preview">
+                                    @include('admin.components.warehouse.addwarehouse')
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <hr>
-                        </div>
+                            <div>
+                                <hr>
+                            </div>
+                        @endcan
+
                         <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
                             {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
@@ -86,7 +89,8 @@
                                         <td>{{ $warehouse->warehouse_name }}</td>
                                         <td>
                                             @foreach ($user as $item)
-                                            <span class="badge bg-primary">{{ $item->name }}-ID:{{ $item->id }}</span><br>
+                                                <span
+                                                    class="badge bg-primary">{{ $item->name }}-ID:{{ $item->id }}</span><br>
                                             @endforeach
                                         </td>
                                         <td>{{ $warehouse->warehouse_street }}</td>
@@ -100,8 +104,11 @@
                                         <td class="table-action">
                                             <a href="{{ route('shelf.warehouse-details', $warehouse->id) }}"
                                                 class="action-icon"> <i class="mdi mdi-eye"></i></a>
-                                            <a href="{{ route('warehouse.edit', $warehouse->id) }}" class="action-icon">
-                                                <i class="mdi mdi-square-edit-outline"></i></a>
+                                            @can('war.edit')
+                                                <a href="{{ route('warehouse.edit', $warehouse->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-square-edit-outline"></i></a>
+                                            @endcan
+
                                         </td>
                                     </tr>
                                 @endforeach

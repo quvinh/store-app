@@ -30,22 +30,25 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-sm-4">
-                                <a data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false"
-                                    aria-controls="collapseExample" class="btn btn-danger mb-2 collapsed">
-                                    Tạo mới đơn vị tính
-                                </a>
+                        @can('uni.add')
+                            <div class="row mb-2">
+                                <div class="col-sm-4">
+                                    <a data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false"
+                                        aria-controls="collapseExample" class="btn btn-danger mb-2 collapsed">
+                                        Tạo mới đơn vị tính
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="collapse" id="collapseExample">
-                            <div class="tab-pane show active" id="custom-styles-preview">
-                                @include('admin.components.unit.addunit')
+                            <div class="collapse" id="collapseExample">
+                                <div class="tab-pane show active" id="custom-styles-preview">
+                                    @include('admin.components.unit.addunit')
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <hr>
-                        </div>
+                            <div>
+                                <hr>
+                            </div>
+                        @endcan
+
                         <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
                             {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
@@ -63,10 +66,14 @@
                                         <td>{{ $unit->unit_name }}</td>
                                         <td>{{ $unit->unit_amount }}</td>
                                         <td class="table-action">
-                                            <a href="{{ route('unit.edit', $unit->id) }}" class="action-icon">
-                                                <i class="mdi mdi-square-edit-outline"></i></a>
-                                            <a href="{{ route('unit.delete', $unit->id) }}" class="action-icon">
-                                                <i class="mdi mdi-delete"></i></a>
+                                            @can('uni.edit')
+                                                <a href="{{ route('unit.edit', $unit->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-square-edit-outline"></i></a>
+                                            @endcan
+                                            @can('uni.delete')
+                                                <a href="{{ route('unit.delete', $unit->id) }}" class="action-icon">
+                                                    <i class="mdi mdi-delete"></i></a>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
@@ -77,45 +84,51 @@
             </div> <!-- end col -->
         </div>
         <!-- end row -->
-        @if (count($unitTrashed) > 0)
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-title text-center" style="padding-top: 10px">
-                            <h4>Danh sách đơn vị tính đã xóa</h4><div align="center"><hr width="95%"></div>
-                        </div>
-                        <div class="card-body">
-                            <table id="scroll-vertical-datatable-trashed" class="table dt-responsive nowrap">
-                                {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
-                                <thead>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Tên</th>
-                                        <th>Số lượng</th>
-                                        <th style="width: 10%">Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($unitTrashed as $key => $unit)
+        @can('uni.delete')
+            @if (count($unitTrashed) > 0)
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-title text-center" style="padding-top: 10px">
+                                <h4>Danh sách đơn vị tính đã xóa</h4>
+                                <div align="center">
+                                    <hr width="95%">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="scroll-vertical-datatable-trashed" class="table dt-responsive nowrap">
+                                    {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
+                                    <thead>
                                         <tr>
-                                            <td>{{ $key + 1 }}</td>
-                                            <td>{{ $unit->unit_name }}</td>
-                                            <td>{{ $unit->unit_amount }}</td>
-                                            <td class="table-action">
-                                                <a href="{{ route('unit.restore', $unit->id) }}" class="action-icon">
-                                                    <i class="mdi mdi-delete-restore"></i></a>
-                                                <a href="{{ route('unit.destroy', $unit->id) }}" class="action-icon">
-                                                    <i class="mdi mdi-delete-forever"></i></a>
-                                            </td>
+                                            <th>STT</th>
+                                            <th>Tên</th>
+                                            <th>Số lượng</th>
+                                            <th style="width: 10%">Thao tác</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div> <!-- end card-body-->
-                    </div> <!-- end card-->
-                </div> <!-- end col -->
-            </div>
-        @endif
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($unitTrashed as $key => $unit)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $unit->unit_name }}</td>
+                                                <td>{{ $unit->unit_amount }}</td>
+                                                <td class="table-action">
+                                                    <a href="{{ route('unit.restore', $unit->id) }}" class="action-icon">
+                                                        <i class="mdi mdi-delete-restore"></i></a>
+                                                    <a href="{{ route('unit.destroy', $unit->id) }}" class="action-icon">
+                                                        <i class="mdi mdi-delete-forever"></i></a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div> <!-- end card-body-->
+                        </div> <!-- end card-->
+                    </div> <!-- end col -->
+                </div>
+            @endif
+        @endcan
+
 
     </div> <!-- container -->
 @endsection

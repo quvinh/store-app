@@ -55,28 +55,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Giá kệ</h5>
-                        @include('admin.components.shelf.manshelf')
-                        {{-- <ul class="nav nav-tabs nav-bordered mb-3">
-                            <li class="nav-item">
-                                <a href="#buttons-table-preview" data-bs-toggle="tab" aria-expanded="false"
-                                    class="nav-link active">
-                                    <span class="d-none d-md-block">Giá kệ</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#buttons-table-code" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
-                                    <span class="d-none d-md-block">Vật tư</span>
-                                </a>
-                            </li>
-                        </ul> <!-- end nav-->
-                        <div class="tab-content">
-                            <div class="tab-pane show active" id="buttons-table-preview">
-                                @include('admin.components.shelf.manshelf')
-                            </div>
-                            <div class="tab-pane" id="buttons-table-code">
-                                @include('admin.components.shelf.shelfdetail')
-                            </div>
-                        </div> --}}
+                        @can('she.view')
+                            @include('admin.components.shelf.manshelf')
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -86,7 +67,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Vật tư</h5>
-                        @include('admin.components.shelf.shelfdetail')
+                        @can('ite.view')
+                            @include('admin.components.shelf.shelfdetail')
+                        @endcan
                     </div>
                 </div>
             </div>

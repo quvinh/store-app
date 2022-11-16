@@ -57,15 +57,18 @@
                                 <form action="{{ route('admin.role.add') }}" method="post" class="text-sm-end">
                                     @csrf
                                     <div class="row">
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="name" name="name"
-                                            placeholder="Nhập quyền mới..." value="" required />
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="name" name="name"
+                                                placeholder="Nhập quyền mới..." value="" required />
+                                        </div>
+                                        @can('sys.add')
+                                            <div class="col-sm-3">
+                                                <button class="btn btn-primary" type="submit" style="width:100%;"><i
+                                                        class="mdi mdi-plus-circle me-2"></i> Add Role</button>
+                                            </div>
+                                        @endcan
+
                                     </div>
-                                    <div class="col-sm-3">
-                                        <button class="btn btn-primary" type="submit" style="width:100%;"><i
-                                                class="mdi mdi-plus-circle me-2"></i> Add Role</button>
-                                    </div>
-                                </div>
                                 </form>
                             </div>
                             <!-- end col-->
@@ -98,10 +101,15 @@
                                                 {{ count($role->permissions) }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('admin.role.edit', $role->id) }}" class="action-icon"> <i
-                                                        class="mdi mdi-square-edit-outline"></i></a>
-                                                <a href="{{ route('admin.role.delete', $role->id) }}" class="action-icon"> <i
-                                                        class="mdi mdi-delete"></i></a>
+                                                @can('sys.edit')
+                                                    <a href="{{ route('admin.role.edit', $role->id) }}" class="action-icon"> <i
+                                                            class="mdi mdi-square-edit-outline"></i></a>
+                                                @endcan
+                                                @can('sys.delete')
+                                                    <a href="{{ route('admin.role.delete', $role->id) }}" class="action-icon">
+                                                        <i class="mdi mdi-delete"></i></a>
+                                                @endcan
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -148,29 +156,30 @@
                 },
                 pageLength: 20,
                 columns: [
-                //     {
-                //     orderable: !1,
-                //     render: function(e, l, a, o) {
-                //         return "display" === l && (e =
-                //             '<div class="form-check"><input type="checkbox" id="check' +
-                //             roles[o.row] +
-                //             '" name="checklist[]" class="checkonly form-check-input dt-checkboxes"><label class="form-check-label">&nbsp;</label></div>'
-                //         ), e
-                //     },
-                //     checkboxes: {
-                //         selectRow: !0,
-                //         selectAllRender: '<div class="form-check"><input type="checkbox" id="checkall" class="form-check-input dt-checkboxes"><label class="form-check-label">&nbsp;</label></div>'
-                //     }
-                // },
-                {
-                    orderable: !0
-                }, {
-                    orderable: !0
-                }, {
-                    orderable: !0
-                }, {
-                    orderable: !1
-                }],
+                    //     {
+                    //     orderable: !1,
+                    //     render: function(e, l, a, o) {
+                    //         return "display" === l && (e =
+                    //             '<div class="form-check"><input type="checkbox" id="check' +
+                    //             roles[o.row] +
+                    //             '" name="checklist[]" class="checkonly form-check-input dt-checkboxes"><label class="form-check-label">&nbsp;</label></div>'
+                    //         ), e
+                    //     },
+                    //     checkboxes: {
+                    //         selectRow: !0,
+                    //         selectAllRender: '<div class="form-check"><input type="checkbox" id="checkall" class="form-check-input dt-checkboxes"><label class="form-check-label">&nbsp;</label></div>'
+                    //     }
+                    // },
+                    {
+                        orderable: !0
+                    }, {
+                        orderable: !0
+                    }, {
+                        orderable: !0
+                    }, {
+                        orderable: !1
+                    }
+                ],
                 select: {
                     style: "multi"
                 },

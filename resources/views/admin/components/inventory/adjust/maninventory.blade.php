@@ -1,4 +1,4 @@
-@extends('admin.home.master')
+a@extends('admin.home.master')
 
 @section('title')
     Inventory
@@ -66,11 +66,9 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="mb-3 input-group">
-                                    <span class="input-group-text"><i
-                                            class="mdi mdi-calendar text-primary"></i></span>
+                                    <span class="input-group-text"><i class="mdi mdi-calendar text-primary"></i></span>
                                     <input type="text" class="form-control date" id="date_change"
-                                        data-toggle="date-picker" data-cancel-class="btn-warning"
-                                        name="date_change"
+                                        data-toggle="date-picker" data-cancel-class="btn-warning" name="date_change"
                                         value="{{ app('request')->input('date') ? str_replace('_', ' - ', str_replace('-', '/', app('request')->input('date'))) : '' }}">
                                 </div>
                             </div>
@@ -78,14 +76,17 @@
                                 <button type="button" class="btn btn-primary" onclick="filter()">Tìm kiếm</button>
                             </div>
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-sm-4">
-                                <a href="{{ route('inventory.create') }}" class="btn btn-danger mb-2">
-                                    Tạo phiếu
-                                </a>
+                        @can('inv.add')
+                            <div class="row mb-2">
+                                <div class="col-sm-4">
+                                    <a href="{{ route('inventory.create') }}" class="btn btn-danger mb-2">
+                                        Tạo phiếu
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <hr>
+                            <hr>
+                        @endcan
+
                         {{-- <div class="col s4"></div> --}}
                         <table id="adjust-item-datatable" class="table table-striped dt-responsive nowrap w-100">
                             <thead>
@@ -102,7 +103,8 @@
                                 @foreach ($inventories as $key => $item)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td><a href="{{ route('inventory.edit', $item->id) }}"><span class="text-info">{{ $item->inventory_code }}</span></a></td>
+                                        <td><a href="{{ route('inventory.edit', $item->id) }}"><span
+                                                    class="text-info">{{ $item->inventory_code }}</span></a></td>
                                         <td><span class="badge bg-primary">{{ $item->name }}</span></td>
                                         <td>{{ $item->created_at }}</td>
                                         <td>
@@ -115,7 +117,10 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('inventory.edit', $item->id) }}" class="btn btn-warning mb-2 me-1" type="button">Chi tiết</a>
+                                            @can('inv.edit')
+                                                <a href="{{ route('inventory.edit', $item->id) }}"
+                                                    class="btn btn-warning mb-2 me-1" type="button">Chi tiết</a>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
@@ -177,6 +182,7 @@
                 },
             })
         });
+
         function filter() {
             var dt = $('#date_change').val();
             var dateVal = dt.replace(' - ', '_');

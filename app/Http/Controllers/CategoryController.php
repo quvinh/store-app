@@ -13,11 +13,13 @@ class CategoryController extends Controller
 {
     public static function Routes()
     {
-        Route::get('category', [CategoryController::class, 'index'])->name('category.index');
-        Route::post('category/store', [CategoryController::class, 'store'])->name('category.store');
-        Route::get('category/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
-        Route::get('category/destroy/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
-        Route::put('category/update/{id}', [CategoryController::class, 'update'])->name('category.update');
+        Route::get('category', [CategoryController::class, 'index'])->name('category.index')->middleware(['can:cat.view']);
+        Route::post('category/store', [CategoryController::class, 'store'])->name('category.store')->middleware(['can:cat.add']);
+        Route::group(['middleware' => ['can:cat.edit']], function () {
+            Route::get('category/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
+            Route::put('category/update/{id}', [CategoryController::class, 'update'])->name('category.update');
+        });
+        Route::get('category/destroy/{id}', [CategoryController::class, 'destroy'])->name('category.destroy')->middleware(['can:cat.delete']);
     }
     /**
      * Display a listing of the resource.

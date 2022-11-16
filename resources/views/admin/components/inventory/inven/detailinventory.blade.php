@@ -69,15 +69,20 @@
                         <div class="tab-pane show active" id="detail">
                             @include('admin.components.inventory.inven.detail')
                         </div>
-                        <div class="tab-pane" id="import">
+                        @can('eim.view')
+                            <div class="tab-pane" id="import">
                             @include('admin.components.inventory.inven.import')
                         </div>
                         <div class="tab-pane" id="export">
                             @include('admin.components.inventory.inven.export')
                         </div>
-                        <div class="tab-pane" id="transfer">
+                        @endcan
+                        @can('tra.view')
+                            <div class="tab-pane" id="transfer">
                             @include('admin.components.inventory.inven.transfer')
                         </div>
+                        @endcan
+
                     </div>
                 </div>
             </div>
@@ -123,15 +128,85 @@
                 }, {
                     orderable: !1
                 }],
-                select: {
-                    style: "multi"
-                },
+                // select: {
+                //     style: "multi"
+                // },
                 // order: [
                 //     [1, "asc"]
                 // ],
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded"), $(
                         "#export-datatable_length label").addClass("form-label")
+                },
+            })
+            $("#import-datatable").DataTable({
+                language: {
+                    paginate: {
+                        previous: "<i class='mdi mdi-chevron-left'>",
+                        next: "<i class='mdi mdi-chevron-right'>"
+                    },
+                    info: "Showing import _START_ to _END_ of _TOTAL_",
+                    lengthMenu: 'Display <select class="form-select form-select-sm ms-1 me-1"><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="-1">All</option></select>'
+                },
+                pageLength: 50,
+                columns: [{
+                    orderable: !0
+                }, {
+                    orderable: !0
+                }, {
+                    orderable: !0
+                }, {
+                    orderable: !1
+                }, {
+                    orderable: !1
+                }, {
+                    orderable: !1
+                }],
+                // select: {
+                //     style: "multi"
+                // },
+                // order: [
+                //     [1, "asc"]
+                // ],
+                drawCallback: function() {
+                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded"), $(
+                        "#import-datatable_length label").addClass("form-label")
+                },
+            })
+            $("#transfer-datatable").DataTable({
+                language: {
+                    paginate: {
+                        previous: "<i class='mdi mdi-chevron-left'>",
+                        next: "<i class='mdi mdi-chevron-right'>"
+                    },
+                    info: "Showing transfer _START_ to _END_ of _TOTAL_",
+                    lengthMenu: 'Display <select class="form-select form-select-sm ms-1 me-1"><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="-1">All</option></select>'
+                },
+                pageLength: 50,
+                columns: [{
+                    orderable: !0
+                }, {
+                    orderable: !0
+                }, {
+                    orderable: !0
+                }, {
+                    orderable: !1
+                }, {
+                    orderable: !1
+                }, {
+                    orderable: !1
+                }, {
+                    orderable: !1
+                }],
+                // select: {
+                //     style: "multi"
+                // },
+                // order: [
+                //     [1, "asc"]
+                // ],
+                drawCallback: function() {
+                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded"), $(
+                        "#transfer-datatable_length label").addClass("form-label")
                 },
             })
         })
