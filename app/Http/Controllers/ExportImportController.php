@@ -120,8 +120,11 @@ class ExportImportController extends Controller
             $val->item = DB::table('items')
                 ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
                 ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
-                ->where('ex_imports.exim_type', 1)
-                ->where('ex_imports.exim_code', $val->exim_code)
+                ->where([
+                    'ex_imports.exim_type' => 1,
+                    'ex_imports.exim_code' => $val->exim_code,
+                    'ex_imports.warehouse_id' => $warehouse_id,
+                ])
                 ->select('items.item_name as item')
                 ->get();
         }
@@ -130,8 +133,11 @@ class ExportImportController extends Controller
             $val->item = DB::table('items')
                 ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
                 ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
-                ->where('ex_imports.exim_type', 0)
-                ->where('ex_imports.exim_code', $val->exim_code)
+                ->where([
+                    'ex_imports.exim_type' => 0,
+                    'ex_imports.exim_code' => $val->exim_code,
+                    'ex_imports.warehouse_id' => $warehouse_id,
+                ])
                 ->select('items.item_name as item')
                 ->groupBy('items.item_name')
                 ->get();
