@@ -123,16 +123,6 @@ class SupplierController extends Controller
         Supplier::find($id)->update([
             'supplier_name' => $request->supplier_name,
             'supplier_code' => $request->supplier_code,
-            'supplier_status' => $request->supplier_status == 'on' ? '1' : '0',
-            'supplier_codetax' => $request->supplier_codetax ? $request->supplier_codetax : 0,
-            'supplier_phone' => $request->supplier_phone ? $request->supplier_phone : 0,
-            'supplier_email' => $request->supplier_email ? $request->supplier_email : 0,
-            'supplier_type' => $request->supplier_type ? $request->supplier_type : 0,
-            'supplier_citizenid' => $request->supplier_citizenid ? $request->supplier_citizenid : 0,
-            'bank_id' => $request->bank_id ? $request->bank_id : 0,
-            'supplier_branch' => $request->supplier_branch ? $request->supplier_branch : 0,
-            'supplier_numbank' => $request->supplier_numbank ? $request->supplier_numbank : 0,
-            'supplier_ownerbank' => $request->supplier_ownerbank ? $request->supplier_ownerbank : 0,
             'supplier_note' => $request->supplier_note ? $request->supplier_note : '',
         ]);
         return redirect()->route('supplier.index')->with('success', 'Cập nhật nhà cung cấp thành công.');
