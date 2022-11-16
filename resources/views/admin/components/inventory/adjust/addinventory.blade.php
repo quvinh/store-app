@@ -207,7 +207,7 @@
                     b = [];
                 var html = '';
                 var text = $("#itemdetail_id option:selected").text();
-                var c = text.split('-');
+                var c = text.split(' - ');
                 a = [...c.slice(4)];
                 for (var val of a) {
                     b.push(val.replace(/\D/g, ' ').trim().replace(/\s+/g, ' '))

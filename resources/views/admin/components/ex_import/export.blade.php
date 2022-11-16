@@ -186,7 +186,7 @@
                     b = [];
                 var html = '';
                 var text = $("#itemdetail_id option:selected").text()
-                var c = text.split('-');
+                var c = text.split(' - ');
                 a = [...c.slice(4)];
                 for (var val of a) {
                     b.push(val.replace(/\D/g, ' ').trim().replace(/\s+/g, ' '))
@@ -204,7 +204,7 @@
                 var item_valid = b[2];
                 var item_quantity = $("#item_quantity").val();
                 var price = $("#export_price").val();
-
+                
                 if (item_name !== '' && supplier_name !== '' && item_quantity > 0 && price > 0) {
                     if (list.filter(item => item.id == item_detail).length > 0) {
                         var data = [...list];

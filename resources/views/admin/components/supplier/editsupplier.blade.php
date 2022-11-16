@@ -30,9 +30,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form class="needs-validation" novalidate action="{{ route('supplier.store') }}" method="POST"
+                        <form class="needs-validation" novalidate action="{{ route('supplier.update', $supplier->id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
+                            @method('put')
                             <div class="mb-3">
                                 <div class="col s12 m6 l6">
                                     <div class="row mb-2">
