@@ -27,7 +27,7 @@ return [
     ],
     'transfer' => [
         'transfer' => 'Điều chuyển vật tư',
-        'create' => 'Tạo phiếu điều chuyển',
+        'add' => 'Tạo phiếu điều chuyển',
         'edit' => 'Sửa phiếu điều chuyển',
     ],
     'inventory' => [

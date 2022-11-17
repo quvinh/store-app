@@ -41,20 +41,7 @@
         @php
             $route = preg_replace('/(admin)|\d/i', '', str_replace('/', '', Request::getPathInfo()));
         @endphp
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box">
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Add Transfer</li>
-                        </ol>
-                    </div>
-                    <h4 class="page-title">Add Transfer</h4>
-                </div>
-            </div>
-        </div>
+        {{ Breadcrumbs::render($route) }}
         <!-- end page title -->
         @if (session()->has('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -122,11 +109,7 @@
                                                     id="itemdetail_id">
                                                     <option value="">Chọn phụ tùng</option>
                                                     @foreach ($items as $item)
-                                                        <option value="{{ $item->itemdetail_id }}">{{ $item->item_name }}
-                                                            - {{ $item->item_code }} - {{ $item->supplier_name }} -
-                                                            {{ $item->shelf_name }} - Tầng {{ $item->floor_id }} - Ô
-                                                            {{ $item->cell_id }} - SLKD:{{ $item->item_quantity[0] }}
-                                                        </option>
+                                                        <option value="{{ $item->itemdetail_id }}">{{ $item->item_name }} - {{ $item->item_code }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - Tầng {{ $item->floor_id }} - Ô {{ $item->cell_id }} - SLKD:{{ $item->item_quantity[0] }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

@@ -27,7 +27,7 @@ return [
     ],
     'transfer' => [
         'transfer' => 'Transfer management',
-        'create' => 'Create Transfer',
+        'add' => 'Create Transfer',
         'edit' => 'Edit Transfer',
     ],
     'inventory' => [
