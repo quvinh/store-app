@@ -26,6 +26,9 @@
         @endphp
         {{ Breadcrumbs::render($route) }}
         <!-- end page title -->
+        @php
+        $count = DB::table('items')->max('id');
+        @endphp
         <form class="needs-validation" novalidate action="{{ route('item.store') }}" method="POST"
             enctype="multipart/form-data">
             @csrf
@@ -35,7 +38,7 @@
                         <div class="col s6">
                             <label class="form-label" for="item_code">Mã vật tư:</label>
                             <input type="text" class="form-control" id="item_code" placeholder="Mã vật tư" required=""
-                                name="item_code">
+                                name="item_code" value="{{ $count + 1}}">
                             <div class="invalid-feedback">
                                 Vui lòng nhập mã vật tư.
                             </div>
