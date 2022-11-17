@@ -203,7 +203,7 @@
                 var cell_id = b[1];
                 var item_valid = b[2];
                 var item_quantity = $("#item_quantity").val();
-                var price = $("#export_price").val();
+                var price = $("#export_price").val().replaceAll('.', '');
                 
                 if (item_name !== '' && supplier_name !== '' && item_quantity > 0 && price > 0) {
                     if (list.filter(item => item.id == item_detail).length > 0) {
