@@ -101,14 +101,14 @@ class DatabaseSeeder extends Seeder
         // ]);
         DB::table('suppliers')->insert([
             [
-                'supplier_code' => 1,
+                'supplier_code' => rand(100000, 999999),
                 'supplier_name' => 'An Thịnh',
                 'supplier_phone' => '0123456789',
                 'supplier_codetax' => '0123456789',
                 'supplier_status' => 1,
             ],
             [
-                'supplier_code' => 2,
+                'supplier_code' => rand(100000, 999999),
                 'supplier_name' => 'Thịnh Phát',
                 'supplier_phone' => '0123456789',
                 'supplier_codetax' => '0123456789',

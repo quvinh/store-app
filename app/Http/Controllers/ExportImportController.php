@@ -172,11 +172,14 @@ class ExportImportController extends Controller
             ->where('warehouse_managers.user_id', Auth::user()->id)
             ->select('warehouses.*')->get();
         foreach ($items as $item) {
-            $units = UnitDetail::join('units', 'unit_details.unit_id', '=', 'units.id')->select('units.*')->where('unit_details.item_id', $item->id)->orderBy('units.id')->get();
+            $units = UnitDetail::join('units', 'unit_details.unit_id', '=', 'units.id')->select('units.*')->where('unit_details.item_id', $item->id)->orderBy('units.unit_amount')->get();
             $item->value = $item->item_name;
             $item->data = $item->id;
-            $item->unit = $units;
+            foreach($units as $key => $value) {
+                $item->unit[$key] = [$value->unit_name, $value->unit_amount];
+            }
         }
+        // dd($items);
         return view('admin.components.ex_import.import', compact('shelves', 'categories', 'suppliers', 'units', 'items', 'warehouses'));
     }
 
@@ -200,7 +203,6 @@ class ExportImportController extends Controller
             'exim_type' => 1,
             'created_by' => Auth::user()->id,
             'exim_status' => 0,
-            'invoice_id' => 0,
         ]);
         for ($i = 0; $i < $count; $i++) {
             ExImportDetail::create([

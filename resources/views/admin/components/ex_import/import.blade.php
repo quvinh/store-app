@@ -74,8 +74,17 @@
                                     </div>
                                     <label for="item">Tên vật tư</label>
                                     <input id="item" class="form-control"><br>
-                                    <label for="code">Mã vật tư</label>
-                                    <input type="text" id="code" class="form-control"><br>
+
+                                    <div><label for="category">Loại vật tư</label>
+                                        <select data-toggle="select2" title="Category" id="category">
+                                            <option value="">Chọn loại vật tư</option>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}">
+                                                    {{ $category->category_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div><br>
 
                                     <div class="row">
                                         <div class="col s6">
@@ -94,43 +103,40 @@
                                 </div>
                                 <div class="col s6">
                                     <div><label for="supplier">Nhà cung cấp</label>
-                                        <select data-toggle="select2" title="Supplier" id="supplier">
+                                        <select data-toggle="select2" title="Supplier" id="supplier"
+                                            onchange="changeSupplier(this.selectedOptions[0].getAttribute('data-code'))">
                                             <option value="">Chọn nhà cung cấp</option>
                                             @foreach ($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}">
+                                                <option value="{{ $supplier->id }}"
+                                                    data-code="{{ $supplier->supplier_code }}">
                                                     {{ $supplier->supplier_name }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <br>
-                                    <div><label for="category">Loại vật tư</label>
-                                        <select data-toggle="select2" title="Category" id="category">
-                                            <option value="">Chọn loại vật tư</option>
-                                            @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}">
-                                                    {{ $category->category_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                    <label for="code">Mã nhà cung cấp</label>
+                                    <input type="text" id="supplier_code" class="form-control" readonly>
                                     <br>
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div><label for="unit">Đơn vị tính</label>
-                                                <select data-toggle="select2" title="Supplier" id="unit">
+                                                <select data-toggle="select2" title="Unit" id="unit"
+                                                    onchange="changeUnit(this.selectedOptions[0].getAttribute('data-amount'))">
                                                     <option value="">Chọn đơn vị tính</option>
-                                                    @foreach ($units as $unit)
-                                                        <option value="{{ $unit->id }}">
+                                                    {{-- @foreach ($units as $unit)
+                                                        <option value="{{ $unit->id }}" data-amount="{{ $unit->unit_amount }}">
                                                             {{ $unit->unit_name }}
                                                         </option>
-                                                    @endforeach
+                                                    @endforeach --}}
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="unit_amount">Số lượng(bóc tách)</label>
-                                            <input type="number" min="1" max="1000000" value="" class="form-control" id="unit_amount">
+                                            <label for="unit_amount">Số lượng(bóc tách <span
+                                                    id="unit_nameamount"></span>)</label>
+                                            <input type="number" min="1" max="1000000" value=""
+                                                class="form-control" id="unit_amount">
                                         </div>
                                     </div>
                                     <br>
@@ -211,7 +217,21 @@
                     $("#id").val(suggestion.id);
                     $("#code").val(suggestion.item_code);
                     $("#category").val(suggestion.category_id).trigger('change');
-                    $("#unit").val(suggestion.item_unit).trigger('change');
+                    $("#category").attr('disabled', true);
+                    // $("#unit").val(suggestion.item_unit).trigger('change');
+                    $("#unit").html();
+                    $("#unit_amount").val(1)
+
+                    let units = suggestion.unit;
+                    console.log(units)
+                    units.map((item, index) => {
+                        if (index == 0) {
+                            $("#unit_nameamount").text(`theo ${item[0]}`);
+                        }
+                        $("#unit").append(
+                            `<option value="${index}" data-amount="${item[1]}" ${ index == 0 ? 'selected' : ''}>${item[0]}</option>`
+                        );
+                    })
                 }
             });
             $('#btnAdd').on('click', function() {
@@ -224,12 +244,13 @@
                 var unit_id = $("#unit").val();
                 var unit = $("#unit option:selected").text();
                 var price = $("#price").val().replaceAll('.', '');
-                var quantity = parseInt($("#quantity").val());
+                var quantity = parseInt($("#quantity").val()) * parseInt($("#unit_amount").val());
                 var supplier_id = $("#supplier").val();
+                var supplier_code = $("#supplier_code").val();
                 var supplier = $("#supplier option:selected").text();
                 var warehouse_id = parseInt($("#warehouse").val());
                 var warehouse = $("#warehouse option:selected").text();
-                if (name !== '' && supplier_id !== '' && price > 0 && quantity > 0) {
+                if (name !== '' && unit_id !== '' && supplier_id !== '' && price > 0 && quantity > 0) {
                     // if (list.filter(item => item.id === id && item.supplier_id === supplier_id).length > 0)
                     // {
                     //     var data = [...list];
@@ -272,6 +293,7 @@
                         price: price,
                         supplier: supplier,
                         supplier_id: supplier_id,
+                        supplier_code: supplier_code,
                         warehouse: warehouse,
                         warehouse_id: warehouse_id,
                         category: category,
@@ -283,7 +305,7 @@
                                         <th><input type="text" name="id[]" value="${item.id}" hidden>${item.name}</th>
                                         <th {{ count($warehouses) > 1 ? '' : 'hidden' }}><input type="text"
                                                 name="warehouse[]" value="${item.warehouse_id}" hidden>${item.warehouse}</th>
-                                        <th><input type="text" name="code[]" value="${item.code}" hidden>${item.code}</th>
+                                        <th><input type="text" name="code[]" value="${item.supplier_code}" hidden>${item.supplier_code}</th>
                                         <th><input type="text" name="supplier[]" value="${item.supplier_id}" hidden>${item.supplier}</th>
                                         <th><input type="text" name="category[]" value="${item.category_id}" hidden>${item.category}</th>
                                         <th><input type="text" name="unit[]" value="${item.unit_id}" hidden>${item.unit}</th>
@@ -300,7 +322,7 @@
                     $('#btnSave').attr('disabled', false);
                     i++;
                 } else {
-                    alert('Chọn tên, nhà cung cấp và số lượng, giá nhập lớn hơn 0');
+                    alert('Chọn tên, ĐVT, nhà cung cấp và số lượng, giá nhập lớn hơn 0');
                 }
             })
             $('#btnDelete').on('click', function() {
@@ -312,6 +334,7 @@
                 $("#id").val('');
                 $("#code").val('');
                 $("#category").val('').trigger('change');
+                $("#category").attr('disabled', false);
                 $("#unit").val('').trigger('change');
                 $("#price").val(0);
                 $("#quantity").val(0);
@@ -330,6 +353,14 @@
             if (list.length === 0) {
                 $('#save-list').attr('disabled', true);
             }
+        }
+
+        function changeSupplier(value) {
+            $('#supplier_code').val(value);
+        }
+
+        function changeUnit(value) {
+            $('#unit_amount').val(value);
         }
     </script>
 @endsection
