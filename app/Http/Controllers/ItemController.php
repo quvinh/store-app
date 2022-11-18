@@ -45,7 +45,7 @@ class ItemController extends Controller
             ->select('items.*', 'units.unit_name as unit', 'categories.category_name as category')
             ->whereNull('items.deleted_at')->get();
         $dataTrash = $items = DB::table('items')
-            ->join('units', 'units.id', '=', 'items.item_unit')
+            ->join('units_details', 'items.id', '=', 'unit_details.item_id')
             ->join('categories', 'categories.id', '=', 'items.category_id')
             ->whereNotNull('items.deleted_at')
             ->select('items.*', 'units.unit_name as unit', 'categories.category_name as category')

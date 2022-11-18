@@ -27,7 +27,7 @@
         {{ Breadcrumbs::render($route) }}
         <!-- end page title -->
         @php
-        $count = DB::table('items')->max('id');
+            $count = DB::table('items')->max('id');
         @endphp
         <form class="needs-validation" novalidate action="{{ route('item.store') }}" method="POST"
             enctype="multipart/form-data">
@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         <div class="col s6">
-                            <label for="category">Loại vật tư</label>
+                            <label for="category" class="mb-1">Loại vật tư</label>
                             <select data-toggle="select2" title="Category" id="category" name="category">
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}">
@@ -57,21 +57,26 @@
                     <div class="row mb-2">
                         <div class="col s6">
                             <label class="form-label" for="unit_name">Đơn vị tính</label>
-                            <input type="text" class="form-control" id="unit_name" placeholder="Tên vật tư"
-                                required="" name="unit_name">
+                            <input type="text" class="form-control" id="unit_name" placeholder="Đơn vị tính"
+                                required="" name="unit_name[]">
                             <div class="invalid-feedback">
-                                Vui lòng nhập tên vật tư.
+                                Vui lòng nhập ĐVT.
                             </div>
                         </div>
-                        <div class="col s6">
+                        <div class="col s3">
                             <label class="form-label" for="unit_amount">Số lượng (bóc tách)</label>
-                            <input type="text" class="form-control" id="unit_amount" placeholder="Tên vật tư"
-                                required="" name="unit_amount">
+                            <input type="number" min="1" max="1000000" class="form-control" id="unit_amount"
+                                placeholder="Số lượng" value="1" required="" name="unit_amount[]">
                             <div class="invalid-feedback">
-                                Vui lòng nhập tên vật tư.
+                                Vui lòng nhập SL.
                             </div>
+                        </div>
+                        <div class="col s3">
+                            <br>
+                            <button class="btn btn-primary mt-1" type="button" id="add-unit">Thêm ĐVT</button>
                         </div>
                     </div>
+                    <div id="list-unit"></div>
                     <div class="row mb-2">
                         <div class="col s6">
                             <label class="form-label" for="item_note">Ghi chú:</label>
@@ -119,4 +124,40 @@
     <!-- demo app -->
     <script src="{{ asset('assets/js/pages/demo.datatable-init.js') }}"></script>
     <!-- end demo js-->
+    <script>
+        $(document).ready(function() {
+            $('#add-unit').on('click', function() {
+                var html = `<div class="row mb-2">
+                        <div class="col s6">
+                            <label class="form-label" for="unit_name">Đơn vị tính</label>
+                            <input type="text" class="form-control" id="unit_name" placeholder="Đơn vị tính"
+                                required="" name="unit_name[]">
+                            <div class="invalid-feedback">
+                                Vui lòng nhập ĐVT.
+                            </div>
+                        </div>
+                        <div class="col s3">
+                            <label class="form-label" for="unit_amount">Số lượng (bóc tách)</label>
+                            <input type="number" min="1" max="1000000" class="form-control" id="unit_amount" placeholder="Số lượng" value="1"
+                                required="" name="unit_amount[]">
+                            <div class="invalid-feedback">
+                                Vui lòng nhập SL.
+                            </div>
+                        </div>
+                        <div class="col s3">
+                            <br>
+                            <button class="btn btn-secondary mt-1 remove-unit" type="button">Xóa dòng</button>
+                        </div>
+                    </div>`;
+                $('#list-unit').append(html);
+                removeUnit();
+            })
+
+            function removeUnit() {
+                $('.remove-unit').on('click', function() {
+                    $(this).parent().parent().remove();
+                })
+            }
+        })
+    </script>
 @endsection
