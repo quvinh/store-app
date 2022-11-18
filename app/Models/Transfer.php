@@ -13,6 +13,7 @@ class Transfer extends Model
     protected $fillable = [
         'transfer_code',
         'transfer_status',
+        'transfer_quanlity',
         'transfer_note',
         'warehouse_from',
         'warehouse_to',

@@ -36,14 +36,6 @@
                 <div class="col s12 m6 l6">
                     <div class="row mb-2">
                         <div class="col s6">
-                            <label class="form-label" for="item_code">Mã vật tư:</label>
-                            <input type="text" class="form-control" id="item_code" placeholder="Mã vật tư" required=""
-                                name="item_code" value="{{ $count + 1}}">
-                            <div class="invalid-feedback">
-                                Vui lòng nhập mã vật tư.
-                            </div>
-                        </div>
-                        <div class="col s6">
                             <label class="form-label" for="item_name">Tên vật tư:</label>
                             <input type="text" class="form-control" id="item_name" placeholder="Tên vật tư"
                                 required="" name="item_name">
@@ -51,8 +43,6 @@
                                 Vui lòng nhập tên vật tư.
                             </div>
                         </div>
-                    </div>
-                    <div class="row mb-2">
                         <div class="col s6">
                             <label for="category">Loại vật tư</label>
                             <select data-toggle="select2" title="Category" id="category" name="category">
@@ -63,18 +53,24 @@
                                 @endforeach
                             </select>
                         </div>
-
+                    </div>
+                    <div class="row mb-2">
                         <div class="col s6">
-                            <label for="unit">Đơn vị tính</label>
-                            <select data-toggle="select2" title="Supplier" id="unit" name="item_unit">
-                                @foreach ($units as $unit)
-                                    <option value="{{ $unit->id }}">
-                                        {{ $unit->unit_name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <label class="form-label" for="unit_name">Đơn vị tính</label>
+                            <input type="text" class="form-control" id="unit_name" placeholder="Tên vật tư"
+                                required="" name="unit_name">
+                            <div class="invalid-feedback">
+                                Vui lòng nhập tên vật tư.
+                            </div>
                         </div>
-
+                        <div class="col s6">
+                            <label class="form-label" for="unit_amount">Số lượng (bóc tách)</label>
+                            <input type="text" class="form-control" id="unit_amount" placeholder="Tên vật tư"
+                                required="" name="unit_amount">
+                            <div class="invalid-feedback">
+                                Vui lòng nhập tên vật tư.
+                            </div>
+                        </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col s6">

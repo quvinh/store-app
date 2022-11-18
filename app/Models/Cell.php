@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Cell extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'floor_id',
+        'cell_name',
+        'cell_capacity',
+    ];
 }

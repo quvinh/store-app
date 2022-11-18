@@ -17,6 +17,7 @@ class CreateTransfersTable extends Migration
             $table->id();
             $table->char('transfer_code', 20);
             $table->tinyInteger('transfer_status');
+            $table->tinyInteger('transfer_quanlity')->nullable();
             $table->text('transfer_note')->nullable();
             $table->bigInteger('warehouse_from');
             $table->bigInteger('warehouse_to');

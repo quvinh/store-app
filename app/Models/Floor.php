@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Floor extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'shelf_id',
+        'floor_name',
+        'floor_capacity',
+    ];
 }
