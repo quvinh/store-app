@@ -286,10 +286,18 @@ class ExportImportController extends Controller
                 'users.name',
             )
             ->get();
+        $floors = ItemDetail::join('floors', 'item_details.floor_id', '=', 'floors.id')
+            ->join('items', 'item_details.item_id', '=', 'items.id')
+            ->select(DB::raw('SUM(item_details.item_quantity * item_capacity) as sumquan'))->groupBy('floor_id', 'item_id')->get();
+        dd($floors);
         $shelves = DB::table('shelves')
             ->join('warehouse_details', 'warehouse_details.shelf_id', '=', 'shelves.id')
             ->select('shelves.*')
             ->where('warehouse_details.warehouse_id', $im_items->first()->warehouse_id)->get();
+        foreach ($shelves as $key => $item) {
+            
+        }
+        // dd($shelves);
         return view('admin.components.ex_import.confirmimport', compact('im_items', 'shelves'));
     }
 

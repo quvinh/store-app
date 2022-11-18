@@ -120,10 +120,10 @@
                                                 </select>
                                             </th>
                                             <th><input type="number" name="floor[]" id="{{ $key }}"
-                                                    class="form-control text-center"
+                                                    class="form-control text-center" min="1" max="3"
                                                     value="{{ $item->floor_to ? $item->floor_to : '' }}"></th>
                                             <th><input type="number" name="cell[]" id="{{ $key }}"
-                                                    class="form-control text-center"
+                                                    class="form-control text-center" min="1" max="5"
                                                     value="{{ $item->cell_to ? $item->cell_to : '' }}"></th>
                                         </tr>
                                     @endforeach
