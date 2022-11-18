@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Cell;
 use App\Models\ExImport;
 use App\Models\ExImportDetail;
+use App\Models\Floor;
 use App\Models\Item;
 use App\Models\ItemDetail;
 use App\Models\Supplier;
@@ -12,6 +14,7 @@ use App\Models\Unit;
 use App\Models\UnitDetail;
 use App\Models\User;
 use App\Models\Warehouse;
+use App\Models\WarehouseDetail;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -36,6 +39,7 @@ class ExportImportController extends Controller
                 Route::put('/update/{id}', [ExportImportController::class, 'im_update'])->name('import.update');
                 Route::get('/confirm/{id}', [ExportImportController::class, 'im_confirm'])->name('import.confirm');
                 Route::put('/update-status/{id}', [ExportImportController::class, 'im_update_status'])->name('import.update-status');
+                Route::get('/dispatch/shelf/{id}', [ExportImportController::class, 'dispatchShelf']);
             });
         });
 
@@ -175,7 +179,7 @@ class ExportImportController extends Controller
             $units = UnitDetail::join('units', 'unit_details.unit_id', '=', 'units.id')->select('units.*')->where('unit_details.item_id', $item->id)->orderBy('units.unit_amount')->get();
             $item->value = $item->item_name;
             $item->data = $item->id;
-            foreach($units as $key => $value) {
+            foreach ($units as $key => $value) {
                 $item->unit[$key] = [$value->unit_name, $value->unit_amount];
             }
         }
@@ -279,6 +283,7 @@ class ExportImportController extends Controller
             ->select(
                 'ex_import_details.*',
                 'items.item_name as item',
+                'items.item_capacity as item_capacity',
                 'ex_imports.exim_code',
                 'ex_imports.exim_status',
                 'ex_imports.warehouse_id',
@@ -286,58 +291,77 @@ class ExportImportController extends Controller
                 'users.name',
             )
             ->get();
-        $floors = ItemDetail::join('floors', 'item_details.floor_id', '=', 'floors.id')
-            ->join('items', 'item_details.item_id', '=', 'items.id')
-            ->select(DB::raw('SUM(item_details.item_quantity * item_capacity) as sumquan'))->groupBy('floor_id', 'item_id')->get();
-        dd($floors);
+        // $listCell = array();
+        // $listShelf = Item::join('item_details', 'item_details.item_id', '=', 'items.id')
+        // foreach ($im_items as $key => $item) {
+        //     $listCell[$key] = [$item->cell_to, $item->item_quantity * $item->item_capacity];
+        // }
+        // dd($listCell);
         $shelves = DB::table('shelves')
             ->join('warehouse_details', 'warehouse_details.shelf_id', '=', 'shelves.id')
             ->select('shelves.*')
             ->where('warehouse_details.warehouse_id', $im_items->first()->warehouse_id)->get();
-        foreach ($shelves as $key => $item) {
-            
-        }
         // dd($shelves);
+        
+        // $floors = array(); 
+        // foreach ($shelves as $key => $item) {
+        //     $listF = Floor::where('shelf_id', $item->id)->get();
+        //     $arrF = array();
+        //     foreach ($listF as $index => $value) {
+        //         $listC = Cell::where('floor_id', $value->id)->get();
+        //         $cells = array();
+        //         foreach ($listC as $i => $data) {
+        //             $cells[$i] = [$data->id, $data->cell_capacity];
+        //         }
+        //         $arrF[$index] = $cells;
+        //     }
+        //     $floors[$key] = $arrF;
+        // }
+        // dd($floors);
         return view('admin.components.ex_import.confirmimport', compact('im_items', 'shelves'));
     }
 
     public function im_update_status(Request $request)
     {
         $exim_id = ExImportDetail::find($request->id[0])->exim_id;
-        $warehouse_id = ExImport::find($exim_id)->warehouse_id;
-        foreach ($request->id as $key => $id) {
-            ExImportDetail::find($id)->update([
-                'exim_detail_status' => 1,
-                'shelf_to' => $request->shelf[$key],
-                'floor_to' => $request->floor[$key],
-                'cell_to' => $request->cell[$key],
-            ]);
-            $import = ExImportDetail::find($id);
-            $item = ItemDetail::where([
-                ['item_id', $import->item_id], ['warehouse_id', $warehouse_id],
-                ['supplier_id', $import->supplier_id], ['shelf_id', $import->shelf_to],
-                ['floor_id', $import->floor_to], ['cell_id', $import->cell_to],
-            ]);
-
-            if ($item->count() > 0) {
-                $quantity = $item->first()->item_quantity;
-                $item->update(['item_quantity' => $quantity + $import->item_quantity]);
-                ExImportDetail::find($id)->update(['itemdetail_id' => $item->first()->id]);
-            } else {
-                $item_detail = ItemDetail::create([
-                    'item_id' => $import->item_id,
-                    'warehouse_id' => $warehouse_id,
-                    'supplier_id' => $import->supplier_id,
-                    'shelf_id' => $import->shelf_to,
-                    'floor_id' => $import->floor_to,
-                    'cell_id' => $import->cell_to,
-                    'item_quantity' => $import->item_quantity,
+        $status = ExImport::find($exim_id)->exim_status;
+        if ($status != 1) {
+            $warehouse_id = ExImport::find($exim_id)->warehouse_id;
+            foreach ($request->id as $key => $id) {
+                ExImportDetail::find($id)->update([
+                    'exim_detail_status' => 1,
+                    'shelf_to' => $request->shelf[$key],
+                    'floor_to' => $request->floor[$key],
+                    'cell_to' => $request->cell[$key],
                 ]);
-                ExImportDetail::find($id)->update(['itemdetail_id' => $item_detail->id]);
+                $import = ExImportDetail::find($id);
+                $item = ItemDetail::where([
+                    ['item_id', $import->item_id], ['warehouse_id', $warehouse_id],
+                    ['supplier_id', $import->supplier_id], ['shelf_id', $import->shelf_to],
+                    ['floor_id', $import->floor_to], ['cell_id', $import->cell_to],
+                ]);
+
+                if ($item->count() > 0) {
+                    $quantity = $item->first()->item_quantity;
+                    $item->update(['item_quantity' => $quantity + $import->item_quantity]);
+                    ExImportDetail::find($id)->update(['itemdetail_id' => $item->first()->id]);
+                } else {
+                    $item_detail = ItemDetail::create([
+                        'item_id' => $import->item_id,
+                        'warehouse_id' => $warehouse_id,
+                        'supplier_id' => $import->supplier_id,
+                        'shelf_id' => $import->shelf_to,
+                        'floor_id' => $import->floor_to,
+                        'cell_id' => $import->cell_to,
+                        'item_quantity' => $import->item_quantity,
+                    ]);
+                    ExImportDetail::find($id)->update(['itemdetail_id' => $item_detail->id]);
+                }
             }
+            ExImport::find($exim_id)->update(['exim_status' => 1]);
+            return redirect()->route('ex_import.index')->with(['success', 'Duyệt phiếu nhập thành công.']);
         }
-        ExImport::find($exim_id)->update(['exim_status' => 1]);
-        return redirect()->route('ex_import.index')->with(['success', 'Duyệt phiếu nhập thành công.']);
+        return redirect()->route('ex_import.index')->with(['success', 'Phiếu đã được duyệt.']);
     }
 
     public function export(Request $request)
@@ -679,5 +703,9 @@ class ExportImportController extends Controller
         if (count($shelf) > 0) {
             return response()->json($shelf);
         }
+    }
+
+    public function dispatchShelf($id) {
+        
     }
 }

@@ -142,7 +142,7 @@ class ShelfController extends Controller
             ->select('shelves.*')
             ->where('warehouse_details.warehouse_id', $warehouse_id)
             ->get();
-
+        // dd($shelf);
         $items = DB::table('item_details')
             ->leftJoin('items', 'items.id', '=', 'item_details.item_id')
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')

@@ -133,7 +133,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="unit_amount">Số lượng(bóc tách <span
+                                            <label for="unit_amount">SL(bóc tách <span
                                                     id="unit_nameamount"></span>)</label>
                                             <input type="number" min="1" max="1000000" value=""
                                                 class="form-control" id="unit_amount">

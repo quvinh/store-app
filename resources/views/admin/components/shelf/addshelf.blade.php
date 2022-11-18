@@ -1,12 +1,15 @@
 <form class="needs-validation" novalidate action="{{ route('shelf.add-shelf', $warehouse->id) }}" method="POST"
     enctype="multipart/form-data">
     @csrf
+    @php
+    $maxId = DB::table('shelves')->max('id');
+    @endphp
     <div class="mb-3">
         <div class="col s12 m6 l6">
             <div class="row mb-2">
                 <div class="col s6">
                     <label class="form-label" for="shelf_code">Mã giá/kệ:</label>
-                    <input type="text" class="form-control" id="shelf_code" placeholder="Mã giá/kệ" required=""
+                    <input type="text" class="form-control" id="shelf_code" placeholder="Mã giá/kệ" required="" value="{{ $maxId + 1 }}"
                         name="shelf_code">
                     <div class="invalid-feedback">
                         Vui lòng nhập mã giá/kệ.

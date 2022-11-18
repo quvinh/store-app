@@ -115,32 +115,64 @@ class DatabaseSeeder extends Seeder
                 'supplier_status' => 1,
             ]
         ]);
-        DB::table('shelves')->insert([
-            [
-                'shelf_code' => 1,
-                'shelf_name' => 'Kệ 1',
-                'shelf_position' => 'HP',
-                'shelf_note' => '',
-                'shelf_status' => 1,
-            ],
-            [
-                'shelf_code' => 2,
-                'shelf_name' => 'Kệ 2',
-                'shelf_position' => 'HP',
-                'shelf_note' => '',
-                'shelf_status' => 1,
-            ]
-        ]);
-        DB::table('warehouse_details')->insert([
-            [
-                'warehouse_id' => 1,
-                'shelf_id' => 1,
-            ],
-            [
-                'warehouse_id' => 2,
-                'shelf_id' => 2,
-            ]
-        ]);
+        // DB::table('shelves')->insert([
+        //     [
+        //         'shelf_code' => 1,
+        //         'shelf_name' => 'Kệ 1',
+        //         'shelf_position' => 'HP',
+        //         'shelf_note' => '',
+        //         'shelf_status' => 1,
+        //     ],
+        //     [
+        //         'shelf_code' => 2,
+        //         'shelf_name' => 'Kệ 2',
+        //         'shelf_position' => 'HP',
+        //         'shelf_note' => '',
+        //         'shelf_status' => 1,
+        //     ]
+        // ]);
+        // DB::table('floors')->insert([
+        //     [
+        //         'shelf_id' => 1,
+        //         'floor_name' => 'Tầng 1',
+        //         'floor_capacity' => 50000,
+        //     ],
+        //     [
+        //         'shelf_id' => 1,
+        //         'floor_name' => 'Tầng 2',
+        //         'floor_capacity' => 50000,
+        //     ],
+        //     [
+        //         'shelf_id' => 1,
+        //         'floor_name' => 'Tầng 3',
+        //         'floor_capacity' => 50000,
+        //     ],
+        //     [
+        //         'shelf_id' => 2,
+        //         'floor_name' => 'Tầng 1',
+        //         'floor_capacity' => 50000,
+        //     ],
+        //     [
+        //         'shelf_id' => 2,
+        //         'floor_name' => 'Tầng 2',
+        //         'floor_capacity' => 50000,
+        //     ],
+        //     [
+        //         'shelf_id' => 2,
+        //         'floor_name' => 'Tầng 3',
+        //         'floor_capacity' => 50000,
+        //     ],
+        // ]);
+        // DB::table('warehouse_details')->insert([
+        //     [
+        //         'warehouse_id' => 1,
+        //         'shelf_id' => 1,
+        //     ],
+        //     [
+        //         'warehouse_id' => 2,
+        //         'shelf_id' => 2,
+        //     ]
+        // ]);
         DB::table('warehouse_managers')->insert([
             [
                 'warehouse_id' => 1,
