@@ -47,11 +47,10 @@
                             {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Tên</th>
                                     <th>Đơn vị tính</th>
                                     <th>Phân loại</th>
-                                    <th>Định mức tối đa</th>
-                                    <th>Định mức tối thiểu</th>
                                     <th>Ngày tạo</th>
                                     <th>Ngày cập nhật</th>
                                     <th>Ghi chú</th>
@@ -61,11 +60,10 @@
                             <tbody>
                                 @foreach ($data as $key => $item)
                                     <tr>
+                                        <td>{{ $item->id }}</td>
                                         <td>{{ $item->item_name }}</td>
                                         <td>{{ $item->unit }}</td>
                                         <td>{{ $item->category }}</td>
-                                        <th>{{ $item->item_max }}</th>
-                                        <th>{{ $item->item_min }}</th>
                                         <th>{{ $item->created_at }}</th>
                                         <th>{{ $item->updated_at }}</th>
                                         <td>{{ $item->item_note }}</td>
