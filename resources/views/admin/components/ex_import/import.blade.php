@@ -86,7 +86,7 @@
                                         </div>
                                         <div class="col s6">
                                             <label for="price">Giá nhập</label>
-                                            <input type="text" value="" data-toggle="input-mask"
+                                            <input type="text" value="100000" data-toggle="input-mask"
                                                 data-mask-format="000.000.000.000.000" data-reverse="true"
                                                 class="form-control" id="price">
                                         </div>
@@ -115,15 +115,23 @@
                                         </select>
                                     </div>
                                     <br>
-                                    <div><label for="unit">Đơn vị tính</label>
-                                        <select data-toggle="select2" title="Supplier" id="unit">
-                                            <option value="">Chọn đơn vị tính</option>
-                                            @foreach ($units as $unit)
-                                                <option value="{{ $unit->id }}">
-                                                    {{ $unit->unit_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div><label for="unit">Đơn vị tính</label>
+                                                <select data-toggle="select2" title="Supplier" id="unit">
+                                                    <option value="">Chọn đơn vị tính</option>
+                                                    @foreach ($units as $unit)
+                                                        <option value="{{ $unit->id }}">
+                                                            {{ $unit->unit_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="unit_amount">Số lượng(bóc tách)</label>
+                                            <input type="number" min="1" max="1000000" value="" class="form-control" id="unit_amount">
+                                        </div>
                                     </div>
                                     <br>
 
@@ -215,11 +223,7 @@
                 var category = $("#category option:selected").text();
                 var unit_id = $("#unit").val();
                 var unit = $("#unit option:selected").text();
-<<<<<<< HEAD
                 var price = $("#price").val().replaceAll('.', '');
-=======
-                var price = $("#price").val().replaceAll('.','');
->>>>>>> higo
                 var quantity = parseInt($("#quantity").val());
                 var supplier_id = $("#supplier").val();
                 var supplier = $("#supplier option:selected").text();

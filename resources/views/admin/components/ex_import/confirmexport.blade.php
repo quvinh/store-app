@@ -45,17 +45,30 @@
                     <div class="card-body">
                         <div class="text-sm-start">
                             <a href="{{ route('ex_import.index') }}" class="btn btn-info mb-2 me-1">Quay lại</a>
+                            <form action="{{ route('ex_update_export', $export_id) }}" method="post">
+                                @csrf
+                                @method('put')
+                                <input type="text" hidden value="1" name="status">
+                                <button type="submit" class="btn btn-danger">Hủy phiếu xuất</button>
+                            </form>
                         </div>
                         <br>
                         <h5 class="card-title">Thông tin</h5>
-                        <form action="" class="px-5">
+                        <form action="{{ route('ex_update_export', $export_id) }}" method="post">
+                            @csrf
+                            @method('put')
                             <div class="row">
                                 <div class="col-3 text-end">
+                                    <label for="" class="form-control">Người nhận</label><br>
                                     <label for="" class="form-control">Mã phiếu</label><br>
                                     <label for="" class="form-control">Trạng thái</label><br>
                                     <label for="" class="form-control">Người tạo</label><br>
                                 </div>
                                 <div class="col-9">
+                                    <input type="text" hidden value="1" name="status">
+                                    <select data-toggle="select2" title="Chọn người nhận" id="receiver" name="receiver">
+                                        
+                                    </select>
                                     <input type="text" class="form-control" readonly
                                         value="{{ $export[0]->exim_code }}"><br>
                                     <input type="text" class="form-control" readonly
@@ -64,7 +77,6 @@
                                         value="{{ $export[0]->name }}"><br>
                                 </div>
                             </div>
-
                         </form>
                     </div>
                 </div>
@@ -89,9 +101,35 @@
                                 </tr>
                             </thead>
                             <tbody>
-
                                 @foreach ($export_details as $key => $item)
-                                    <form
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $item->item_name }}</td>
+                                    <td>{{ $item->supplier_name }}</td>
+                                    <td>{{ $item->ex_item_quantity }}</td>
+                                    <td>{{ $item->item_price }}</td>
+                                    <td>{{ $item->exim_detail_status == 1 ? 'Đã duyệt' : 'Chờ duyệt' }}</td>
+                                    <td>
+                                        <button type="button" title="Chi tiết" class="view-item btn btn-warning"
+                                            data-name="{{ $item->item_name }}" data-unit="{{ $item->unit_name }}"
+                                            data-supplier="{{ $item->supplier_name }}"
+                                            data-category="{{ $item->category_name }}"
+                                            data-price="{{ $item->item_price }}"
+                                            data-long="{{ $item->item_long }}"
+                                            data-height="{{ $item->item_height }}"
+                                            data-width="{{ $item->item_width }}"
+                                            data-note="{{ $item->item_note }}"
+                                            data-weight="{{ $item->item_weight }}"
+                                            data-weightunit="{{ $item->item_weightuint }}"
+                                            data-image="{{ $item->item_images }}"
+                                            data-shelf-name="{{ $item->shelf_name }}"
+                                            data-floor="{{ $item->floor_id }}" data-cell="{{ $item->cell_id }}"
+                                            data-warehouse-name="{{ $item->warehouse_name }}" id="view">
+                                            Chi tiết
+                                        </button>
+                                    </td>
+                                </tr>
+                                    {{-- <form
                                         action="{{ route('export.update-status', [
                                             'id' => $item->itemdetail_id,
                                             'exim_id' => $item->exim_id,
@@ -130,14 +168,11 @@
 
                                                 <button class="btn btn-primary"
                                                     {{ $item->exim_detail_status == 1 ? 'hidden' : '' }}
-                                                    type="submit">duyệt</button>
-                                                {{-- <a
-                                                    class="action-icon" title="Duyệt" type="submit"><i
-                                                        class="uil-file-check"></i></a> --}}
+                                                    type="submit">Duyệt</button>
                                             </td>
 
                                         </tr>
-                                    </form>
+                                    </form> --}}
                                 @endforeach
                             </tbody>
                         </table>
@@ -156,12 +191,6 @@
                             </div>
                             <div class="modal-body">
                                 <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="code" class="form-label">Mã vật tư:</label>
-                                            <input type="text" id="code" class="form-control" readonly>
-                                        </div>
-                                    </div>
                                     <div class="col">
                                         <div class="mb-3">
                                             <label for="category" class="form-label">Loại:</label>

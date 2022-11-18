@@ -210,7 +210,6 @@ class AccountController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required',
-            'birthday' => 'required',
             'username' => 'required',
         ]);
         if ($validator->fails()) {

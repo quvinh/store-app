@@ -97,6 +97,7 @@ class PermissionSeeder extends Seeder
         $rolePresident = Role::create(['name' => 'Giám đốc', 'guard_name' => 'web']);
         $roleAccount = Role::create(['name' => 'Kế toán', 'guard_name' => 'web']);
         $roleHR = Role::create(['name' => 'Quản lý nhân sự', 'guard_name' => 'web']);
+        $roleStore = Role::create(['name' => 'Thủ kho', 'guard_name' => 'web']);
         $roleEmployee = Role::create(['name' => 'Nhân viên', 'guard_name' => 'web']);
 
         // Give permission
@@ -109,13 +110,16 @@ class PermissionSeeder extends Seeder
             ['name', 'not like', 'acc%'],
             ['name', 'not like', 'sys%'],
         ])->get());
-        $roleEmployee->givePermissionTo(Permission::where([
+        $roleStore->givePermissionTo(Permission::where([
             ['name', 'not like', 'acc%'],
             ['name', 'not like', 'sys%'],
             ['name', 'not like', 'war%'],
-            ['name', 'not like', 'cus%'],
+            ['name', 'not like', '%edit'],
             ['name', 'not like', '%delete'],
             ['name', '<>', 'she.edit'],
+        ])->get());
+        $roleEmployee->givePermissionTo(Permission::where([
+            ['name', 'like', 'war.view'],
         ])->get());
 
         // Assign role
@@ -149,8 +153,52 @@ class PermissionSeeder extends Seeder
             'address' => 'Hai Phong',
             'mobile' => '0962334137',
         ]);
+        $giamdoc = User::create([
+            'name' => 'Giám Đốc',
+            'username' => 'giamdoc',
+            'email' => 'giamdoc@gmail.com',
+            'password' => bcrypt('123456'),
+            'gender' => 1,
+            'birthday' => '2000-06-21',
+            'address' => 'Hai Phong',
+            'mobile' => '0962334127',
+        ]);
+        $ketoan = User::create([
+            'name' => 'Kế toán',
+            'username' => 'ketoan',
+            'email' => 'ketoan@gmail.com',
+            'password' => bcrypt('123456'),
+            'gender' => 1,
+            'birthday' => '2000-06-21',
+            'address' => 'Hai Phong',
+            'mobile' => '0962334127',
+        ]);
+        $thukho = User::create([
+            'name' => 'Thủ kho',
+            'username' => 'thukho',
+            'email' => 'thukho@gmail.com',
+            'password' => bcrypt('123456'),
+            'gender' => 1,
+            'birthday' => '2000-06-21',
+            'address' => 'Hai Phong',
+            'mobile' => '0962334127',
+        ]);
+        $nhanvien = User::create([
+            'name' => 'Nhân viên',
+            'username' => 'nhanvien',
+            'email' => 'nhanvien@gmail.com',
+            'password' => bcrypt('123456'),
+            'gender' => 1,
+            'birthday' => '2000-06-21',
+            'address' => 'Hai Phong',
+            'mobile' => '0962334127',
+        ]);
         $admin->assignRole($roleAdmin);
         $lvv->assignRole($roleAdmin);
         $quv->assignRole($roleAdmin);
+        $giamdoc->assignRole($rolePresident);
+        $ketoan->assignRole($roleAccount);
+        $thukho->assignRole($roleStore);
+        $nhanvien->assignRole($roleEmployee);
     }
 }

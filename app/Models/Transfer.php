@@ -15,6 +15,7 @@ class Transfer extends Model
         'transfer_status',
         'transfer_quanlity',
         'transfer_note',
+        'transfer_command',
         'warehouse_from',
         'warehouse_to',
         'created_by',

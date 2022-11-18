@@ -67,6 +67,17 @@
                                 <form action="{{ route('transfer.store') }}" method="post">
                                     @csrf
                                     <div class="row mb-2">
+                                        <div class="col-md-6 ms-1 me-1 mb-1">
+                                            <label class="form-label">
+                                                <span class="text-danger">(*)</span> <span class="text-primary">Người yêu cầu</span>
+                                            </label>
+                                            <select class="form-control select2" data-toggle="select2"  onchange="filter()"
+                                                id="transfer_command">
+                                                <option value="">Chọn người yêu cầu</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
                                         <div class="col-md-6">
                                             <div class="col-md-12 ms-1 me-1 mb-1">
                                                 <label class="form-label">

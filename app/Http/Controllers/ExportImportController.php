@@ -9,6 +9,8 @@ use App\Models\Item;
 use App\Models\ItemDetail;
 use App\Models\Supplier;
 use App\Models\Unit;
+use App\Models\UnitDetail;
+use App\Models\User;
 use App\Models\Warehouse;
 use Carbon\Carbon;
 use DateTime;
@@ -46,7 +48,8 @@ class ExportImportController extends Controller
                 Route::get('/edit/{id}', [ExportImportController::class, 'ex_edit'])->name('export.edit');
                 Route::put('/update/{id}', [ExportImportController::class, 'ex_update'])->name('export.update');
                 Route::get('/confirm/{id}', [ExportImportController::class, 'ex_confirm'])->name('export.confirm');
-                Route::put('/update-status/{exim_id}/{id}', [ExportImportController::class, 'ex_update_status'])->name('export.update-status');
+                Route::put('/update-export/{id}', [ExportImportController::class, 'ex_update_export'])->name('export.update-export');
+                Route::put('/update-status/{exim_id}/{id}', [ExportImportController::class, 'ex_update_status'])->name('export.update-status'); // Tung vat tu?
             });
         });
         Route::group(['prefix' => 'ex_import'], function () {
@@ -169,8 +172,10 @@ class ExportImportController extends Controller
             ->where('warehouse_managers.user_id', Auth::user()->id)
             ->select('warehouses.*')->get();
         foreach ($items as $item) {
+            $units = UnitDetail::join('units', 'unit_details.unit_id', '=', 'units.id')->select('units.*')->where('unit_details.item_id', $item->id)->orderBy('units.id')->get();
             $item->value = $item->item_name;
             $item->data = $item->id;
+            $item->unit = $units;
         }
         return view('admin.components.ex_import.import', compact('shelves', 'categories', 'suppliers', 'units', 'items', 'warehouses'));
     }
@@ -324,7 +329,6 @@ class ExportImportController extends Controller
         ExImport::find($exim_id)->update(['exim_status' => 1]);
         return redirect()->route('ex_import.index')->with(['success', 'Duyệt phiếu nhập thành công.']);
     }
-
 
     public function export(Request $request)
     {
@@ -544,6 +548,8 @@ class ExportImportController extends Controller
             ->where('ex_imports.id', $id)
             ->select('ex_imports.*', 'name')
             ->get();
+        $export_id = $id;
+        $warehouse_id = ExImport::find($id)->first()->warehouse_id;
         $export_details = DB::table('ex_import_details')
             ->join('item_details', 'item_details.id', '=', 'ex_import_details.itemdetail_id')
             ->join('items', 'items.id', '=', 'item_details.item_id')
@@ -574,7 +580,8 @@ class ExportImportController extends Controller
             )
             ->where('exim_id', $id)
             ->get();
-        return view('admin.components.ex_import.confirmexport', compact('export', 'export_details'));
+        $receivers = User::join('warehouse_managers', 'users.id', '=', 'warehosue_managers.warehouse_id')->where('warehouse_managers.warehouse_id', $warehouse_id)->hasRole('Thủ kho', 'Nhân viên')->get();
+        return view('admin.components.ex_import.confirmexport', compact('export', 'export_details', 'export_id'));
     }
 
     public function ex_update_status($exim_id, $id)
@@ -616,6 +623,34 @@ class ExportImportController extends Controller
         }
 
         return redirect()->back()->with('success', 'Duyệt thành công');
+    }
+
+    public function ex_update_export(Request $request, $id)
+    {
+        if ($request->status == 1) {
+            $ex_item_details = ExImportDetail::where('exim_id', $id)->get('id', 'itemdetail_id', 'item_quantity');
+            foreach ($ex_item_details as $key => $item) {
+
+                ExImportDetail::find($item->id)->update([
+                    'exim_detail_status' => '1'
+                ]);
+                $item_details = ItemDetail::find($item->itemdetail_id);
+                $item_details->update([
+                    'item_quantity' => $item_details->item_quantity - $item->item_quantity
+                ]);
+            }
+            ExImport::find($id)->update([
+                'exim_status' => $request->status,
+                'receiver' => $request->receiver,
+            ]);
+            return redirect()->back()->with('success', 'Duyệt thành công');
+        } else if ($request->status == 2) {
+            ExImport::find($id)->update([
+                'exim_status' => $request->status,
+            ]);
+            return redirect()->back()->with('success', 'Hủy thành công');
+        }
+        return redirect()->back()->withErrors(['error' => 'Lỗi lưu phiếu']);
     }
 
     public function example()
