@@ -15,6 +15,9 @@ class CreateCellsTable extends Migration
     {
         Schema::create('cells', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('floor_id');
+            $table->string('cell_name');
+            $table->float('cell_capacity');
             $table->timestamps();
         });
     }
