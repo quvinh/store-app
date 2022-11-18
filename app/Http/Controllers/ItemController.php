@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Unit;
+use App\Models\UnitDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -40,12 +41,15 @@ class ItemController extends Controller
     public function index()
     {
         $data = DB::table('items')
-            ->join('units', 'units.id', '=', 'items.item_unit')
+            ->join('unit_details', 'items.id', '=', 'unit_details.item_id')
+            ->join('units', 'units.id', '=', 'unit_details.unit_id')
             ->join('categories', 'categories.id', '=', 'items.category_id')
             ->select('items.*', 'units.unit_name as unit', 'categories.category_name as category')
+            ->groupBy('items.id')
             ->whereNull('items.deleted_at')->get();
         $dataTrash = $items = DB::table('items')
-            ->join('units_details', 'items.id', '=', 'unit_details.item_id')
+            ->join('unit_details', 'items.id', '=', 'unit_details.item_id')
+            ->join('units', 'units.id', '=', 'unit_details.unit_id')
             ->join('categories', 'categories.id', '=', 'items.category_id')
             ->whereNotNull('items.deleted_at')
             ->select('items.*', 'units.unit_name as unit', 'categories.category_name as category')
@@ -73,21 +77,30 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'item_name' => 'required|unique:items',
-            'item_code' => 'required|unique:items',
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
-        Item::create([
+        $item = Item::create([
             'item_name' => $request->item_name,
-            'item_code' => $request->item_code,
-            'item_unit' => $request->item_unit,
             'category_id' => $request->category,
             'item_status' => $request->item_status == 'on' ? '1' : '0',
             'item_note' => $request->item_note,
         ]);
+        foreach($request->unit_name as $key => $val){
+            $unit = Unit::create([
+                'unit_name' => $val,
+                'unit_amount' => $request->unit_amount[$key],
+            ]);
+            UnitDetail::create([
+                'unit_id' => $unit->id,
+                'item_id' => $item->id,
+            ]);
+        }
+
         return redirect()->route('item.index')->with('success', 'Tạo mới vật tư thành công');
     }
 
@@ -110,7 +123,9 @@ class ItemController extends Controller
      */
     public function edit($id)
     {
-        $units = Unit::all();
+        $units = Unit::join('unit_details', 'unit_details.unit_id' , '=', 'units.id')
+        ->where('unit_details.item_id', $id)->get();
+        // dd($units);
         $categories = Category::all();
         $item = Item::find($id);
         return view('admin.components.item.edititem', compact('units', 'categories', 'item'));
@@ -125,23 +140,30 @@ class ItemController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'item_name' => 'required',
-            'item_code' => 'required',
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
-        Item::create([
+        Item::find($id)->update([
             'item_name' => $request->item_name,
-            'item_code' => $request->item_code,
-            'item_unit' => $request->item_unit,
             'category_id' => $request->category,
-            'item_max' => $request->item_max,
-            'item_min' => $request->item_min,
             'item_status' => $request->item_status == 'on' ? '1' : '0',
             'item_note' => $request->item_note,
         ]);
+        foreach($request->unit_name as $key => $val){
+            $unit = Unit::find($request->unit_id[$key])->update([
+                'unit_name' => $val,
+                'unit_amount' => $request->unit_amount[$key],
+            ]);
+            UnitDetail::where('item_id', $id)->delete();
+            UnitDetail::create([
+                'unit_id' => $request->unit_id[$key],
+                'item_id' => Item::find($id)->id,
+            ]);
+        }
         return redirect()->route('item.index')->with('success', 'Cập nhật vật tư thành công');
     }
 
