@@ -22,8 +22,8 @@ class CreateWarehousesTable extends Migration
             $table->tinyInteger('warehouse_status');
             $table->text('warehouse_note')->nullable();
             $table->string('warehouse_image')->nullable();
-            $table->bigInteger('country_id')->nullable();
-            $table->bigInteger('city_id')->nullable();
+            // $table->bigInteger('country_id')->nullable();
+            // $table->bigInteger('city_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
