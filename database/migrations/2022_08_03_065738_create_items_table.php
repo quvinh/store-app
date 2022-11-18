@@ -32,6 +32,7 @@ class CreateItemsTable extends Migration
             $table->tinyInteger('item_status')->default(0);
             $table->text('item_note')->nullable();
             $table->bigInteger('category_id');
+            $table->integer('item_capacity')->nullable(); // The tich vat tu
             $table->boolean('item_bigsize')->default(0); // Kich co vat tu (to/nho)
             $table->dateTime('item_manufacturing')->nullable(); // Ngay san xuat
             $table->dateTime('item_date')->nullable(); // Ngay het han

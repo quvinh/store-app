@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cell;
+use App\Models\Floor;
 use App\Models\Shelf;
 use App\Models\Warehouse;
 use App\Models\WarehouseDetail;
@@ -145,7 +147,8 @@ class ShelfController extends Controller
             ->leftJoin('items', 'items.id', '=', 'item_details.item_id')
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
             ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
-            ->leftJoin('units', 'units.id', '=', 'items.item_unit')
+            ->join('unit_details', 'unit_details.item_id', '=', 'items.id')
+            ->leftJoin('units', 'units.id', '=', 'unit_details.unit_id')
             ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
             ->select(
                 'items.*',
@@ -209,9 +212,7 @@ class ShelfController extends Controller
             return redirect()->back()->withErrors($validator);
         }
 
-        $status = 0;
-
-        Shelf::create(array_merge(
+        $shelf = Shelf::create(array_merge(
             $validator->validate(),
             [
                 'shelf_code' => $request->shelf_code,
@@ -221,12 +222,24 @@ class ShelfController extends Controller
                 'shelf_note' => $request->shelf_note
             ]
         ));
-
-        $shelf = Shelf::orderBy('id', 'desc')->take(1)->get();
+        for ($i=0; $i < 3; $i++) {
+            $floor = Floor::create([
+                'shelf_id' => $shelf->id,
+                'floor_name' => 'Tầng '.($i+1),
+                'floor_capacity' => 50000,
+            ]);
+            for ($j=0; $j < 5; $j++) {
+                Cell::create([
+                    'floor_id' => $floor->id,
+                    'cell_name' => 'Ô '.($j+1),
+                    'cell_capacity' => 10000,
+                ]);
+            }
+        }
 
         WarehouseDetail::create([
             'warehouse_id' => $warehouse_id,
-            'shelf_id' => $shelf[0]->id,
+            'shelf_id' => $shelf->id,
         ]);
         return redirect()->back()->with('success', 'Tạo mới giá kệ thành công');
     }

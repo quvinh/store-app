@@ -93,6 +93,17 @@
                     </div>
 
                     <div class="row mb-2">
+                        <div class="col s6">
+                            <label class="form-label" for="item_capacity">Thể tích:</label>
+                            <input type="text" class="form-control" id="item_capacity" placeholder="Thể tích"
+                                name="item_capacity">
+                        </div>
+
+                        <div class="col s6">
+                            <span class="form-label" style="font-weight:600">Vật tư lớn:</span><br><br>
+                            <input type="checkbox" id="switch_bigsize" checked data-switch="success" name="item_bigsize" />
+                            <label for="switch_bigsize" data-on-label="Yes" data-off-label="No"></label>
+                        </div>
                     </div>
                 </div>
             </div>

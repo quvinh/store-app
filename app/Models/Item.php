@@ -28,6 +28,8 @@ class Item extends Model
         'item_status',
         'item_note',
         'category_id',
+        'item_bigsize',
+        'item_capacity',
         'item_manufacturing',
         'item_date',
         // 'item_max',

@@ -48,7 +48,8 @@
                                         <div class="col s6">
                                             <label class="form-label" for="item_name">Tên vật tư:</label>
                                             <input type="text" class="form-control" id="item_name"
-                                                placeholder="Tên vật tư" required="" name="item_name" value="{{$item->item_name}}">
+                                                placeholder="Tên vật tư" required="" name="item_name"
+                                                value="{{ $item->item_name }}">
                                             <div class="invalid-feedback">
                                                 Vui lòng nhập tên vật tư.
                                             </div>
@@ -57,7 +58,8 @@
                                             <label for="category" class="mb-1">Loại vật tư</label>
                                             <select data-toggle="select2" title="Category" id="category" name="category">
                                                 @foreach ($categories as $category)
-                                                    <option value="{{ $category->id }}" {{$category->id == $item->category_id ? 'selected' : ''}}>
+                                                    <option value="{{ $category->id }}"
+                                                        {{ $category->id == $item->category_id ? 'selected' : '' }}>
                                                         {{ $category->category_name }}
                                                     </option>
                                                 @endforeach
@@ -66,25 +68,27 @@
                                     </div>
                                     @foreach ($units as $unit)
                                         <div class="row mb-2">
-                                        <div class="col s6">
-                                            <label class="form-label" for="unit_name">Đơn vị tính</label>
-                                            <input type="text" class="form-control" id="unit_name" value="{{$unit->unit_name}}"
-                                                placeholder="Đơn vị tính" required="" name="unit_name[]">
-                                            <div class="invalid-feedback">
-                                                Vui lòng nhập ĐVT.
+                                            <div class="col s6">
+                                                <label class="form-label" for="unit_name">Đơn vị tính</label>
+                                                <input type="text" class="form-control" id="unit_name"
+                                                    value="{{ $unit->unit_name }}" placeholder="Đơn vị tính" required=""
+                                                    name="unit_name[]">
+                                                <div class="invalid-feedback">
+                                                    Vui lòng nhập ĐVT.
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col s3">
-                                            <label class="form-label" for="unit_amount">Số lượng (bóc tách)</label>
-                                            <input type="number" min="1" max="1000000" class="form-control"
-                                                id="unit_amount" placeholder="Số lượng" value="{{$unit->unit_amount}}" required=""
-                                                name="unit_amount[]">
-                                            <div class="invalid-feedback">
-                                                Vui lòng nhập SL.
+                                            <div class="col s3">
+                                                <label class="form-label" for="unit_amount">Số lượng (bóc tách)</label>
+                                                <input type="number" min="1" max="1000000" class="form-control"
+                                                    id="unit_amount" placeholder="Số lượng"
+                                                    value="{{ $unit->unit_amount }}" required="" name="unit_amount[]">
+                                                <div class="invalid-feedback">
+                                                    Vui lòng nhập SL.
+                                                </div>
                                             </div>
+                                            <input type="text" name="unit_id[]" id="" hidden
+                                                value="{{ $unit->id }}">
                                         </div>
-                                        <input type="text" name="unit_id[]" id="" hidden value="{{$unit->id}}">
-                                    </div>
                                     @endforeach
 
                                     <div id="list-unit"></div>
@@ -92,19 +96,30 @@
                                         <div class="col s6">
                                             <label class="form-label" for="item_note">Ghi chú:</label>
                                             <input type="text" class="form-control" id="item_note" placeholder="Ghi chú"
-                                                name="item_note" value="{{$item->item_note}}">
+                                                name="item_note" value="{{ $item->item_note }}">
                                         </div>
 
                                         <div class="col s6">
                                             <span class="form-label" style="font-weight:600">Kích
                                                 hoạt ngay:</span><br><br>
-                                            <input type="checkbox" id="switch3" checked data-switch="success"
-                                                name="item_status" {{$item->item_status == 1 ? 'checked' : ''}}/>
+                                            <input type="checkbox" id="switch3" data-switch="success"
+                                                name="item_status" {{ $item->item_status == 1 ? 'checked' : '' }} />
                                             <label for="switch3" data-on-label="Yes" data-off-label="No"></label>
                                         </div>
                                     </div>
 
                                     <div class="row mb-2">
+                                        <div class="col s6">
+                                            <label class="form-label" for="item_capacity">Thể tích:</label>
+                                            <input type="text" class="form-control" id="item_capacity" placeholder="Thể tích"
+                                                name="item_capacity" value="{{$item->item_capacity}}">
+                                        </div>
+
+                                        <div class="col s6">
+                                            <span class="form-label" style="font-weight:600">Vật tư lớn:</span><br><br>
+                                            <input type="checkbox" id="switch_bigsize" data-switch="success" name="item_bigsize" {{ $item->item_bigsize == 1 ? 'checked' : '' }}/>
+                                            <label for="switch_bigsize" data-on-label="Yes" data-off-label="No"></label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

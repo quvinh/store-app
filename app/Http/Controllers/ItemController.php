@@ -87,6 +87,8 @@ class ItemController extends Controller
         $item = Item::create([
             'item_name' => $request->item_name,
             'category_id' => $request->category,
+            'item_capacity' => $request->item_capacity,
+            'item_bigsize' => $request->item_bigsize == 'on' ? '1' : '0',
             'item_status' => $request->item_status == 'on' ? '1' : '0',
             'item_note' => $request->item_note,
         ]);
@@ -150,15 +152,18 @@ class ItemController extends Controller
         Item::find($id)->update([
             'item_name' => $request->item_name,
             'category_id' => $request->category,
+            'item_capacity' => $request->item_capacity,
+            'item_bigsize' => $request->item_bigsize == 'on' ? '1' : '0',
             'item_status' => $request->item_status == 'on' ? '1' : '0',
             'item_note' => $request->item_note,
         ]);
+        UnitDetail::where('item_id', $id)->delete();
         foreach($request->unit_name as $key => $val){
             $unit = Unit::find($request->unit_id[$key])->update([
                 'unit_name' => $val,
                 'unit_amount' => $request->unit_amount[$key],
             ]);
-            UnitDetail::where('item_id', $id)->delete();
+
             UnitDetail::create([
                 'unit_id' => $request->unit_id[$key],
                 'item_id' => Item::find($id)->id,

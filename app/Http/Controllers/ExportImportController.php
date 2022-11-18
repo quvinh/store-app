@@ -334,7 +334,6 @@ class ExportImportController extends Controller
 
     public function export(Request $request)
     {
-
         $warehouses = DB::table('warehouse_managers')
             ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
             ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
@@ -347,19 +346,18 @@ class ExportImportController extends Controller
         $items = DB::table('item_details')
             ->join('items', 'items.id', '=', 'item_details.item_id')
             ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
+            ->join('floors', 'floors.id', '=', 'item_details.floor_id')
+            ->join('cells', 'cells.id', '=', 'item_details.cell_id')
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
             ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
             ->select(
                 'items.*',
                 'item_details.id as itemdetail_id',
-                'item_details.item_quantity as item_detail_quantity',
-                'warehouse_id',
-                'supplier_id',
-                'shelf_id',
-                'floor_id',
-                'cell_id',
+                'item_details.*',
                 'shelf_name',
+                'floor_name',
+                'cell_name',
                 'warehouse_name',
                 'category_name',
                 'supplier_name'
@@ -393,7 +391,7 @@ class ExportImportController extends Controller
                 $trans_invalid[0]->quantity = 0;
             }
             $val->item_quantity = [
-                $val->item_detail_quantity - $exim_invalid[0]->quantity - $trans_invalid[0]->quantity,
+                $val->item_quantity - $exim_invalid[0]->quantity - $trans_invalid[0]->quantity,
                 $exim_invalid[0]->quantity +  $trans_invalid[0]->quantity
             ];
         }

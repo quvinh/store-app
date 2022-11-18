@@ -51,8 +51,8 @@
                                     <th>Tên</th>
                                     <th>Đơn vị tính</th>
                                     <th>Phân loại</th>
+                                    <th>Thể tích</th>
                                     <th>Ngày tạo</th>
-                                    <th>Ngày cập nhật</th>
                                     <th>Ghi chú</th>
                                     <th style="width: 10%">Thao tác</th>
                                 </tr>
@@ -61,11 +61,15 @@
                                 @foreach ($data as $key => $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->item_name }}</td>
+                                        <td><span class="text-info">{{ $item->item_name }}</span> <i
+                                                class="uil-check-square font-16 {{ $item->item_bigsize == 1 ? 'text-success' : '' }}"
+                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="{{ $item->item_bigsize == 1 ? 'Vật tư lớn' : 'Vật tư nhỏ và vừa' }}"></i>
+                                        </td>
                                         <td>{{ $item->unit }}</td>
                                         <td>{{ $item->category }}</td>
+                                        <th>{{ $item->item_capacity }}</th>
                                         <th>{{ $item->created_at }}</th>
-                                        <th>{{ $item->updated_at }}</th>
                                         <td>{{ $item->item_note }}</td>
                                         <td class="table-action">
                                             @can('ite.edit')

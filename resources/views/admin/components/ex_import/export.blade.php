@@ -78,9 +78,10 @@
                                             name="item_detail">
                                             @foreach ($items as $item)
                                                 <option value="{{ $item->itemdetail_id }}">
-                                                    {{ $item->item_name .' - '. $item->item_code .' - '. $item->supplier_name .' - '. $item->shelf_name .' - Tầng '.
+                                                    {{ $item->item_name .' - '. $item->supplier_name .' - '. $item->shelf_name .' - Tầng '.
                                                     $item->floor_id .' - Ô '.$item->cell_id .' - SLKD: '. $item->item_quantity[0] }}
                                                 </option>
+                                                {{-- <input type="text" name="" id="item"> --}}
                                             @endforeach
                                         </select>
                                     </div>
@@ -126,7 +127,6 @@
                                     <tr>
                                         <th>STT</th>
                                         <th>Vật tư</th>
-                                        <th>Mã vật tư</th>
                                         <th>Kho</th>
                                         <th>Giá/Kệ</th>
                                         <th>Tầng</th>
@@ -205,7 +205,7 @@
                 console.log(a, b, b[2]);
                 var item_quantity = $("#item_quantity").val();
                 var price = $("#export_price").val().replaceAll('.', '');
-                
+
                 if (item_name !== '' && supplier_name !== '' && item_quantity > 0 && price > 0) {
                     if (list.filter(item => item.id == item_detail).length > 0) {
                         var data = [...list];
@@ -258,7 +258,6 @@
                                         <input name="export_price[]" value="${item.price}" hidden>
                                         <input name="item_valid[]" value="${item.item_valid}" hidden>
                                     </td>
-                                    <td><b>${item.code}</b></td>
                                     <td><b>${item.warehouse_name}</b></td>
                                     <td><b>${item.shelf_name}</b></td>
                                     <td><b>${item.floor_id}</b></td>
