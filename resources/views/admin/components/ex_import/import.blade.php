@@ -215,7 +215,11 @@
                 var category = $("#category option:selected").text();
                 var unit_id = $("#unit").val();
                 var unit = $("#unit option:selected").text();
+<<<<<<< HEAD
                 var price = $("#price").val().replaceAll('.', '');
+=======
+                var price = $("#price").val().replaceAll('.','');
+>>>>>>> higo
                 var quantity = parseInt($("#quantity").val());
                 var supplier_id = $("#supplier").val();
                 var supplier = $("#supplier option:selected").text();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Warehouse;
+use App\Models\WarehouseManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -94,10 +95,14 @@ class WarehouseController extends Controller
             'city_id' => '1',
         ];
 
-        Warehouse::create(array_merge(
+        $warehouse = Warehouse::create(array_merge(
             $validator->validated(),
             $data,
         ));
+        WarehouseManager::create([
+            'warehouse_id' => $warehouse->id,
+            'user_id' => Auth::user()->id,
+        ]);
         Log::info('[' . $request->getMethod() . '] (' . Auth::user()->username . ')' . Auth::user()->name . ' >> Tạo mới kho "' . $request->warehouse_name . '"');
         return redirect()->back()->with('success', 'Tạo mới kho thành công');
     }
@@ -172,7 +177,7 @@ class WarehouseController extends Controller
         ];
         $warehouse->update($data);
 
-        return redirect()->route('warehouse.index')->with('success', 'Cập nhật thành công');
+        return redirect()->route('warehouse.warehouse-by-id')->with('success', 'Cập nhật thành công');
     }
 
     /**

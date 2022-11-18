@@ -89,8 +89,8 @@ class ShelfController extends Controller
     {
         $shelf = Shelf::find($id);
         $validator = Validator::make($request->all(), [
-            'shelf_name' => 'required|unique:shelves,shelf_name,' . $id,
-            'shelf_code' => 'required|unique:shelves,shelf_code,' . $id,
+            'shelf_name' => 'required',
+            'shelf_code' => 'required',
             'shelf_position' => 'required',
         ]);
 

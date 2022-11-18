@@ -202,6 +202,7 @@
                 var floor_id = b[0];
                 var cell_id = b[1];
                 var item_valid = b[2];
+                console.log(a, b, b[2]);
                 var item_quantity = $("#item_quantity").val();
                 var price = $("#export_price").val().replaceAll('.', '');
                 
