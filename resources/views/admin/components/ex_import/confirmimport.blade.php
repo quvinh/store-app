@@ -89,10 +89,10 @@
                                         <th width="15%">Phụ tùng/ Vật tư</th>
                                         <th width="15%">Nhà cung cấp</th>
                                         <th width="10%">Số lượng</th>
-                                        <th width="10%">Đơn giá</th>
+                                        <!-- <th width="10%">Đơn giá</th> -->
                                         <th width="10%">Chọn Kệ</th>
-                                        <th width="7%">Chọn Tầng</th>
-                                        <th width="7%">Chọn Ô</th>
+                                        <th width="10%">Chọn Tầng</th>
+                                        <th width="10%">Chọn Ô</th>
                                     </tr>
                                 </thead>
                                 <tbody id="list-import">
@@ -107,10 +107,10 @@
                                                     class="form-control text-center" readonly></th>
                                             <th><input type="text" value="{{ $item->item_quantity }}"
                                                     class="form-control text-center" readonly></th>
-                                            <th><input type="text" value="{{ $item->item_price }}"
-                                                    class="form-control text-center" readonly></th>
+                                            <!-- <th><input type="text" value="{{ $item->item_price }}"
+                                                    class="form-control text-center" readonly></th> -->
                                             <th>
-                                                <select data-toggle="select2" title="Shelf" id="{{'shelf'.$key}}" name="shelf[]">
+                                                <select data-toggle="select2" title="Shelf" id="{{'shelf'.$key}}" name="shelf[]" onchange="dispatchShelf(this.value);">
                                                     @foreach ($shelves as $shelf)
                                                         <option
                                                             value="{{ $shelf->id }} {{ $shelf->id == $item->shelf_to ? 'selected' : '' }}">
@@ -119,12 +119,34 @@
                                                     @endforeach
                                                 </select>
                                             </th>
-                                            <th><input type="number" name="floor[]" id="{{ $key }}"
-                                                    class="form-control text-center"
+                                            <th>
+                                                <select data-toggle="select2" title="Shelf" id="floor{{$key}}" name="floor[]">
+                                                    <option value="">Tầng</option>
+                                                    @foreach ($shelves as $shelf)
+                                                        <option
+                                                            value="{{ $shelf->id }} {{ $shelf->id == $item->shelf_to ? 'selected' : '' }}">
+                                                            {{ $shelf->shelf_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </th>
+                                            <th>
+                                                <select data-toggle="select2" title="Shelf" id="cell{{$key}}" name="cell[]">
+                                                    <option value="">Ô</option>
+                                                    <option value="1">1</option>
+                                                    <option value="1">1</option>
+                                                    <option value="1">1</option>
+                                                    <option value="1">1</option>
+                                                    <option value="1">1</option>
+                                                    <option value="1">1</option>
+                                                </select>
+                                            </th>
+                                            <!-- <th><input type="number" name="floor[]" id="{{ $key }}"
+                                                    class="form-control text-center" min="1" max="3"
                                                     value="{{ $item->floor_to ? $item->floor_to : '' }}"></th>
                                             <th><input type="number" name="cell[]" id="{{ $key }}"
-                                                    class="form-control text-center"
-                                                    value="{{ $item->cell_to ? $item->cell_to : '' }}"></th>
+                                                    class="form-control text-center" min="1" max="5"
+                                                    value="{{ $item->cell_to ? $item->cell_to : '' }}"></th> -->
                                         </tr>
                                     @endforeach
                                 </tbody>

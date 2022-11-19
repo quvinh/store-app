@@ -3,7 +3,6 @@
     <thead>
         <tr>
             <th>STT</th>
-            <th>Mã vật tư</th>
             <th>Tên vật tư</th>
             <th>Loại vật tư</th>
             <th>Số lượng</th>
@@ -28,7 +27,6 @@
         @foreach ($items as $key => $item)
             <tr>
                 <td>{{ $key + 1 }}</td>
-                <td>{{ $item->item_code }}</td>
                 <td>{{ $item->item_name }}</td>
                 <td>{{ $item->category_name }}</td>
                 <td>{{ $item->item_detail_quantity }}</td>
