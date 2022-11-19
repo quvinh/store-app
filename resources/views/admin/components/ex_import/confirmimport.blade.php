@@ -94,22 +94,23 @@
                                         <th width="15%">Chọn Kệ</th>
                                         <th width="15%">Chọn Tầng</th>
                                         <th width="20%">Chọn Ô</th>
+                                        {{-- <th width="8%">Tách</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody id="list-import">
                                     @foreach ($im_items as $key => $item)
-                                        <tr>
+                                        <tr id="row{{ $key }}">
                                             <td><input type="text" value="{{ $item->item }}"
-                                                    class="form-control text-center" readonly>
-                                                <input type="text" value="{{ $item->id }}" name="id[]"
+                                                    class="form-control text-center" readonly id="name{{ $key }}">
+                                                <input type="text" value="{{ $item->id }}" name="id[]" id="id{{ $key }}"
                                                     class="form-control text-center" hidden>
                                             </td>
                                             <th><input type="text" value="{{ $item->item_capacity }}"
-                                                class="form-control text-center" readonly></th>
+                                                class="form-control text-center" readonly id="capacity{{ $key }}"></th>
                                             <th><input type="text" value="{{ $item->supplier_name }}"
-                                                    class="form-control text-center" readonly></th>
+                                                    class="form-control text-center" readonly id="supplier{{ $key }}"></th>
                                             <th><input type="text" value="{{ $item->item_quantity }}"
-                                                    class="form-control text-center" readonly></th>
+                                                    class="form-control text-center" readonly id="quantity{{ $key }}"></th>
                                             <!-- <th><input type="text" value="{{ $item->item_price }}"
                                                             class="form-control text-center" readonly></th> -->
                                             <th>
@@ -131,11 +132,23 @@
                                                 </select>
                                             </th>
                                             <th>
-                                                <select data-toggle="select2" title="Cell" id="cell{{ $key }}"
+                                                <select data-toggle="select2" title="Cell" id="cell{{ $key }}" onchange="dispatchCell(this.value, {{ $key }})"
                                                     name="cell[]" disabled>
                                                     <option value="">Ô</option>
                                                 </select>
                                             </th>
+                                            {{-- <th>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <span class="visually-hidden">Toggle Dropdown</span>
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item"><input type="number" value="1" min="1" max="10000" class="form-control text-center"></a>
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item" type="button" onclick="seprateRow({{ $key }})">Tách SL</a>
+                                                    </div>
+                                                </div>
+                                            </th> --}}
                                             <!-- <th><input type="number" name="floor[]" id="{{ $key }}"
                                                             class="form-control text-center" min="1" max="3"
                                                             value="{{ $item->floor_to ? $item->floor_to : '' }}"></th>
@@ -161,6 +174,7 @@
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
 
     <!-- third party js -->
+    
     <script src="{{ asset('assets/js/vendor/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.responsive.min.js') }}"></script>
@@ -172,6 +186,7 @@
     <script src="{{ asset('assets/js/vendor/buttons.print.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.select.min.js') }}"></script>
+    
     <!-- third party js ends -->
     {{-- <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.10/jquery.autocomplete.min.js">
@@ -180,6 +195,7 @@
     <script src="{{ asset('assets/js/pages/demo.datatable-init.js') }}"></script>
     <!-- end demo js-->
     <script>
+        let cell_selected = [];
         function dispatchShelf(id, key) {
             if (!isNaN(parseInt(id))) {
                 $.ajax({
@@ -190,7 +206,7 @@
                         let html = '<option value="">Tầng</option>';
                         $('#floor' + key).html(html);
                         floors.map((item, index) => {
-                            console.log(item);
+                            // console.log(item);
                             $('#floor' + key).append(`<option value="${item.id}">${item.floor_name}</option>`)
                         })
                         $('#floor' + key).attr('disabled', false);
@@ -209,6 +225,8 @@
 
         function dispatchFloor(id, key) {
             if (!isNaN(parseInt(id))) {
+                let capacity_value = $('#capacity' + key).val();
+                let quantity_value = $('#quantity' + key).val();
                 $.ajax({
                     type: 'GET',
                     url: `/admin/import/dispatch/floor/${id}`,
@@ -217,7 +235,11 @@
                         let html = '<option value="">Ô</option>';
                         $('#cell' + key).html(html);
                         cells.map((item, index) => {
-                            $('#cell' + key).append(`<option value="${item.id}">${item.cell_name} (${item.sum}/${item.cell_capacity})</option>`)
+                            let add_count = cell_selected.filter(value => value.id == item.id);
+                            let sub = add_count.length > 0 ? add_count[0].capacity : 0;
+                            let total = item.sum + sub;
+                            let visible = (total + (capacity_value * quantity_value)) <= item.cell_capacity ? true : false;
+                            $('#cell' + key).append(`<option value="${item.id}" data-capacity="${total}" ${visible ? '' : 'disabled'}>${item.cell_name} (${total}/${item.cell_capacity})</option>`)
                         })
                         $('#cell' + key).attr('disabled', false);
                     },
@@ -231,30 +253,88 @@
             }
         }
 
-        function dispatchCell(id) {
+        function dispatchCell(id, key) {
             if (!isNaN(parseInt(id))) {
-                let sum = 0;
-                $.ajax({
-                    type: 'GET',
-                    url: `/admin/import/dispatch/cell/${id}`,
-                    success: function(res) {
-                        const cell = res.cell;
-                        // let sum = 0;
-                        cell.map((item, index) => {
-                            sum += item.item_capacity * item_quantity;
-                        })
-                        // console.log(sum)
-                        return 1;
-                    },
-                    error: function(e) {
-                        console.log(e);
-                        return 2;
-                    }
-                })
-                return sum;
+                let capacity_value = $('#capacity' + key).val();
+                let quantity_value = $('#quantity' + key).val();
+                let cell_capacity = $('#cell' + key).find(':selected').attr('data-capacity');
+                console.log(id, capacity_value, quantity_value, cell_capacity);
+                if(cell_capacity <= capacity_value * quantity_value) {
+                    cell_selected.push({
+                        'id' : id,
+                        'capacity' : capacity_value *  quantity_value
+                    });
+                } else {
+                    alert('Không đủ không gian để chứu vật tư');
+                }
             } else {
-                return 0;
             }
+            console.log(cell_selected);
+        }
+
+        function seprateRow(key) {
+            let id = $('#id' + key).val();
+            let random = (Math.floor(Math.random() * 1000)).toString();
+            let name = 'name' + key + '_' + random;
+            let name_value = $('#name' + key).val();
+            let capacity = 'capacity' + key + '_' + random;
+            let capacity_value = $('#capacity' + key).val();
+            let supplier = 'supplier' + key + '_' + random;
+            let supplier_value = $('#supplier' + key).val();
+            let quantity = 'quantity' + key + '_' + random;
+            let quantity_value = $('#quantity' + key).val();
+            let shelf = 'shelf' + key + '_' + random;
+            let floor = 'floor' + key + '_' + random;
+            let cell = 'cell' + key + '_' + random;
+            let html = `<tr id="row${key + '_' + random}">
+                <td><input type="text" value="${name_value}"
+                        class="form-control text-center" readonly id="${name}">
+                    <input type="text" value="${id}" name="id[]"
+                        class="form-control text-center" hidden>
+                </td>
+                <th><input type="text" value="${capacity_value}"
+                    class="form-control text-center" readonly id="${capacity}"></th>
+                <th><input type="text" value="${supplier_value}"
+                        class="form-control text-center" readonly id="${supplier}"></th>
+                <th><input type="text" value="${quantity_value}"
+                        class="form-control text-center" readonly id="${quantity}"></th>
+                <th>
+                    <select data-toggle="select2" title="Shelf" id="${shelf}"
+                        name="shelf[]" onchange="dispatchShelf(this.value, ${key + '_' + random});">
+                        <option value="">Chọn Kệ</option>
+                        @foreach ($shelves as $shelf)
+                            <option
+                                value="{{ $shelf->id }} {{ $shelf->id == $item->shelf_to ? 'selected' : '' }}">
+                                {{ $shelf->shelf_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </th>
+                <th>
+                    <select data-toggle="select2" title="Floor" id="${floor}" onchange="dispatchFloor(this.value, ${key + '_' + random});"
+                        name="floor[]" disabled>
+                    </select>
+                </th>
+                <th>
+                    <select data-toggle="select2" title="Cell" id="${cell}"
+                        name="cell[]" disabled>
+                        <option value="">Ô</option>
+                    </select>
+                </th>
+                <th>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item"><input type="number" value="1" min="1" max="10000" class="form-control text-center"></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" type="button" onclick="seprateRow(${key + '_' + random})">Tách SL</a>
+                        </div>
+                    </div>
+                </th>
+            </tr>`;
+            $('#row' + key).after(html);
         }
     </script>
 @endsection

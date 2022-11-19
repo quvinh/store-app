@@ -320,6 +320,7 @@
                     $('#supplier').val('').trigger('change');
                     $('#list-import').html(html);
                     $('#btnSave').attr('disabled', false);
+                    $("#category").attr('disabled', false);
                     $('#unit').html('');
                     $('#item').val('');
                     $('#unit_amount').val(1);

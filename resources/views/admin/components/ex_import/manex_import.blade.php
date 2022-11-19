@@ -134,9 +134,13 @@
                                                 @endcannot
                                                 <td>{{ $item->created_by }}</td>
                                                 <th>
-                                                    @foreach ($item->item as $vt)
-                                                        {{ $vt->item }} <br>
-                                                    @endforeach
+                                                    @if ($item->item->duplicates('item')->count())
+                                                        {{ $item->item->duplicates('item')->first() }}
+                                                    @else
+                                                        @foreach ($item->item as $index => $vt)
+                                                            {{ $vt->item }}<br>
+                                                        @endforeach
+                                                    @endif
                                                 </th>
                                                 <th>
                                                     <span style="font-size: 15px"

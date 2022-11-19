@@ -210,18 +210,35 @@ class ExportImportController extends Controller
             'created_by' => Auth::user()->id,
             'exim_status' => 0,
         ]);
+        $cell_capacity = Cell::orderBy('cell_capacity')->first()->cell_capacity;
         for ($i = 0; $i < $count; $i++) {
-            ExImportDetail::create([
-                'exim_id' => $import->id,
-                'item_id' => $request->id[$i],
-                'supplier_id' => $request->supplier[$i],
-                'warehouse_id' => $request->warehouse[$i],
-                'item_quantity' => $request->quantity[$i],
-                'item_price' => str_replace('.', '', $request->price[$i]),
-                'item_total' => 0,
-                'itemdetail_id' => 0,
-                'item_vat' => 0
-            ]);
+            $item_capacity = Item::find($request->id[$i])->item_capacity;
+            $quantity = $request->quantity[$i];
+            $arr_count = array();
+            $count_div = intval($cell_capacity / $item_capacity);
+            $loop_quantity = $quantity;
+            $j = 0;
+            while ($loop_quantity - $count_div > 0) {
+                $loop_quantity -= $count_div;
+                array_push($arr_count, $count_div);
+                $j++;
+            }
+            if($quantity % $count_div > 0) {
+                array_push($arr_count, $quantity % $count_div);
+            }
+            foreach($arr_count as $num) {
+                ExImportDetail::create([
+                    'exim_id' => $import->id,
+                    'item_id' => $request->id[$i],
+                    'supplier_id' => $request->supplier[$i],
+                    'warehouse_id' => $request->warehouse[$i],
+                    'item_quantity' => $num,
+                    'item_price' => str_replace('.', '', $request->price[$i]),
+                    'item_total' => 0,
+                    'itemdetail_id' => 0,
+                    'item_vat' => 0
+                ]);
+            }
         }
         return redirect()->route('ex_import.index', ['#export'])->with(['success', 'Tạo phiếu nhập thành công.']);
     }
