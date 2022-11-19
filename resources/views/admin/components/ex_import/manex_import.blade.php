@@ -144,24 +144,29 @@
                                                 <th>
                                                     <span style="font-size: 15px"
                                                         class="badge badge-{{ $item->exim_status == '0' ? 'info-lighten' : 'success-lighten' }}">
-                                                        {{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</span>
+                                                        {{ $item->exim_status == '0' ? 'Chờ duyệt' : '' }}{{ $item->exim_status == '1' ? 'Đã duyệt' : '' }}</span>
                                                 </th>
                                                 <td>{{ $item->created }}</td>
                                                 <td class="table-action">
                                                     @can('eim.edit')
-                                                        <a href="{{ route('import.edit', $item->id) }}" class="action-icon">
-                                                            <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
-                                                                data-bs-placement="top" title="Sửa phiếu"></i></a>
-                                                        <a href="{{ route('import.confirm', $item->id) }}"
-                                                            class="action-icon">
-                                                            <i class="mdi mdi-clipboard-edit-outline" data-bs-toggle="tooltip"
-                                                                data-bs-placement="top" title="Duyệt phiếu"></i></a>
+                                                        @if ($item->exim_status == 0)
+                                                            {{-- <a href="{{ route('import.edit', $item->id) }}"
+                                                                class="action-icon">
+                                                                <i class="mdi mdi-square-edit-outline"
+                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                    title="Sửa phiếu"></i></a> --}}
+                                                            <a href="{{ route('import.confirm', $item->id) }}"
+                                                                class="action-icon">
+                                                                <i class="mdi mdi-clipboard-edit-outline"
+                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                    title="Duyệt phiếu"></i></a>
+                                                        @endif
                                                     @endcan
                                                     @can('eim.delete')
-                                                        <a href="{{ route('ex_import.delete', $item->id) }}"
+                                                        {{-- <a href="{{ route('ex_import.delete', $item->id) }}"
                                                             class="action-icon">
                                                             <i class="mdi mdi-delete" data-bs-toggle="tooltip"
-                                                                data-bs-placement="top" title="Xóa phiếu"></i></a>
+                                                                data-bs-placement="top" title="Xóa phiếu"></i></a> --}}
                                                     @endcan
                                                 </td>
                                             </tr>

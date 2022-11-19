@@ -219,7 +219,7 @@
                     $("#category").val(suggestion.category_id).trigger('change');
                     $("#category").attr('disabled', true);
                     // $("#unit").val(suggestion.item_unit).trigger('change');
-                    $("#unit").html();
+                    $("#unit").html('');
                     $("#unit_amount").val(1)
 
                     let units = suggestion.unit;
@@ -320,6 +320,10 @@
                     $('#supplier').val('').trigger('change');
                     $('#list-import').html(html);
                     $('#btnSave').attr('disabled', false);
+                    $('#unit').html('');
+                    $('#item').val('');
+                    $('#unit_amount').val(1);
+                    $('#unit_nameamount').text('');
                     i++;
                 } else {
                     alert('Chọn tên, ĐVT, nhà cung cấp và số lượng, giá nhập lớn hơn 0');
