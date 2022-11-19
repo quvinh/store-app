@@ -39,7 +39,10 @@
                                     <a href="{{ route('ex_import.index') }}" class="btn btn-info">Quay lại</a>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                    @if ($im_items[0]->exim_status == 0)
+                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                    @endif
+                                    
                                 </div>
                             </div><br>
                             <div class="row">
@@ -52,7 +55,7 @@
                                     <input type="text" class="form-control" readonly
                                         value="{{ $im_items[0]->exim_code }}"><br>
                                     <input type="text" class="form-control" readonly
-                                        value="{{ $im_items[0]->exim_status == 0 ? 'Chưa duyệt' : 'Đã duyệt' }}"><br>
+                                        value="{{ $im_items[0]->exim_status == 0 ? 'Chưa duyệt' : '' }}{{ $im_items[0]->exim_status == 1 ? 'Đã duyệt' : '' }}{{ $im_items[0]->exim_status == 2 ? 'Đã hủy' : '' }}"><br>
                                     <input type="text" class="form-control" readonly
                                         value="{{ $im_items[0]->name }}"><br>
                                 </div>
@@ -66,22 +69,31 @@
                                         <th width="">Nhà cung cấp</th>
                                         <th width="10%">Số lượng</th>
                                         <th width="15%">Đơn giá</th>
-                                        <th width="">Trạng thái</th>
+                                        <th width="">Vị trí</th>
                                     </tr>
                                 </thead>
                                 <tbody id="list-import">
                                     @foreach ($im_items as $item)
+                                        @php
+                                            if($item->exim_status == 1) {
+                                                $floor = DB::table('floors')->where('id', $item->floor_to)->first()->floor_name;
+                                                $cell = DB::table('cells')->where('id', $item->cell_to)->first()->cell_name;
+                                            } else {
+                                                $floor = '-';
+                                                $cell = '-';
+                                            }                                            
+                                        @endphp
                                         <tr class="text-center">
                                             <td hidden><input type="text" name="id[]" value="{{ $item->id }}">
                                             </td>
                                             <td>{{ $item->item }}</td>
                                             <th>{{ $item->supplier_name }}</th>
-                                            <th><input type="number" name="quantity[]" value="{{ $item->item_quantity }}"
+                                            <th><input type="number" name="quantity[]" value="{{ $item->item_quantity }}" {{ $im_items[0]->exim_status == 1 ? 'readonly' : '' }}
                                                     class="form-control" id="quantity"></th>
-                                            <th><input type="text" name="price[]" value="{{ $item->item_price }}"
+                                            <th><input type="text" name="price[]" value="{{ $item->item_price }}" {{ $im_items[0]->exim_status == 1 ? 'readonly' : '' }}
                                                     data-toggle="input-mask" data-mask-format="000.000.000.000.000"
                                                     data-reverse="true" class="form-control" id="price"></th>
-                                            <th>{{ $item->exim_detail_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}</th>
+                                            <th>{{ $floor }}, {{ $cell }}</th>
                                         </tr>
                                     @endforeach
                                 </tbody>
