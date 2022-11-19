@@ -125,7 +125,7 @@ class ItemController extends Controller
      */
     public function edit($id)
     {
-        $units = Unit::join('unit_details', 'unit_details.unit_id' , '=', 'units.id')
+        $units = DB::table('units')->join('unit_details', 'unit_details.unit_id' , '=', 'units.id')
         ->where('unit_details.item_id', $id)->get();
         // dd($units);
         $categories = Category::all();

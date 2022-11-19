@@ -39,76 +39,80 @@
                 </div>
             @endforeach
         @endif
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-6">
-                                <a href="{{ route('ex_import.index') }}" class="btn btn-info">Quay lại</a>
-                            </div>
-                            <div class="col-6 text-end">
-                                <button type="submit" class="btn btn-primary">Lưu</button>
-                            </div>
-                        </div><br>
-                        <div class="row">
-                            <div class="col-3 text-end">
-                                <label for="" class="form-control">Mã phiếu</label><br>
-                                <label for="" class="form-control">Trạng thái</label><br>
-                                <label for="" class="form-control">Người tạo</label><br>
-                            </div>
-                            <div class="col-9">
-                                <input type="text" class="form-control" readonly
-                                    value="{{ $export[0]->exim_code }}"><br>
-                                <input type="text" class="form-control" readonly
-                                    value="{{ $export[0]->exim_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}"><br>
-                                <input type="text" class="form-control" readonly value="{{ $export[0]->name }}"><br>
+        <form action="{{ route('export.update', $export->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <a href="{{ route('ex_import.index') }}" class="btn btn-info">Quay lại</a>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <button type="submit" class="btn btn-primary"
+                                        {{ $export->exim_status == '0' ? '' : 'disabled' }}>Lưu</button>
+                                </div>
+                            </div><br>
+                            <div class="row">
+                                <div class="col-3 text-end">
+                                    <label for="" class="form-control">Người nhận</label><br>
+                                    <label for="" class="form-control">Mã phiếu</label><br>
+                                    <label for="" class="form-control">Trạng thái</label><br>
+                                    <label for="" class="form-control">Người tạo</label><br>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ $export->receiver }}"><br>
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ $export->exim_code }}"><br>
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ $export->exim_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}"><br>
+                                    <input type="text" class="form-control" readonly value="{{ $export->name }}"><br>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Chi tiết</h5>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Chi tiết</h5>
 
-                        <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
-                            <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Vật tư/Phụ tùng</th>
-                                    <th>Nhà cung cấp</th>
-                                    <th>Số lượng</th>
-                                    <th>Đơn giá</th>
-                                    <th>Trạng thái</th>
-                                    <th>Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                @foreach ($export_details as $key => $item)
-                                    <form action="{{ route('export.update', $item->exim_id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
+                            <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Vật tư/Phụ tùng</th>
+                                        <th>Nhà cung cấp</th>
+                                        <th>Số lượng</th>
+                                        <th>Đơn giá</th>
+                                        <th>Trạng thái</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($export_details as $key => $item)
                                         <tr>
 
-                                            <td>{{ $key + 1 }}</td>
+                                            <td>{{ $key + 1 }} <input type="text" hidden name="id[]" value="{{$item->ex_import_details_id}}"></td>
                                             <td>{{ $item->item_name }}</td>
                                             <td>{{ $item->supplier_name }}</td>
                                             <td><input type="number" name="quantity[]"
                                                     value="{{ $item->ex_item_quantity }}" class="form-control"
-                                                    id="quantity"></td>
+                                                    id="quantity" {{ $export->exim_status == '0' ? '' : 'disabled' }}>
+                                            </td>
                                             <td><input type="text" name="price[]" value="{{ $item->item_price }}"
                                                     data-toggle="input-mask" data-mask-format="000.000.000.000.000"
-                                                    data-reverse="true" class="form-control" id="price"></td>
+                                                    data-reverse="true" class="form-control" id="price"
+                                                    {{ $export->exim_status == '0' ? '' : 'disabled' }}></td>
                                             <td>{{ $item->exim_detail_status == 1 ? 'Đã duyệt' : 'Chờ duyệt' }}</td>
                                             <td>
                                                 <button type="button" title="Chi tiết" class="view-item btn btn-warning"
-                                                    data-name="{{ $item->item_name }}"
-                                                    data-unit="{{ $item->unit_name }}"
+                                                    data-name="{{ $item->item_name }}" data-unit="{{ $item->unit_name }}"
                                                     data-supplier="{{ $item->supplier_name }}"
                                                     data-category="{{ $item->category_name }}"
                                                     data-price="{{ $item->item_price }}"
@@ -119,7 +123,6 @@
                                                     data-weight="{{ $item->item_weight }}"
                                                     data-weightunit="{{ $item->item_weightuint }}"
                                                     data-image="{{ $item->item_images }}"
-                                                    data-code="{{ $item->item_code }}"
                                                     data-shelf-name="{{ $item->shelf_name }}"
                                                     data-floor="{{ $item->floor_id }}" data-cell="{{ $item->cell_id }}"
                                                     data-warehouse-name="{{ $item->warehouse_name }}" id="view">
@@ -128,139 +131,135 @@
                                             </td>
 
                                         </tr>
-                                    </form>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                    @endforeach
+                                </tbody>
+                            </table>
 
+                        </div>
                     </div>
-                </div>
-                <div class="modal fade" id="item_details" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="myCenterModalLabel">
-                                    <p id="name"></p>
-                                </h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-hidden="true"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="code" class="form-label">Mã vật tư:</label>
-                                            <input type="text" id="code" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="category" class="form-label">Loại:</label>
-                                            <input type="text" id="category" class="form-control" readonly>
-                                        </div>
-                                    </div>
+                    <div class="modal fade" id="item_details" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myCenterModalLabel">
+                                        <p id="name"></p>
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-hidden="true"></button>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="supplier" class="form-label">Nhà SX:</label>
-                                            <input type="text" id="supplier" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="unit" class="form-label">Đơn vị tính:</label>
-                                            <input type="text" id="unit" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="warehouse" class="form-label">Kho:</label>
-                                            <input type="text" id="warehouse" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="shelf" class="form-label">Giá/Kệ:</label>
-                                            <input type="text" id="shelf" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="floor" class="form-label">Tầng:</label>
-                                            <input type="text" id="floor" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="cell" class="form-label">Ô:</label>
-                                            <input type="text" id="cell" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="item_price" class="form-label">Đơn giá:</label>
-                                            <input type="text" id="item_price" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="long" class="form-label">Dài:</label>
-                                            <input type="text" id="long" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="height" class="form-label">Cao:</label>
-                                            <input type="text" id="height" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="width" class="form-label">Rộng:</label>
-                                            <input type="text" id="width" class="form-control" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="mb-3">
-                                                    <label for="weight" class="form-label">Nặng:</label>
-                                                    <input type="text" id="weight" class="form-control" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="mb-3">
-                                                    <label for="weightuint" class="form-label">Đơn vị:</label>
-                                                    <input type="text" id="weightuint" class="form-control" readonly>
-                                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="category" class="form-label">Loại:</label>
+                                                <input type="text" id="category" class="form-control" readonly>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="supplier" class="form-label">Nhà SX:</label>
+                                                <input type="text" id="supplier" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="unit" class="form-label">Đơn vị tính:</label>
+                                                <input type="text" id="unit" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="warehouse" class="form-label">Kho:</label>
+                                                <input type="text" id="warehouse" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="shelf" class="form-label">Giá/Kệ:</label>
+                                                <input type="text" id="shelf" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="floor" class="form-label">Tầng:</label>
+                                                <input type="text" id="floor" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="cell" class="form-label">Ô:</label>
+                                                <input type="text" id="cell" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="item_price" class="form-label">Đơn giá:</label>
+                                                <input type="text" id="item_price" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="long" class="form-label">Dài:</label>
+                                                <input type="text" id="long" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="height" class="form-label">Cao:</label>
+                                                <input type="text" id="height" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="width" class="form-label">Rộng:</label>
+                                                <input type="text" id="width" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label for="weight" class="form-label">Nặng:</label>
+                                                        <input type="text" id="weight" class="form-control"
+                                                            readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label for="weightuint" class="form-label">Đơn vị:</label>
+                                                        <input type="text" id="weightuint" class="form-control"
+                                                            readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3">
-                                            <label for="note" class="form-label">Mô tả:</label>
-                                            <input type="text" id="note" class="form-control" readonly>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="note" class="form-label">Mô tả:</label>
+                                                <input type="text" id="note" class="form-control" readonly>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 @endsection
 
@@ -286,7 +285,6 @@
         $(document).ready(function() {
             $('.view-item').on('click', function() {
                 console.log($(this).attr('data-code'));
-                $('#code').val($(this).attr('data-code'));
                 $('#name').text($(this).attr('data-name'));
                 $('#unit').val($(this).attr('data-unit'));
                 $('#supplier').val($(this).attr('data-supplier'));
