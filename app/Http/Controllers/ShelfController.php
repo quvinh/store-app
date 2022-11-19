@@ -202,7 +202,7 @@ class ShelfController extends Controller
     public function addShelf(Request $request, $warehouse_id)
     {
         $validator = Validator::make($request->all(), [
-            'shelf_name' => 'required|unique:shelves',
+            'shelf_name' => 'required',
             'shelf_code' => 'required|unique:shelves',
             'shelf_status' => 'required',
             'shelf_position' => 'required',

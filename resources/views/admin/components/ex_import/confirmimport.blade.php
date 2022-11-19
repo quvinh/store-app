@@ -90,11 +90,9 @@
                                         <th width="10%">Thể tích</th>
                                         <th width="15%">Nhà cung cấp</th>
                                         <th width="10%">Số lượng</th>
-                                        <!-- <th width="10%">Đơn giá</th> -->
                                         <th width="15%">Chọn Kệ</th>
                                         <th width="15%">Chọn Tầng</th>
                                         <th width="20%">Chọn Ô</th>
-                                        {{-- <th width="8%">Tách</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody id="list-import">
@@ -111,8 +109,6 @@
                                                     class="form-control text-center" readonly id="supplier{{ $key }}"></th>
                                             <th><input type="text" value="{{ $item->item_quantity }}"
                                                     class="form-control text-center" readonly id="quantity{{ $key }}"></th>
-                                            <!-- <th><input type="text" value="{{ $item->item_price }}"
-                                                            class="form-control text-center" readonly></th> -->
                                             <th>
                                                 <select data-toggle="select2" title="Shelf" id="{{ 'shelf' . $key }}"
                                                     name="shelf[]" onchange="dispatchShelf(this.value, {{ $key }});">
@@ -128,7 +124,6 @@
                                             <th>
                                                 <select data-toggle="select2" title="Floor" id="floor{{ $key }}" onchange="dispatchFloor(this.value, {{ $key }});"
                                                     name="floor[]" disabled>
-                                                    {{-- <option value="">Tầng</option> --}}
                                                 </select>
                                             </th>
                                             <th>

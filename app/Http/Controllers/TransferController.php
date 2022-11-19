@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cell;
+use App\Models\Item;
 use App\Models\ItemDetail;
 use App\Models\Transfer;
 use App\Models\TransferDetail;
@@ -183,16 +185,33 @@ class TransferController extends Controller
             'transfer_status' => 0,
             'transfer_note' => $request->note,
         ]);
+        $cell_capacity = Cell::orderBy('cell_capacity')->first()->cell_capacity;
         for ($i = 0; $i < $count; $i++) {
             $item = ItemDetail::find($request->itemdetail_id[$i]);
-            TransferDetail::create([
-                'transfer_id' => $transfer->id,
-                'itemdetail_id' => $item->id,
-                'item_quantity' => $request->item_quantity[$i],
-                'shelf_from' => $item->shelf_id,
-                'floor_from' => $item->floor_id,
-                'cell_from' => $item->cell_id,
-            ]);
+            $item_capacity = Item::find($request->id[$i])->item_capacity;
+            $quantity = $request->quantity[$i];
+            $arr_count = array();
+            $count_div = intval($cell_capacity / $item_capacity);
+            $loop_quantity = $quantity;
+            $j = 0;
+            while ($loop_quantity - $count_div > 0) {
+                $loop_quantity -= $count_div;
+                array_push($arr_count, $count_div);
+                $j++;
+            }
+            if ($quantity % $count_div > 0) {
+                array_push($arr_count, $quantity % $count_div);
+            }
+            foreach ($arr_count as $num) {
+                TransferDetail::create([
+                    'transfer_id' => $transfer->id,
+                    'itemdetail_id' => $item->id,
+                    'item_quantity' => $request->item_quantity[$i],
+                    'shelf_from' => $item->shelf_id,
+                    'floor_from' => $item->floor_id,
+                    'cell_from' => $item->cell_id,
+                ]);
+            }
         }
         return redirect()->back()->with(['success' => 'Tạo phiếu luân chuyển thành công.']);
     }
@@ -231,6 +250,7 @@ class TransferController extends Controller
                 'transfers.transfer_status',
                 'transfers.warehouse_to',
                 'warehouses.warehouse_name',
+                'items.item_capacity',
                 'users.name',
             )
             ->get();

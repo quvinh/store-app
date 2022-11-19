@@ -87,6 +87,12 @@ Breadcrumbs::for('transferadd', function (BreadcrumbTrail $trail) {
     $trail->push(Lang::get('breadcrumb.transfer.add'), route('transfer.add'));
 });
 
+// Dashboard > Transfer > edit
+Breadcrumbs::for('transferedit', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('transfer');
+    $trail->push(Lang::get('breadcrumb.transfer.edit'), route('transfer.edit', $id));
+});
+
 // Dashboard > Inventory
 Breadcrumbs::for('inventory-item', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
