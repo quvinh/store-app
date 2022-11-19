@@ -195,7 +195,6 @@ class InventoryController extends Controller
                 'items.item_name',
                 'items.id as item_id',
                 DB::raw('SUM(inventory_details.item_difference) as item_broken'),
-                'items.item_code',
                 'suppliers.supplier_name',
                 'warehouse_name'
             )
@@ -287,7 +286,8 @@ class InventoryController extends Controller
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
             ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
-            ->join('units', 'units.id', '=', 'items.item_unit')
+            ->join('unit_details', 'unit_details.item_id', '=', 'items.id')
+            ->join('units', 'units.id', '=', 'unit_details.unit_id')
             ->select(
                 'items.*',
                 'item_details.id as itemdetail_id',
@@ -304,6 +304,7 @@ class InventoryController extends Controller
                 'supplier_name',
                 'unit_name'
             )
+            ->groupBy('itemdetail_id')
             ->where('item_details.item_quantity', '>', 0)
             ->whereNull('items.deleted_at')
             ->where($text, $id)

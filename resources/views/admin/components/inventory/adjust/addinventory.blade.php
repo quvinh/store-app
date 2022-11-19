@@ -101,7 +101,7 @@
                                         <select data-toggle="select2" title="Item" id="itemdetail_id" name="item_detail">
                                             @foreach ($items as $item)
                                                 <option value="{{ $item->itemdetail_id }}">
-                                                    {{ $item->item_name }} - {{ $item->item_code }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - Tằng ID:{{ $item->floor_id }} - Ô ID:{{ $item->cell_id }} - SL:{{ $item->item_detail_quantity }}
+                                                    {{ $item->item_name }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - Tằng ID:{{ $item->floor_id }} - Ô ID:{{ $item->cell_id }} - SL:{{ $item->item_detail_quantity }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -208,7 +208,7 @@
                 var html = '';
                 var text = $("#itemdetail_id option:selected").text();
                 var c = text.split(' - ');
-                a = [...c.slice(4)];
+                a = [...c.slice(3)];
                 for (var val of a) {
                     b.push(val.replace(/\D/g, ' ').trim().replace(/\s+/g, ' '))
                 }
@@ -216,14 +216,13 @@
                 var warehouse_id = $('#warehouse').val();
                 var item_name = text.split(' - ')[0];
                 var supplier_name = text.split(' - ')[2];
-                var item_code = text.split(' - ')[1];
                 var warehouse_name = $("#warehouse option:selected").text().split(' - ')[1];
                 var shelf_name = text.split(' - ')[3];
                 var floor_id = b[0];
                 var cell_id = b[1];
                 var item_valid = b[2];
 
-                console.log(floor_id, item_valid)
+                console.log('a', a); console.log('b', b); console.log('c', c);
                 var item_quantity = $("#item_quantity").val();
                 if (item_name !== '' && supplier_name !== '' && item_quantity > 0) {
                     if (list.filter(item => item.id == item_detail).length > 0) {
@@ -236,7 +235,6 @@
                                 newdata.push(...data.filter(value => value.id !== item.id), {
                                     id: item.id,
                                     name: item.name,
-                                    code: item.code,
                                     supplier_name: item.supplier_name,
                                     warehouse_name: item.warehouse_name,
                                     quantity: item.quantity + parseInt(item_quantity),
@@ -256,7 +254,6 @@
                             quantity: parseInt(item_quantity),
                             supplier_name: supplier_name,
                             warehouse_name: warehouse_name,
-                            code: item_code,
                             shelf_name: shelf_name,
                             floor_id: floor_id,
                             cell_id: cell_id,

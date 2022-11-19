@@ -100,6 +100,9 @@
                             <li>
                                 <a href="{{ route('statistic.transfer') }}">Thống kê điều chuyển</a>
                             </li>
+                            <li>
+                                <a href="{{ route('statistic.adjust') }}">Thống kê điều chỉnh</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

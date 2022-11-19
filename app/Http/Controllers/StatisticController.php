@@ -21,6 +21,7 @@ class StatisticController extends Controller
                 Route::get('/import', [StatisticController::class, 'import'])->name('statistic.import');
                 Route::get('/export', [StatisticController::class, 'export'])->name('statistic.export');
                 Route::get('/transfer', [StatisticController::class, 'transfer'])->name('statistic.transfer');
+                Route::get('/adjust', [StatisticController::class, 'adjust'])->name('statistic.adjust');
             });
         });
     }
@@ -92,6 +93,7 @@ class StatisticController extends Controller
             ->join('users', 'users.id', '=', 'transfers.created_by')
             ->join('warehouses', 'warehouses.id', '=', 'transfers.warehouse_to')
             ->select('transfers.*', 'users.name', DB::raw('date_format(transfers.created_at, "%d-%m-%Y %H:%i:%s") as created'), 'warehouses.warehouse_name')
+            ->where('transfers.transfer_status', 5)
             ->whereNull('transfers.deleted_at')
             ->orderByDesc('created_at');
         $warehouses = DB::table('warehouse_managers')
@@ -114,5 +116,35 @@ class StatisticController extends Controller
         }
         $transfers = $transfers->get();
         return view('admin.components.statistic.transfer', compact('transfers', 'warehouses'));
+    }
+    public function adjust(Request $request)
+    {
+        $inventories = DB::table('inventories')
+            ->join('users', 'users.id', '=', 'inventories.created_by')
+            ->join('warehouses', 'warehouses.id', '=', 'inventories.warehouse_id')
+            ->select('inventories.*', 'users.name', DB::raw('date_format(inventories.created_at, "%d-%m-%Y %H:%i:%s") as created'), 'warehouses.warehouse_name')
+            ->whereNull('inventories.deleted_at')
+            ->where('inventories.inventory_status', 1)
+            ->orderByDesc('created_at');
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
+            ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
+            ->select('warehouses.*')
+            ->where('user_id', '=', Auth::user()->id)
+            ->get();
+        if (isset($request->warehouse)) {
+            $inventories->where('inventories.warehouse_id', $request->warehouse);
+        } else $inventories->where('inventories.warehouse_id', $warehouses[0]->id);
+        if (isset($request->quarter)) {
+            $inventories->where(DB::raw('QUARTER(inventories.created_at)'), $request->quarter);
+        }
+        if (isset($request->month)) {
+            $inventories->where(DB::raw('date_format(inventories.created_at, "%m")'), $request->month);
+        }
+        if (isset($request->year)) {
+            $inventories->where(DB::raw('date_format(inventories.created_at, "%Y")'), $request->year);
+        }
+        $inventories = $inventories->get();
+        return view('admin.components.statistic.adjust', compact('inventories', 'warehouses'));
     }
 }

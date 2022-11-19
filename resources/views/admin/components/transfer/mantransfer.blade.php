@@ -73,7 +73,7 @@
                                 <button type="button" class="btn btn-primary" onclick="filter()">Tìm kiếm</button>
                             </div>
                         </div>
-                        <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
+                        <table id="basic-datatable" class="table dt-responsive nowrap">
                             {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
                                 <tr>

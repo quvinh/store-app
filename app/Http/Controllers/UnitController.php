@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
 use App\Models\Unit;
+use App\Models\UnitDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +36,8 @@ class UnitController extends Controller
     {
         $units = Unit::where('deleted_at', null)->get();
         $unitTrashed = Unit::onlyTrashed()->get();
-        return view('admin.components.unit.manunit', compact('units', 'unitTrashed'));
+        $items = Item::all();
+        return view('admin.components.unit.manunit', compact('units', 'unitTrashed', 'items'));
     }
 
     /**
@@ -61,9 +64,13 @@ class UnitController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
-        Unit::create([
+        $unit = Unit::create([
             'unit_name' => $request->unit_name,
             'unit_amount' => $request->unit_amount ? $request->unit_amount : '1',
+        ]);
+        UnitDetail::create([
+            'unit_id' => $unit->id,
+            'item_id' => $request->item,
         ]);
         return redirect()->route('unit.index')->with('success', 'Thêm mới đơn vị tính thành công');
     }

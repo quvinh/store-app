@@ -134,12 +134,12 @@ class ShelfController extends Controller
             'floor_name' => $request->floor_name,
             'floor_capacity' => array_sum($request->cell_capacity),
         ]);
-        // foreach ($request->id as $key => $id){
-        //     Cell::find($id)->update([
-        //         'cell_name' => $request->cell_name[$key],
-        //         'cell_capacity' => $request->cell_capacity[$key],
-        //     ]);
-        // }
+        foreach ($request->cell_id as $key => $id){
+            Cell::find($id)->update([
+                'cell_name' => $request->cell_name[$key],
+                'cell_capacity' => $request->cell_capacity[$key],
+            ]);
+        }
         return redirect()->back()->with(['success' => 'Cập nhật tầng thành công']);
     }
 
@@ -186,6 +186,7 @@ class ShelfController extends Controller
                 'item_details.id as itemdetail_id',
                 'items.item_quantity as item_valid'
             )
+            ->groupBy('item_details.id')
             ->orderByDesc('items.item_name')
             ->where('item_details.warehouse_id', $warehouse_id)
             ->where('item_details.item_quantity', '>', '0')
