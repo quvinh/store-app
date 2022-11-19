@@ -24,9 +24,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="tab-content">
-                            <form class="needs-validation" novalidate
-                                action="{{ route('shelf.update',$shelf->id) }}" method="POST"
-                                enctype="multipart/form-data">
+                            <form class="needs-validation" novalidate action="{{ route('shelf.update', $shelf->id) }}"
+                                method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
@@ -35,7 +34,8 @@
                                             <div class="col s6">
                                                 <label class="form-label" for="shelf_code">Mã giá/kệ:</label>
                                                 <input type="text" class="form-control" id="shelf_code"
-                                                    placeholder="Mã giá/kệ" required="" name="shelf_code" value="{{ $shelf->shelf_code }}">
+                                                    placeholder="Mã giá/kệ" required="" name="shelf_code"
+                                                    value="{{ $shelf->shelf_code }}">
                                                 <div class="invalid-feedback">
                                                     Vui lòng nhập mã giá/kệ.
                                                 </div>
@@ -43,7 +43,8 @@
                                             <div class="col s6">
                                                 <label class="form-label" for="shelf_position">vị trí:</label>
                                                 <input type="text" class="form-control" id="shelf_position"
-                                                    placeholder="vị trí" required="" name="shelf_position" value="{{ $shelf->shelf_position }}">
+                                                    placeholder="vị trí" required="" name="shelf_position"
+                                                    value="{{ $shelf->shelf_position }}">
                                                 <div class="invalid-feedback">
                                                     Vui lòng nhập số vị trí.
                                                 </div>
@@ -53,7 +54,8 @@
                                             <div class="col s6">
                                                 <label class="form-label" for="shelf_name">Tên giá/kệ:</label>
                                                 <input type="text" class="form-control" id="shelf_name"
-                                                    placeholder="Tên giá/kệ" required="" name="shelf_name" value="{{ $shelf->shelf_name }}">
+                                                    placeholder="Tên giá/kệ" required="" name="shelf_name"
+                                                    value="{{ $shelf->shelf_name }}">
                                                 <div class="invalid-feedback">
                                                     Vui lòng nhập tên giá/kệ.
                                                 </div>
@@ -61,17 +63,51 @@
                                             <div class="col s6">
                                                 <label class="form-label" for="shelf_note">Ghi chú:</label>
                                                 <input type="text" class="form-control" id="shelf_note"
-                                                    placeholder="Ghi chú" name="shelf_note" value="{{ $shelf->shelf_note }}">
+                                                    placeholder="Ghi chú" name="shelf_note"
+                                                    value="{{ $shelf->shelf_note }}">
                                             </div>
                                         </div>
                                         <div class="row mb-2"><span class="form-label" style="font-weight:600">Kích
                                                 hoạt ngay:</span>
                                             <div class=" col s6">
-                                                <input type="checkbox" id="switch3" {{ ($shelf->shelf_status==1) ? 'checked': ''}} data-switch="success"
+                                                <input type="checkbox" id="switch3"
+                                                    {{ $shelf->shelf_status == 1 ? 'checked' : '' }} data-switch="success"
                                                     name="shelf_status" />
                                                 <label for="switch3" data-on-label="Yes" data-off-label="No"></label>
                                             </div>
                                         </div>
+                                    </div>
+                                    <hr>
+                                    <h3 class="text-center">Danh sách các tầng</h3>
+                                    <div class="row">
+                                        <table id="basic-datatable" class="table dt-responsive nowrap w-100">
+                                            <thead>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Tên tầng</th>
+                                                    <th>Thể tích</th>
+                                                    <th>Số ô</th>
+                                                    <th style="width: 10%">Thao tác</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($floors as $key => $floor)
+                                                    <tr>
+                                                        <td>{{ $key + 1 }}</td>
+                                                        <td>{{ $floor->floor_name }}</td>
+                                                        <td>{{ $floor->floor_capacity }}</td>
+                                                        <td>{{ $cell_number }}</td>
+                                                        <td class="table-action">
+                                                            @can('she.edit')
+                                                                <a href="{{ route('floor.edit', $floor->id) }}"
+                                                                    class="action-icon">
+                                                                    <i class="mdi mdi-square-edit-outline"></i></a>
+                                                            @endcan
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                                 <button class="btn btn-success mb-2 me-1" type="submit">Lưu</button>

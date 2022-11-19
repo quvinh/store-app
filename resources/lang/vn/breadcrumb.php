@@ -12,6 +12,10 @@ return [
         'create' => 'Tạo mới kệ',
         'edit' => 'Sửa kệ',
     ],
+    'floor' => [
+        'floor' => 'Tầng',
+        'edit' => 'Sửa tầng',
+    ],
     'ex_import' => [
         'ex_import' => 'Quản lý Nhập/Xuất',
     ],

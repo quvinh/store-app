@@ -71,9 +71,12 @@
                                             <label class="form-label">
                                                 <span class="text-danger">(*)</span> <span class="text-primary">Người yêu cầu</span>
                                             </label>
-                                            <select class="form-control select2" data-toggle="select2"  onchange="filter()"
-                                                id="transfer_command">
+                                            <select class="form-control select2" data-toggle="select2" id="transfer_command" name="receiver">
                                                 <option value="">Chọn người yêu cầu</option>
+                                                @foreach ($users as $user)
+                                                        <option value="{{ $user->id }}">
+                                                            {{ $user->name . ' - '. $user->role_name }}</option>
+                                                    @endforeach
                                             </select>
                                         </div>
                                     </div>
