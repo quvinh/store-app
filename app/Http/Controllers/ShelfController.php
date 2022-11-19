@@ -22,6 +22,8 @@ class ShelfController extends Controller
         Route::group(['middleware' => ['can:she.edit']], function () {
             Route::get('edit-shelf/{id}', [ShelfController::class, 'edit'])->name('shelf.edit');
             Route::put('update-shelf/{id}', [ShelfController::class, 'update'])->name('shelf.update');
+            Route::get('edit-floor/{id}', [ShelfController::class, 'editFloor'])->name('floor.edit');
+            Route::put('update-floor/{id}', [ShelfController::class, 'updateFloor'])->name('floor.update');
         });
         Route::get('delete-shelf/{id}', [ShelfController::class, 'destroy'])->name('shelf.destroy')->middleware(['can:she.delete']);
         // Route::get('shelf/{id}', [ShelfController::class, 'shelfDetail'])->name('shelf.shelf-detail');
@@ -77,7 +79,14 @@ class ShelfController extends Controller
     public function edit($id)
     {
         $shelf = Shelf::find($id);
-        return view('admin.components.shelf.editshelf', compact('shelf'));
+        $floors = DB::table('floors')->where('shelf_id', $id)->get();
+        $cells = DB::table('floors')
+        ->join('cells', 'cells.floor_id', '=', 'floors.id')
+        ->where('floors.id', $floors->first()->id)
+        ->select('cells.*')->get();
+        // dd($floors, $cells);
+        $cell_number = count($cells);
+        return view('admin.components.shelf.editshelf', compact('shelf', 'floors', 'cell_number'));
     }
 
     /**
@@ -109,15 +118,29 @@ class ShelfController extends Controller
         ];
         $shelf->update($data);
 
-        $warehouse_id = DB::table('warehouse_details')
-            ->join('shelves', 'id', '=', 'shelf_id')
-            ->where('shelves.id', $id)
-            ->select('warehouse_id')
-            ->pluck('warehouse_id');
-
-        // return redirect()->route('shelf.warehouse-details',$warehouse_id[0])->with('success', 'cập nhật thành công');
-
-        return redirect()->back()->with('success', 'cập nhật thành công');
+        return redirect()->back()->with('success', 'Cập nhật thành công');
+    }
+    public function editFloor($id)
+    {
+        $floor = Floor::find($id);
+        $cells = DB::table('cells')
+        ->where('cells.floor_id', $id)->get();
+        return view('admin.components.shelf.editfloor', compact('floor', 'cells'));
+    }
+    public function updateFloor(Request $request, $id)
+    {
+        // dd($request->all());
+        Floor::find($id)->update([
+            'floor_name' => $request->floor_name,
+            'floor_capacity' => array_sum($request->cell_capacity),
+        ]);
+        // foreach ($request->id as $key => $id){
+        //     Cell::find($id)->update([
+        //         'cell_name' => $request->cell_name[$key],
+        //         'cell_capacity' => $request->cell_capacity[$key],
+        //     ]);
+        // }
+        return redirect()->back()->with(['success' => 'Cập nhật tầng thành công']);
     }
 
     /**
@@ -201,6 +224,7 @@ class ShelfController extends Controller
 
     public function addShelf(Request $request, $warehouse_id)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'shelf_name' => 'required|unique:shelves',
             'shelf_code' => 'required|unique:shelves',
@@ -222,17 +246,17 @@ class ShelfController extends Controller
                 'shelf_note' => $request->shelf_note
             ]
         ));
-        for ($i=0; $i < 3; $i++) {
+        for ($i=0; $i < $request->floor; $i++) {
             $floor = Floor::create([
                 'shelf_id' => $shelf->id,
                 'floor_name' => 'Tầng '.($i+1),
-                'floor_capacity' => 50000,
+                'floor_capacity' => $request->cell_capacity * $request->cell,
             ]);
-            for ($j=0; $j < 5; $j++) {
+            for ($j=0; $j < $request->cell; $j++) {
                 Cell::create([
                     'floor_id' => $floor->id,
                     'cell_name' => 'Ô '.($j+1),
-                    'cell_capacity' => 10000,
+                    'cell_capacity' => $request->cell_capacity,
                 ]);
             }
         }

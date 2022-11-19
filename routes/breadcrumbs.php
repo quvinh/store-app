@@ -33,6 +33,12 @@ Breadcrumbs::for('edit-shelf', function (BreadcrumbTrail $trail, $id) {
     $trail->push(Lang::get('breadcrumb.shelf.edit'), route('shelf.edit', $id));
 });
 
+// Dashboard > Warehouse > Edit shelf > Edit floor
+Breadcrumbs::for('edit-floor', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('edit-shelf');
+    $trail->push(Lang::get('breadcrumb.floor.edit'), route('floor.edit', $id));
+});
+
 // Dashboard > ExIm
 Breadcrumbs::for('ex_import', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');

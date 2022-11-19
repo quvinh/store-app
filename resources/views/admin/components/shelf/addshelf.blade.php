@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div class="col s6">
-                    <label class="form-label" for="shelf_position">vị trí:</label>
+                    <label class="form-label" for="shelf_position">Vị trí:</label>
                     <input type="text" class="form-control" id="shelf_position" placeholder="vị trí" required=""
                         name="shelf_position">
                     <div class="invalid-feedback">
@@ -38,9 +38,38 @@
                     <input type="text" class="form-control" id="shelf_note" placeholder="Ghi chú" name="shelf_note">
                 </div>
             </div>
-            <div class="row mb-2"><span class="form-label" style="font-weight:600">Kích
-                    hoạt ngay:</span>
+            <div class="row mb-2">
+                <div class="col s6">
+                    <label class="form-label" for="floor">Số tầng:</label>
+                    <input type="number" class="form-control" min="1" max="1000" id="floor_id" placeholder="Số tầng" required=""
+                        name="floor">
+                    <div class="invalid-feedback">
+                        Vui lòng nhập số tầng.
+                    </div>
+                </div>
+                <div class="col s6">
+                    <label class="form-label" for="cell">Số ô trong tầng:</label>
+                    <input type="number" min="1" max="1000" class="form-control" id="cell" placeholder="Số ô" required=""
+                        name="cell">
+                    <div class="invalid-feedback">
+                        Vui lòng nhập số ô.
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col s6">
+                    <div class="col s6">
+                        <label class="form-label" for="cell_capacity">Thể tích của ô:</label>
+                        <input type="number" min="5000" max="50000" step="1000" class="form-control" id="cell_capacity" placeholder="Thể tích ô" required=""
+                            name="cell_capacity">
+                        <div class="invalid-feedback">
+                            Vui lòng nhập thể tích ô.
+                        </div>
+                    </div>
+                </div>
                 <div class=" col s6">
+                    <span class="form-label" style="font-weight:600">Kích
+                    hoạt ngay:</span><br><br>
                     <input type="checkbox" id="switch3" checked data-switch="success" name="shelf_status" />
                     <label for="switch3" data-on-label="Yes" data-off-label="No"></label>
                 </div>

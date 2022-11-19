@@ -12,6 +12,10 @@ return [
         'create' => 'Create shelf',
         'edit' => 'Edit shelf',
     ],
+    'floor' => [
+        'floor' => 'Floor',
+        'edit' => 'Edit shelf',
+    ],
     'ex_import' => [
         'ex_import' => 'Export/Import',
     ],

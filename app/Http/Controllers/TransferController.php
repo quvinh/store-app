@@ -89,6 +89,14 @@ class TransferController extends Controller
      */
     public function create(Request $request)
     {
+        $users = DB::table('users')
+        ->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+        ->leftJoin('roles', 'roles.id', '=', 'model_has_roles.role_id')
+        ->select('users.name', 'roles.name as role_name', 'users.id')
+        ->where('roles.name', 'like', 'Giám đốc')
+        // ->orWhere('roles.name', 'like', '%Admin%')
+        ->get();
+        // dd($users);
         $warehouses = DB::table('warehouse_managers')
             ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
             ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
@@ -118,7 +126,6 @@ class TransferController extends Controller
                 'category_name',
                 'supplier_name'
             )
-
             ->whereNull('items.deleted_at')
             ->where('item_details.item_quantity', '>', 0)
             ->where('item_details.warehouse_id', $warehouse_id)
@@ -151,7 +158,7 @@ class TransferController extends Controller
                 $exim_invalid[0]->quantity +  $trans_invalid[0]->quantity
             ];
         }
-        return view('admin.components.transfer.addtransfer', compact('warehouses', 'items'));
+        return view('admin.components.transfer.addtransfer', compact('warehouses', 'items', 'users'));
     }
 
     /**
