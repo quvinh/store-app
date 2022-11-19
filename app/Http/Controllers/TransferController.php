@@ -31,6 +31,7 @@ class TransferController extends Controller
                 Route::put('/update/{id}', [TransferController::class, 'update'])->name('transfer.update');
                 Route::get('/confirm/{id}', [TransferController::class, 'confirm'])->name('transfer.confirm');
                 Route::put('/update-status/{id}', [TransferController::class, 'update_status'])->name('transfer.update-status');
+                Route::put('/update-transfer/{id}', [TransferController::class, 'update_transfer'])->name('transfer.update-transfer');
             });
             Route::group(['middleware' => ['can:tra.delete']], function () {
                 Route::get('/delete/{id}', [TransferController::class, 'delete'])->name('transfer.delete');
@@ -195,8 +196,8 @@ class TransferController extends Controller
         $cell_capacity = Cell::orderBy('cell_capacity')->first()->cell_capacity;
         for ($i = 0; $i < $count; $i++) {
             $item = ItemDetail::find($request->itemdetail_id[$i]);
-            $item_capacity = Item::find($request->id[$i])->item_capacity;
-            $quantity = $request->quantity[$i];
+            $item_capacity = Item::find($item->item_id)->item_capacity;
+            $quantity = $request->item_quantity[$i];
             $arr_count = array();
             $count_div = intval($cell_capacity / $item_capacity);
             $loop_quantity = $quantity;
@@ -363,6 +364,25 @@ class TransferController extends Controller
             };
         };
         return redirect()->route('transfer.index')->with(['success', 'Sửa phiếu điều chuyển thành công.']);
+    }
+
+    public function update_transfer(Request $request, $status) 
+    {
+        // dd($request->all());
+        // 0 - Chua duyet
+        // 1 - Duyet
+        // 2 - Giao hang
+        // 3 - Su co
+        // 4 - Huy
+        // 5 - Hoan thanh
+        if($request->transfer_id) {
+            Transfer::find($request->transfer_id)->update([
+                'transfer_status' => $status
+            ]);
+            return redirect()->route('transfer.index')->with(['success', 'Cập nhật phiếu điều chuyển thành công.']);
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Lỗi hệ thống']);
+        }
     }
 
     /**

@@ -73,7 +73,7 @@
                                 <button type="button" class="btn btn-primary" onclick="filter()">Tìm kiếm</button>
                             </div>
                         </div>
-                        <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
+                        <table id="alternative-page-datatable" class="table dt-responsive nowrap">
                             {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
                                 <tr>
@@ -103,26 +103,84 @@
                                         <td>{{ $transfer->name }}</td>
                                         <td>{{ $transfer->transfer_note }}</td>
                                         <td>
-                                            @if ($transfer->transfer_status == '1')
-                                                <span class="badge bg-success">Đã duyệt</span>
-                                            @else
-                                                <span class="badge bg-info">Chưa duyệt</span>
+                                            @if ($transfer->transfer_status == 0)
+                                                <span class="badge bg-warning">Chưa duyệt</span>
+                                            @endif
+                                            @if ($transfer->transfer_status == 1)
+                                                <span class="badge bg-primary">Đã duyệt</span>
+                                            @endif
+                                            @if ($transfer->transfer_status == 2)
+                                                <span class="badge bg-info">Đang giao</span>
+                                            @endif
+                                            @if ($transfer->transfer_status == 3)
+                                                <span class="badge bg-danger">Sự cố</span>
+                                            @endif
+                                            @if ($transfer->transfer_status == 4)
+                                                <span class="badge bg-secondary">Đã hủy</span>
+                                            @endif
+                                            @if ($transfer->transfer_status == 5)
+                                                <span class="badge bg-secondary">Hoàn thành</span>
                                             @endif
                                         </td>
                                         <td>{{ $transfer->created_at }}</td>
                                         <td class="table-action">
                                             @can('tra.edit')
-                                                <a href="{{ route('transfer.edit', $transfer->id) }}" class="action-icon">
+                                                {{-- <a href="{{ route('transfer.edit', $transfer->id) }}" class="action-icon">
                                                     <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" title="Sửa phiếu"></i></a>
                                                 <a href="{{ route('transfer.confirm', $transfer->id) }}" class="action-icon">
                                                     <i class="mdi mdi-clipboard-edit-outline" data-bs-toggle="tooltip"
-                                                        data-bs-placement="top" title="Duyệt phiếu"></i></a>
+                                                        data-bs-placement="top" title="Duyệt phiếu"></i></a> --}}
+                                                @if (!in_array($transfer->transfer_status, [4, 5]))
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <span class="visually-hidden">Toggle Dropdown</span>
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        @if ($transfer->transfer_status == 0)
+                                                            <form action="{{ route('transfer.update-transfer', 1) }}" method="post">
+                                                                @csrf
+                                                                @method('put')
+                                                                <input type="text" hidden name="transfer_id" value="{{ $transfer->id }}">
+                                                                <button type="submit" class="dropdown-item">Duyệt</button>
+                                                            </form>
+                                                        @endif
+                                                        @if ($transfer->transfer_status == 1)
+                                                            <form action="{{ route('transfer.update-transfer', 2) }}" method="post">
+                                                                @csrf
+                                                                @method('put')
+                                                                <input type="text" hidden name="transfer_id" value="{{ $transfer->id }}">
+                                                                <button type="submit" class="dropdown-item">Giao hàng</button>
+                                                            </form>
+                                                        @endif
+                                                        @if ($transfer->transfer_status == 2)
+                                                            <form action="{{ route('transfer.update-transfer', 3) }}" method="post">
+                                                                @csrf
+                                                                @method('put')
+                                                                <input type="text" hidden name="transfer_id" value="{{ $transfer->id }}">
+                                                                <button type="submit" class="dropdown-item">Sự cố</button>
+                                                            </form>
+                                                        @endif
+                                                        @if (in_array($transfer->transfer_status, [0, 1, 2, 3]))
+                                                            <form action="{{ route('transfer.update-transfer', 4) }}" method="post">
+                                                                @csrf
+                                                                @method('put')
+                                                                <input type="text" hidden name="transfer_id" value="{{ $transfer->id }}">
+                                                                <button type="submit" class="dropdown-item">Hủy phiếu</button>
+                                                            </form>
+                                                        @endif
+                                                        @if ($transfer->transfer_status == 2)
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="{{ route('transfer.confirm', $transfer->id) }}">Hoàn thành</a>                                                       
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                @endif
                                             @endcan
                                             @can('tra.delete')
-                                                <a href="{{ route('transfer.delete', $transfer->id) }}" class="action-icon">
+                                                {{-- <a href="{{ route('transfer.delete', $transfer->id) }}" class="action-icon">
                                                     <i class="mdi mdi-delete" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                        title="Xóa phiếu"></i></a>
+                                                        title="Xóa phiếu"></i></a> --}}
                                             @endcan
 
                                         </td>
