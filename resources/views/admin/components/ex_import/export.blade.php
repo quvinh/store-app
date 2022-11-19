@@ -61,27 +61,34 @@
                                     <input type="text" name="id" id="id" hidden>
                                     <div class="mb-3" {{ count($warehouses) > 1 ? '' : 'hidden' }}>
                                         <label for="warehouse" class="form-label">Kho:</label>
-                                            <select data-toggle="select2" title="Warehouse" id="warehouse" name="warehouse">
-                                                @foreach ($warehouses as $warehouse)
-                                                    <option value="{{ $warehouse->id }}"
-                                                        {{ app('request')->input('warehouse_id') == $warehouse->id ? 'selected' : '' }}>
-                                                        {{ $warehouse->id }} - {{ $warehouse->warehouse_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <br>
+                                        <select data-toggle="select2" title="Warehouse" id="warehouse" name="warehouse">
+                                            @foreach ($warehouses as $warehouse)
+                                                <option value="{{ $warehouse->id }}"
+                                                    {{ app('request')->input('warehouse_id') == $warehouse->id ? 'selected' : '' }}>
+                                                    {{ $warehouse->id }} - {{ $warehouse->warehouse_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <br>
                                         <input type="button" class="btn btn-success" value="Filter" id="btnFilter" hidden>
                                     </div>
                                     <div class="mb-3">
                                         <label for="itemdetail_id" class="form-label">Vật tư/Phụ tùng:</label>
-                                        <select data-toggle="select2" title="Item" id="itemdetail_id"
-                                            name="item_detail">
-                                            @foreach ($items as $item)
+                                        <select data-toggle="select2" title="Item" id="itemdetail_id" name="item_detail">
+                                            @foreach ($items as $key => $item)
                                                 <option value="{{ $item->itemdetail_id }}">
-                                                    {{ $item->item_name .' - '. $item->supplier_name .' - '. $item->shelf_name .' - Tầng '.
-                                                    $item->floor_id .' - Ô '.$item->cell_id .' - SLKD: '. $item->item_quantity[0] }}
+                                                    {{ $item->item_name .
+                                                        ' - ' .
+                                                        $item->supplier_name .
+                                                        ' - ' .
+                                                        $item->shelf_name .
+                                                        ' - Tầng ' .
+                                                        $item->floor_id .
+                                                        ' - Ô ' .
+                                                        $item->cell_id .
+                                                        ' - SLKD: ' .
+                                                        $item->item_quantity[0] }}
                                                 </option>
-                                                {{-- <input type="text" name="" id="item"> --}}
                                             @endforeach
                                         </select>
                                     </div>
@@ -94,7 +101,7 @@
                                                 <input class="form-control" id="item_quantity" data-toggle="touchspin"
                                                     value="0" type="text"
                                                     data-bts-button-down-class="btn btn-danger"
-                                                    data-bts-button-up-class="btn btn-info"><br>
+                                                    data-bts-button-up-class="btn btn-info">
                                             </div>
                                         </div>
                                         <div class="col">
@@ -104,6 +111,23 @@
                                                     data-toggle="input-mask" data-mask-format="000.000.000.000.000"
                                                     data-reverse="true" class="form-control">
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label for="receiver" class="form-label">Người
+                                                    nhận:</label>
+                                                <select data-toggle="select2" title="receiver" id="receiver"
+                                                    name="receiver">
+                                                    @foreach ($users as $user)
+                                                        <option value="{{ $user->id }}"
+                                                            {{ app('request')->input('user_id') == $user->id ? 'selected' : '' }}>
+                                                            {{ $user->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -132,6 +156,7 @@
                                         <th>Tầng</th>
                                         <th>Ô</th>
                                         <th>Nhà sản xuất</th>
+                                        <th>Người nhận</th>
                                         <th>Số lượng</th>
                                         <th>Đơn giá</th>
                                         <th>Thao tác</th>
@@ -187,7 +212,7 @@
                 var html = '';
                 var text = $("#itemdetail_id option:selected").text()
                 var c = text.split(' - ');
-                a = [...c.slice(4)];
+                a = [...c.slice(3)];
                 for (var val of a) {
                     b.push(val.replace(/\D/g, ' ').trim().replace(/\s+/g, ' '))
                 }
@@ -195,29 +220,27 @@
                 var item_detail = $("#itemdetail_id").val();
                 var warehouse_id = $('#warehouse').val();
                 var item_name = text.split(' - ')[0];
-                var supplier_name = text.split(' - ')[2];
-                var item_code = text.split(' - ')[1];
+                var supplier_name = text.split(' - ')[1];
                 var warehouse_name = $("#warehouse option:selected").text().split(' - ')[1];
-                var shelf_name = text.split(' - ')[3];
+                var shelf_name = text.split(' - ')[2];
                 var floor_id = b[0];
                 var cell_id = b[1];
                 var item_valid = b[2];
-                console.log(a, b, b[2]);
                 var item_quantity = $("#item_quantity").val();
                 var price = $("#export_price").val().replaceAll('.', '');
+                var receiver = $("#receiver").val();
+                var receiver_name = $("#receiver option:selected").text();
 
                 if (item_name !== '' && supplier_name !== '' && item_quantity > 0 && price > 0) {
                     if (list.filter(item => item.id == item_detail).length > 0) {
                         var data = [...list];
                         var newdata = [];
                         list.map(item => {
-                            if (item.id === parseInt(item_detail)) {
-                                console.log(item.id, item.quantity, item.quantity + parseInt(
-                                    item_quantity), item.price);
+                            if (item.id === parseInt(item_detail) && item_quantity <= (item_valid -
+                                    item_quantity)) {
                                 newdata.push(...data.filter(value => value.id !== item.id), {
                                     id: item.id,
                                     name: item.name,
-                                    code: item.code,
                                     supplier_name: item.supplier_name,
                                     warehouse_name: item.warehouse_name,
                                     price: item.price,
@@ -225,27 +248,31 @@
                                     floor_id: item.floor_id,
                                     cell_id: item.cell_id,
                                     shelf_name: item.shelf_name,
-                                    item_valid: item.item_valid
+                                    item_valid: item.item_valid,
+                                    receiver_name: item.receiver_name,
                                     // warehouse_id: item.warehouse_id,
                                 });
-                            }
+                            } else alert('Số lượng vượt quá số khả dụng.');
                         });
                         list = [...newdata];
                     } else {
-                        list.push({
-                            id: parseInt(item_detail),
-                            name: item_name,
-                            quantity: parseInt(item_quantity),
-                            supplier_name: supplier_name,
-                            warehouse_name: warehouse_name,
-                            price: price,
-                            code: item_code,
-                            shelf_name: shelf_name,
-                            floor_id: floor_id,
-                            cell_id: cell_id,
-                            item_valid: item_valid,
-                            // warehouse_id: warehouse_id,
-                        })
+                        if (item_quantity <= item_valid) {
+                            list.push({
+                                id: parseInt(item_detail),
+                                name: item_name,
+                                quantity: parseInt(item_quantity),
+                                supplier_name: supplier_name,
+                                warehouse_name: warehouse_name,
+                                price: price,
+                                shelf_name: shelf_name,
+                                floor_id: floor_id,
+                                cell_id: cell_id,
+                                item_valid: item_valid,
+                                receiver_name: receiver_name,
+                                // warehouse_id: warehouse_id,
+                            })
+                        } else alert('Số lượng vượt quá số khả dụng.');
+
                     }
                     list.map((item, index) => {
                         html += `<tr>
@@ -254,6 +281,7 @@
                                         <span class="text-primary"><b>${item.name}</b></span>
                                         <input name="itemdetail_id[]" value="${item.id}" hidden>
                                         <input name="warehouse_id" value="${warehouse_id}" hidden>
+                                        <input name="receiver" value="${receiver}" hidden>
                                         <input name="item_quantity[]" value="${item.quantity}" hidden>
                                         <input name="export_price[]" value="${item.price}" hidden>
                                         <input name="item_valid[]" value="${item.item_valid}" hidden>
@@ -263,6 +291,7 @@
                                     <td><b>${item.floor_id}</b></td>
                                     <td><b>${item.cell_id}</b></td>
                                     <td><b>${item.supplier_name}</b></td>
+                                    <td><b>${item.receiver_name}</b></td>
                                     <td><b>${item.quantity}</b></td>
                                     <td><b>${item.price} VND</b></td>
                                     <td class="table-action">

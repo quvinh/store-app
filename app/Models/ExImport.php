@@ -15,6 +15,7 @@ class ExImport extends Model
         'exim_status',
         'exim_type',
         'invoice_id',
+        'receiver',
         'warehouse_id',
         'created_by',
     ];

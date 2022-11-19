@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Cell;
 use App\Models\ExImport;
 use App\Models\ExImportDetail;
+use App\Models\Floor;
 use App\Models\Item;
 use App\Models\ItemDetail;
 use App\Models\Supplier;
@@ -48,8 +50,8 @@ class ExportImportController extends Controller
                 Route::get('/edit/{id}', [ExportImportController::class, 'ex_edit'])->name('export.edit');
                 Route::put('/update/{id}', [ExportImportController::class, 'ex_update'])->name('export.update');
                 Route::get('/confirm/{id}', [ExportImportController::class, 'ex_confirm'])->name('export.confirm');
-                Route::put('/update-export/{id}', [ExportImportController::class, 'ex_update_export'])->name('export.update-export');
-                Route::put('/update-status/{exim_id}/{id}', [ExportImportController::class, 'ex_update_status'])->name('export.update-status'); // Tung vat tu?
+                Route::put('/update-export/{id}', [ExportImportController::class, 'ex_update_export'])->name('export.update-export'); // Duyet phieu
+                Route::get('/update-status/{id}', [ExportImportController::class, 'ex_update_status'])->name('export.update-status'); // Huy phieu
             });
         });
         Route::group(['prefix' => 'ex_import'], function () {
@@ -97,8 +99,10 @@ class ExportImportController extends Controller
         if (isset($request->status)) {
             if ($request->type == 1 && $request->status == 'duyet') $im_items->where('ex_imports.exim_status', 1);
             if ($request->type == 1 && $request->status == 'cduyet') $im_items->where('ex_imports.exim_status', 0);
+            if ($request->type == 1 && $request->status == 'huy') $im_items->where('ex_imports.exim_status', 2);
             if ($request->type == 0 && $request->status == 'duyet') $ex_items->where('ex_imports.exim_status', 1);
             if ($request->type == 0 && $request->status == 'cduyet') $ex_items->where('ex_imports.exim_status', 0);
+            if ($request->type == 0 && $request->status == 'huy') $ex_items->where('ex_imports.exim_status', 2);
         }
         if (isset($request->date)) {
             $date = explode('_', $request->date);
@@ -133,6 +137,9 @@ class ExportImportController extends Controller
         }
 
         foreach ($ex_items as $val) {
+            $val->receiver = DB::table('ex_imports')
+            ->join('users', 'users.id', '=', 'ex_imports.receiver')
+            ->where('ex_imports.id', $val->id)->first()->name;
             $val->item = DB::table('items')
                 ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
                 ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
@@ -395,8 +402,12 @@ class ExportImportController extends Controller
                 $exim_invalid[0]->quantity +  $trans_invalid[0]->quantity
             ];
         }
-        // dd($items);
-        return view('admin.components.ex_import.export', compact('warehouses', 'items'));
+        $users = DB::table('users')->join('warehouse_managers', 'warehouse_managers.user_id', '=', 'users.id')
+        ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+        ->where('warehouse_managers.warehouse_id', $warehouse_id)
+        ->select('users.*')->get();
+        // dd($users);
+        return view('admin.components.ex_import.export', compact('warehouses', 'items', 'users'));
     }
 
     /**
@@ -407,6 +418,7 @@ class ExportImportController extends Controller
      */
     public function ex_store(Request $request)
     {
+        // dd($request->all());
         $count = count($request->itemdetail_id);
         $date = date('dmY');
         $stt = DB::table('ex_imports')->where('exim_type', '0')->whereDate('created_at', '=', Carbon::now()->toDateString())->count();
@@ -416,14 +428,9 @@ class ExportImportController extends Controller
             'exim_type' => 0,
             'created_by' => Auth::user()->id,
             'exim_status' => 0,
-            'invoice_id' => 0,
+            'receiver' => $request->receiver,
         ]);
         for ($i = 0; $i < $count; $i++) {
-            if ($request->item_valid[$i] < $request->item_quantity[$i]) {
-                $last3 = DB::table('ex_imports')->orderBy('id', 'DESC')->first();
-                ExImport::find($last3->id)->forceDelete();
-                return redirect()->back()->withErrors('Tạo phiếu thất bại, Số lượng nhập không thể lớn hơn số lượng khả dụng');
-            }
             $items = DB::table('item_details')
                 ->where('item_details.id', $request->itemdetail_id[$i])
                 ->select('item_details.*')
@@ -440,6 +447,8 @@ class ExportImportController extends Controller
                 'itemdetail_id' => $items[0]->id,
                 'item_vat' => 0
             ]);
+
+
         }
 
         return redirect()->route('ex_import.index')->with(['success', 'Tạo phiếu nhập thành công.']);
@@ -458,7 +467,10 @@ class ExportImportController extends Controller
             ->join('users', 'users.id', '=', 'ex_imports.created_by')
             ->where('ex_imports.id', $id)
             ->select('ex_imports.*', 'name')
-            ->get();
+            ->first();
+        $export->receiver = DB::table('ex_imports')
+        ->join('users', 'users.id', '=', 'ex_imports.receiver')
+        ->where('ex_imports.id', $id)->first()->name;
         $export_details = DB::table('ex_import_details')
             ->join('item_details', 'item_details.id', '=', 'ex_import_details.itemdetail_id')
             ->join('items', 'items.id', '=', 'item_details.item_id')
@@ -466,7 +478,8 @@ class ExportImportController extends Controller
             ->join('categories', 'categories.id', '=', 'items.category_id')
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
             ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
-            ->join('units', 'units.id', '=', 'items.item_unit')
+            ->join('unit_details', 'unit_details.item_id', '=', 'items.id')
+            ->join('units', 'units.id', '=', 'unit_details.unit_id')
             ->select(
                 'ex_import_details.id as ex_import_details_id',
                 'exim_id',
@@ -493,20 +506,14 @@ class ExportImportController extends Controller
     }
     public function ex_update(Request $request, $id)
     {
+        // dd($request->all());
+
         foreach ($request->id as $key => $val) {
             $export = ExImportDetail::find($val);
-            $old_quantity = $export->item_quantity;
             $export->update([
                 'item_quantity' => $request->quantity[$key],
                 'item_price' => str_replace('.', '', $request->price[$key]),
             ]);
-
-            if ($export->exim_detail_status == 0) {
-                $item = ItemDetail::find($export->itemdetail_id);
-                $item->update([
-                    'item_quantity' => ($item->item_quantity - $export->item_quantity + $old_quantity),
-                ]);
-            }
         };
         return redirect()->route('ex_import.index')->with(['success', 'Sửa phiếu nhập thành công.']);
     }
@@ -547,8 +554,11 @@ class ExportImportController extends Controller
             ->join('users', 'users.id', '=', 'ex_imports.created_by')
             ->where('ex_imports.id', $id)
             ->select('ex_imports.*', 'name')
-            ->get();
-        $export_id = $id;
+            ->first();
+        $export->receiver = DB::table('ex_imports')
+        ->join('users', 'users.id', '=', 'ex_imports.receiver')
+        ->where('ex_imports.id', $id)->first()->name;
+        // dd($export);
         $warehouse_id = ExImport::find($id)->first()->warehouse_id;
         $export_details = DB::table('ex_import_details')
             ->join('item_details', 'item_details.id', '=', 'ex_import_details.itemdetail_id')
@@ -557,7 +567,8 @@ class ExportImportController extends Controller
             ->join('categories', 'categories.id', '=', 'items.category_id')
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
             ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
-            ->join('units', 'units.id', '=', 'items.item_unit')
+            ->join('unit_details', 'unit_details.item_id', '=', 'items.id')
+            ->join('units', 'units.id', '=', 'unit_details.unit_id')
             ->select(
                 'ex_import_details.id as ex_import_details_id',
                 'exim_id',
@@ -580,75 +591,46 @@ class ExportImportController extends Controller
             )
             ->where('exim_id', $id)
             ->get();
-        $receivers = User::join('warehouse_managers', 'users.id', '=', 'warehosue_managers.warehouse_id')->where('warehouse_managers.warehouse_id', $warehouse_id)->hasRole('Thủ kho', 'Nhân viên')->get();
-        return view('admin.components.ex_import.confirmexport', compact('export', 'export_details', 'export_id'));
+        // $receivers = User::join('warehouse_managers', 'users.id', '=', 'warehosue_managers.warehouse_id')->where('warehouse_managers.warehouse_id', $warehouse_id)->hasRole('Thủ kho', 'Nhân viên')->get();
+        return view('admin.components.ex_import.confirmexport', compact('export', 'export_details'));
     }
 
-    public function ex_update_status($exim_id, $id)
+    public function ex_update_status($id)
     {
-        $ex_item_details = DB::table('ex_import_details')
-            ->where('itemdetail_id', $id)
-            ->where('exim_id', $exim_id)
-            ->get();
-        // $ex_item_details = ExImportDetail::where('itemdetail_id', $id)->where('exim_id', $id);
-
-        $ex_items = ExImport::find($exim_id);
-
-        $item_details = ItemDetail::find($id);
-        $count = DB::table('ex_import_details')->where('exim_id', $exim_id)->where('exim_detail_status', 0)->count();
-
-        if ($count > 1) {
-            DB::table('ex_import_details')
-                ->where('itemdetail_id', $id)
-                ->where('exim_id', $exim_id)
-                ->update([
-                    'exim_detail_status' => '1'
-                ]);
-            $item_details->update([
-                'item_quantity' => $item_details->item_quantity - $ex_item_details[0]->item_quantity
-            ]);
-        } else {
-            DB::table('ex_import_details')
-                ->where('itemdetail_id', $id)
-                ->where('exim_id', $exim_id)
-                ->update([
-                    'exim_detail_status' => '1'
-                ]);
-            $item_details->update([
-                'item_quantity' => $item_details->item_quantity - $ex_item_details[0]->item_quantity
-            ]);
-            $ex_items->update([
-                'exim_status' => '1'
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Duyệt thành công');
+        ExImport::find($id)->update(['exim_status' => '2']);
+        ExImportDetail::where('exim_id', $id)->update(['exim_detail_status' => '2']);
+        return redirect()->back()->with('success', 'Hủy phiếu thành công');
     }
 
     public function ex_update_export(Request $request, $id)
     {
         if ($request->status == 1) {
-            $ex_item_details = ExImportDetail::where('exim_id', $id)->get('id', 'itemdetail_id', 'item_quantity');
-            foreach ($ex_item_details as $key => $item) {
+            $ex_item_details = ExImportDetail::where('exim_id', $id)
+            ->select('id', 'itemdetail_id', 'item_quantity')->get();
 
+            foreach ($ex_item_details as $item) {
                 ExImportDetail::find($item->id)->update([
                     'exim_detail_status' => '1'
                 ]);
+                // dd($ex_item_details);
                 $item_details = ItemDetail::find($item->itemdetail_id);
+                $val = Item::find($item_details->item_id);
                 $item_details->update([
                     'item_quantity' => $item_details->item_quantity - $item->item_quantity
+                ]);
+                $cell = Cell::find($item_details->cell_id);
+                $cell->update([
+                    'cell_capacity' => $cell->cell_capacity + $val->item_capacity * $item->item_quantity,
+                ]);
+                $floor = Floor::find($item_details->floor_id);
+                $floor->update([
+                    'floor_capacity' => $floor->floor_capacity + $val->item_capacity * $item->item_quantity,
                 ]);
             }
             ExImport::find($id)->update([
                 'exim_status' => $request->status,
-                'receiver' => $request->receiver,
             ]);
             return redirect()->back()->with('success', 'Duyệt thành công');
-        } else if ($request->status == 2) {
-            ExImport::find($id)->update([
-                'exim_status' => $request->status,
-            ]);
-            return redirect()->back()->with('success', 'Hủy thành công');
         }
         return redirect()->back()->withErrors(['error' => 'Lỗi lưu phiếu']);
     }

@@ -83,6 +83,9 @@
                                             <option value="duyet"
                                                 {{ app('request')->input('status') == 'duyet' ? 'selected' : '' }}>
                                                 Hiển thị phiếu đã duyệt</option>
+                                            <option value="huy"
+                                                {{ app('request')->input('status') == 'huy' ? 'selected' : '' }}>
+                                                Hiển thị phiếu đã hủy</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
@@ -195,6 +198,9 @@
                                             <option value="duyet"
                                                 {{ app('request')->input('status') == 'duyet' ? 'selected' : '' }}>
                                                 Hiển thị phiếu đã duyệt</option>
+                                            <option value="huy"
+                                                {{ app('request')->input('status') == 'huy' ? 'selected' : '' }}>
+                                                Hiển thị phiếu đã hủy</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
@@ -231,6 +237,7 @@
                                             <th>Mã phiếu xuất</th>
                                             <th>Người tạo</th>
                                             <th>Vật tư/ Phụ tùng</th>
+                                            <th>Người nhận</th>
                                             <th>Trạng thái</th>
                                             <th>Thời gian tạo</th>
                                             <th style="width: 10%">Thao tác</th>
@@ -252,28 +259,37 @@
                                                         {{ $vt->item }}<br>
                                                     @endforeach
                                                 </th>
+                                                <th>{{ $item->receiver }}</th>
                                                 <th>
-                                                    <span style="font-size: 15px"
-                                                        class="badge badge-{{ $item->exim_status == '0' ? 'info-lighten' : 'success-lighten' }}">
-                                                        {{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</span>
+                                                    @if ($item->exim_status == '0')
+                                                        <span style="font-size: 15px" class="badge badge-info-lighten">Chờ
+                                                            duyệt</span>
+                                                    @elseif ($item->exim_status == '1')
+                                                    <span style="font-size: 15px" class="badge badge-success-lighten">Đã
+                                                        duyệt</span>
+                                                    @else
+                                                    <span style="font-size: 15px" class="badge badge-danger-lighten">Đã
+                                                        hủy</span>
+                                                    @endif
                                                 </th>
                                                 <td>{{ $item->created }}</td>
                                                 <td class="table-action">
-                                                    @can('eim.edit')
-                                                        <a href="{{ route('export.edit', $item->id) }}" class="action-icon">
-                                                            <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
-                                                                data-bs-placement="top" title="Sửa phiếu"></i></a>
+                                                    @if ($item->exim_status == '0')
+                                                        @can('eim.edit')
+                                                        <a href="{{ route('export.update-status', $item->id) }}" class="action-icon">
+                                                            <i class="mdi mdi-clipboard-alert-outline" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top" title="Hủy phiếu"></i></a>
                                                         <a href="{{ route('export.confirm', $item->id) }}"
                                                             class="action-icon">
                                                             <i class="mdi mdi-clipboard-edit-outline" data-bs-toggle="tooltip"
                                                                 data-bs-placement="top" title="Duyệt phiếu"></i></a>
                                                     @endcan
-                                                    @can('eim.delete')
-                                                        <a href="{{ route('ex_import.delete', $item->id) }}"
-                                                            class="action-icon"> <i class="mdi mdi-delete"
-                                                                data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="Xóa phiếu"></i></a>
-                                                    @endcan
+                                                    @else
+                                                    <a href="{{ route('export.edit', $item->id) }}" class="action-icon">
+                                                        <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top" title="Xem phiếu"></i></a>
+                                                    @endif
+
                                                 </td>
                                             </tr>
                                         @endforeach
