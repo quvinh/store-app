@@ -142,8 +142,8 @@ class ExportImportController extends Controller
 
         foreach ($ex_items as $val) {
             $val->receiver = DB::table('ex_imports')
-            ->join('users', 'users.id', '=', 'ex_imports.receiver')
-            ->where('ex_imports.id', $val->id)->first()->name;
+                ->join('users', 'users.id', '=', 'ex_imports.receiver')
+                ->where('ex_imports.id', $val->id)->first()->name;
             $val->item = DB::table('items')
                 ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
                 ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
@@ -228,10 +228,10 @@ class ExportImportController extends Controller
                 array_push($arr_count, $count_div);
                 $j++;
             }
-            if($quantity % $count_div > 0) {
+            if ($quantity % $count_div > 0) {
                 array_push($arr_count, $quantity % $count_div);
             }
-            foreach($arr_count as $num) {
+            foreach ($arr_count as $num) {
                 ExImportDetail::create([
                     'exim_id' => $import->id,
                     'item_id' => $request->id[$i],
@@ -323,7 +323,7 @@ class ExportImportController extends Controller
         return view('admin.components.ex_import.confirmimport', compact('im_items', 'shelves'));
     }
 
-    public function im_update_status(Request $request)
+    public function im_update_status(Request $request, $id)
     {
         $exim_id = ExImportDetail::find($request->id[0])->exim_id;
         $status = ExImport::find($exim_id)->exim_status;
@@ -443,9 +443,9 @@ class ExportImportController extends Controller
             ];
         }
         $users = DB::table('users')->join('warehouse_managers', 'warehouse_managers.user_id', '=', 'users.id')
-        ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-        ->where('warehouse_managers.warehouse_id', $warehouse_id)
-        ->select('users.*')->get();
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->where('warehouse_managers.warehouse_id', $warehouse_id)
+            ->select('users.*')->get();
         // dd($users);
         return view('admin.components.ex_import.export', compact('warehouses', 'items', 'users'));
     }
@@ -487,8 +487,6 @@ class ExportImportController extends Controller
                 'itemdetail_id' => $items[0]->id,
                 'item_vat' => 0
             ]);
-
-
         }
 
         return redirect()->route('ex_import.index')->with(['success', 'Tạo phiếu nhập thành công.']);
@@ -509,8 +507,8 @@ class ExportImportController extends Controller
             ->select('ex_imports.*', 'name')
             ->first();
         $export->receiver = DB::table('ex_imports')
-        ->join('users', 'users.id', '=', 'ex_imports.receiver')
-        ->where('ex_imports.id', $id)->first()->name;
+            ->join('users', 'users.id', '=', 'ex_imports.receiver')
+            ->where('ex_imports.id', $id)->first()->name;
         $export_details = DB::table('ex_import_details')
             ->join('item_details', 'item_details.id', '=', 'ex_import_details.itemdetail_id')
             ->join('items', 'items.id', '=', 'item_details.item_id')
@@ -596,8 +594,8 @@ class ExportImportController extends Controller
             ->select('ex_imports.*', 'name')
             ->first();
         $export->receiver = DB::table('ex_imports')
-        ->join('users', 'users.id', '=', 'ex_imports.receiver')
-        ->where('ex_imports.id', $id)->first()->name;
+            ->join('users', 'users.id', '=', 'ex_imports.receiver')
+            ->where('ex_imports.id', $id)->first()->name;
         // dd($export);
         $warehouse_id = ExImport::find($id)->first()->warehouse_id;
         $export_details = DB::table('ex_import_details')
@@ -646,7 +644,7 @@ class ExportImportController extends Controller
     {
         if ($request->status == 1) {
             $ex_item_details = ExImportDetail::where('exim_id', $id)
-            ->select('id', 'itemdetail_id', 'item_quantity')->get();
+                ->select('id', 'itemdetail_id', 'item_quantity')->get();
 
             foreach ($ex_item_details as $item) {
                 ExImportDetail::find($item->id)->update([

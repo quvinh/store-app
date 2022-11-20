@@ -137,13 +137,17 @@
                                                 @endcannot
                                                 <td>{{ $item->created_by }}</td>
                                                 <th>
-                                                    @if ($item->item->duplicates('item')->count())
-                                                        {{ $item->item->duplicates('item')->first() }}
-                                                    @else
-                                                        @foreach ($item->item as $index => $vt)
-                                                            {{ $vt->item }}<br>
-                                                        @endforeach
-                                                    @endif
+                                                    @php
+                                                        $count_items = array();
+                                                        foreach($item->item as $value) {
+                                                            if(!in_array($value->item, $count_items)) {
+                                                                array_push($count_items, $value->item);
+                                                            }
+                                                        }
+                                                    @endphp
+                                                    @foreach($count_items as $vl)
+                                                        <b>{{$vl}}</b><br>
+                                                    @endforeach
                                                 </th>
                                                 <th>
                                                     <span style="font-size: 15px"
@@ -154,16 +158,21 @@
                                                 <td class="table-action">
                                                     @can('eim.edit')
                                                         @if ($item->exim_status == 0)
-                                                            {{-- <a href="{{ route('import.edit', $item->id) }}"
-                                                                class="action-icon">
-                                                                <i class="mdi mdi-square-edit-outline"
-                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                    title="Sửa phiếu"></i></a> --}}
+                                                            
+                                                            <a href="{{ route('export.update-status', $item->id) }}" class="action-icon">
+                                                                <i class="mdi mdi-clipboard-alert-outline" data-bs-toggle="tooltip"
+                                                                    data-bs-placement="top" title="Hủy phiếu"></i></a>
                                                             <a href="{{ route('import.confirm', $item->id) }}"
                                                                 class="action-icon">
                                                                 <i class="mdi mdi-clipboard-edit-outline"
                                                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                                                     title="Duyệt phiếu"></i></a>
+                                                        @else
+                                                            <a href="{{ route('import.edit', $item->id) }}"
+                                                                class="action-icon">
+                                                                <i class="mdi mdi-square-edit-outline"
+                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                    title="Xem phiếu"></i></a>
                                                         @endif
                                                     @endcan
                                                     @can('eim.delete')

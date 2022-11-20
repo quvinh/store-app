@@ -90,7 +90,6 @@
                                         <th>Nhà cung cấp</th>
                                         <th>Số lượng</th>
                                         <th>Đơn giá</th>
-                                        <th>Trạng thái</th>
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
@@ -109,7 +108,6 @@
                                                     data-toggle="input-mask" data-mask-format="000.000.000.000.000"
                                                     data-reverse="true" class="form-control" id="price"
                                                     readonly></td>
-                                            <td>{{ $item->exim_detail_status == 1 ? 'Đã duyệt' : 'Chờ duyệt' }}</td>
                                             <td>
                                                 <button type="button" title="Chi tiết" class="view-item btn btn-warning"
                                                     data-name="{{ $item->item_name }}" data-unit="{{ $item->unit_name }}"
