@@ -303,7 +303,7 @@ class TransferController extends Controller
                 ]);
             }
         }
-        Transfer::find($transfer_id)->update(['transfer_status' => 1]);
+        Transfer::find($transfer_id)->update(['transfer_status' => 5]);
         return redirect()->route('transfer.index')->with(['success', 'Duyệt phiếu nhập thành công.']);
     }
 

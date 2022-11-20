@@ -287,7 +287,8 @@ class InventoryController extends Controller
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
             ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
-            ->join('units', 'units.id', '=', 'items.item_unit')
+            ->join('unit_details', 'unit_details.item_id', '=', 'items.id')
+            ->join('units', 'units.id', '=', 'unit_details.unit_id')
             ->select(
                 'items.*',
                 'item_details.id as itemdetail_id',
