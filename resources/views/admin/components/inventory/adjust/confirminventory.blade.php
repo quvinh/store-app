@@ -96,7 +96,6 @@
                             <thead>
                                 <tr>
                                     <th>STT</th>
-                                    <th>Mã vật tư</th>
                                     <th>Vật tư</th>
                                     <th>Nhà sản xuất</th>
                                     <th>Kho</th>
@@ -107,7 +106,6 @@
                                 @foreach ($inventory_detail as $key => $item)
                                     <tr>
                                         <th>{{ $key + 1 }}</th>
-                                        <th>{{ $item->item_code }}</th>
                                         <th>{{ $item->item_name }}</th>
                                         <th>{{ $item->supplier_name }}</th>
                                         <th>{{ $item->warehouse_name }}</th>

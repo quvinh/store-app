@@ -59,6 +59,18 @@
                                     <option value="duyet"
                                         {{ app('request')->input('status') == 'duyet' ? 'selected' : '' }}>
                                         Hiển thị phiếu đã duyệt</option>
+                                    <option value="giao"
+                                        {{ app('request')->input('status') == 'giao' ? 'selected' : '' }}>
+                                        Hiển thị phiếu đang giao</option>
+                                    <option value="suco"
+                                        {{ app('request')->input('status') == 'suco' ? 'selected' : '' }}>
+                                        Hiển thị phiếu gặp sự cố</option>
+                                    <option value="huy"
+                                        {{ app('request')->input('status') == 'huy' ? 'selected' : '' }}>
+                                        Hiển thị phiếu đã huỷ</option>
+                                    <option value="hoanthanh"
+                                        {{ app('request')->input('status') == 'hoanthanh' ? 'selected' : '' }}>
+                                        Hiển thị phiếu đã hoàn thành</option>
                                 </select>
                             </div>
                             <div class="col-sm-3">
@@ -119,7 +131,7 @@
                                                 <span class="badge bg-secondary">Đã hủy</span>
                                             @endif
                                             @if ($transfer->transfer_status == 5)
-                                                <span class="badge bg-secondary">Hoàn thành</span>
+                                                <span class="badge bg-success">Hoàn thành</span>
                                             @endif
                                         </td>
                                         <td>{{ $transfer->created_at }}</td>
@@ -145,7 +157,7 @@
                                                                 <button type="submit" class="dropdown-item">Duyệt</button>
                                                             </form>
                                                         @endif
-                                                        @if ($transfer->transfer_status == 1)
+                                                        @if (in_array($transfer->transfer_status, [1, 3]))
                                                             <form action="{{ route('transfer.update-transfer', 2) }}" method="post">
                                                                 @csrf
                                                                 @method('put')
@@ -281,6 +293,7 @@
         dateVal = dateVal.replaceAll('/', '-');
         var statusVal = $('#status').val();
         var warehouseVal = $('#warehouse').val();
+        console.log(statusVal);
         const paramsObj = {
             status: statusVal,
             warehouse: warehouseVal,

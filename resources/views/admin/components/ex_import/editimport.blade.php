@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="col-6 text-end">
                                     @if ($im_items[0]->exim_status == 0)
-                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                        <!-- <button type="submit" class="btn btn-primary">Lưu</button> -->
                                     @endif
                                     
                                 </div>
@@ -88,9 +88,9 @@
                                             </td>
                                             <td>{{ $item->item }}</td>
                                             <th>{{ $item->supplier_name }}</th>
-                                            <th><input type="number" name="quantity[]" value="{{ $item->item_quantity }}" {{ $im_items[0]->exim_status == 1 ? 'readonly' : '' }}
+                                            <th><input type="number" name="quantity[]" value="{{ $item->item_quantity }}" readonly
                                                     class="form-control" id="quantity"></th>
-                                            <th><input type="text" name="price[]" value="{{ $item->item_price }}" {{ $im_items[0]->exim_status == 1 ? 'readonly' : '' }}
+                                            <th><input type="text" name="price[]" value="{{ $item->item_price }}" readonly
                                                     data-toggle="input-mask" data-mask-format="000.000.000.000.000"
                                                     data-reverse="true" class="form-control" id="price"></th>
                                             <th>{{ $floor }}, {{ $cell }}</th>

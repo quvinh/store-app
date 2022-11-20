@@ -1,13 +1,6 @@
 <div class="row">
     <div class="col">
         <div class="mb-3">
-            <label for="item_code" class="form-label">Mã vật tư:</label>
-            <input type="text" class="form-control" name="" id="item_code" value="{{ $item[0]->item_code }}"
-                aria-describedby="helpId" placeholder="" readonly>
-        </div>
-    </div>
-    <div class="col">
-        <div class="mb-3">
             <label for="category" class="form-label">loại vật tư:</label>
             <input type="text" class="form-control" name="" value="{{ $item[0]->category_name }}" id="category"
                 aria-describedby="helpId" placeholder="" readonly>

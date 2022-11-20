@@ -121,13 +121,6 @@
                                                     <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" title="Sửa phiếu"></i></a>
                                             @endcan
-                                            @can('tra.delete')
-                                                <a href="{{ route('transfer.delete', $item->id) }}" class="action-icon">
-                                                    <i class="mdi mdi-delete" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                        title="Xóa phiếu"></i></a>
-                                            @endcan
-
-
                                         </td>
                                     </tr>
                                 @endforeach

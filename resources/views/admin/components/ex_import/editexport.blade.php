@@ -51,8 +51,8 @@
                                     <a href="{{ route('ex_import.index') }}" class="btn btn-info">Quay lại</a>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <button type="submit" class="btn btn-primary"
-                                        {{ $export->exim_status == '0' ? '' : 'disabled' }}>Lưu</button>
+                                    <!-- <button type="submit" class="btn btn-primary"
+                                        {{ $export->exim_status == '0' ? '' : 'disabled' }}>Lưu</button> -->
                                 </div>
                             </div><br>
                             <div class="row">
@@ -103,12 +103,12 @@
                                             <td>{{ $item->supplier_name }}</td>
                                             <td><input type="number" name="quantity[]"
                                                     value="{{ $item->ex_item_quantity }}" class="form-control"
-                                                    id="quantity" {{ $export->exim_status == '0' ? '' : 'disabled' }}>
+                                                    id="quantity" readonly>
                                             </td>
                                             <td><input type="text" name="price[]" value="{{ $item->item_price }}"
                                                     data-toggle="input-mask" data-mask-format="000.000.000.000.000"
                                                     data-reverse="true" class="form-control" id="price"
-                                                    {{ $export->exim_status == '0' ? '' : 'disabled' }}></td>
+                                                    readonly></td>
                                             <td>{{ $item->exim_detail_status == 1 ? 'Đã duyệt' : 'Chờ duyệt' }}</td>
                                             <td>
                                                 <button type="button" title="Chi tiết" class="view-item btn btn-warning"

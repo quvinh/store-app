@@ -61,6 +61,10 @@ class TransferController extends Controller
             $transfers->where('transfers.warehouse_from', $request->warehouse);
         } else $transfers->where('transfers.warehouse_from', $warehouses[0]->id);
         if (isset($request->status)) {
+            if ($request->status == 'hoanthanh') $transfers->where('transfers.transfer_status', 5);
+            if ($request->status == 'huy') $transfers->where('transfers.transfer_status', 4);
+            if ($request->status == 'suco') $transfers->where('transfers.transfer_status', 3);
+            if ($request->status == 'giao') $transfers->where('transfers.transfer_status', 2);
             if ($request->status == 'duyet') $transfers->where('transfers.transfer_status', 1);
             if ($request->status == 'cduyet') $transfers->where('transfers.transfer_status', 0);
         }
@@ -147,7 +151,7 @@ class TransferController extends Controller
                 ->select(
                     DB::raw('SUM(transfer_details.item_quantity) as quantity'),
                 )
-                ->where('transfers.transfer_status', '0')
+                ->whereIn('transfers.transfer_status', [0, 1, 2, 3])
                 ->where('transfer_details.itemdetail_id', $val->itemdetail_id)
                 ->get();
             if ($exim_invalid[0]->quantity == null) {
@@ -178,6 +182,7 @@ class TransferController extends Controller
             'item_quantity' => 'required',
             'warehouse_from' => 'required',
             'warehouse_to' => 'required',
+            'transfer_command' => 'required',
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
@@ -192,6 +197,7 @@ class TransferController extends Controller
             'created_by' => Auth::user()->id,
             'transfer_status' => 0,
             'transfer_note' => $request->note,
+            'transfer_command' => $request->transfer_command,
         ]);
         $cell_capacity = Cell::orderBy('cell_capacity')->first()->cell_capacity;
         for ($i = 0; $i < $count; $i++) {

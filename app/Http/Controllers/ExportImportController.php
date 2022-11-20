@@ -428,7 +428,7 @@ class ExportImportController extends Controller
                 ->select(
                     DB::raw('SUM(transfer_details.item_quantity) as quantity'),
                 )
-                ->where('transfers.transfer_status', '0')
+                ->whereIn('transfers.transfer_status', [0, 1, 2, 3])
                 ->where('transfer_details.itemdetail_id', $val->itemdetail_id)
                 ->get();
             if ($exim_invalid[0]->quantity == null) {

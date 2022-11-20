@@ -9,6 +9,8 @@
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="light-style">
     <link href="{{ asset('assets/css/app-dark.min.css') }}" rel="stylesheet" type="text/css" id="dark-style">
+    <link href="{{ asset('assets/css/vendor/dataTables.bootstrap5.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/vendor/responsive.bootstrap5.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -17,8 +19,22 @@
         {{-- @php
             $route = preg_replace('/(admin)|\d/i', '', str_replace('/', '', Request::getPathInfo()));
         @endphp
-        {{ Breadcrumbs::render($route, $floor->id) }}--}}
+        {{ Breadcrumbs::render($route, $floor->id) }} --}}
         <!-- end page title -->
+        @if (session()->has('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {{ session()->get('success') }}
+            </div>
+        @endif
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    {{ $error }}
+                </div>
+            @endforeach
+        @endif
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -63,9 +79,13 @@
                                             <tbody>
                                                 @foreach ($cells as $key => $cell)
                                                     <tr>
-                                                        <td>{{ $key + 1 }} <input type="text" name="cell_id[]" id="" hidden value="{{$cell->id}}"></td>
-                                                        <td><input class="form-control" type="text" name="cell_name[]" id="" value="{{ $cell->cell_name }}"></td>
-                                                        <td><input class="form-control" type="number" name="cell_capacity[]" id="" value="{{ $cell->cell_capacity }}"></td>
+                                                        <td>{{ $key + 1 }} <input type="text" name="cell_id[]"
+                                                                id="" hidden value="{{ $cell->id }}"></td>
+                                                        <td><input class="form-control" type="text" name="cell_name[]"
+                                                                id="" value="{{ $cell->cell_name }}"></td>
+                                                        <td><input class="form-control" type="number"
+                                                                name="cell_capacity[]" id=""
+                                                                value="{{ $cell->cell_capacity }}"></td>
                                                         <td class="table-action">
                                                         </td>
                                                     </tr>
@@ -87,4 +107,11 @@
 @section('script')
     <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ asset('assets/js/vendor/dataTables.bootstrap5.js')}}"></script>
+    <script src="{{ asset('assets/js/vendor/dataTables.responsive.min.js')}}"></script>
+    <script src="{{ asset('assets/js/vendor/responsive.bootstrap5.min.js')}}"></script>
+
+    <!-- Datatable Init js -->
+    <script src="{{ asset('assets/js/pages/demo.datatable-init.js')}}"></script>
 @endsection

@@ -195,7 +195,6 @@ class InventoryController extends Controller
                 'items.item_name',
                 'items.id as item_id',
                 DB::raw('SUM(inventory_details.item_difference) as item_broken'),
-                'items.item_code',
                 'suppliers.supplier_name',
                 'warehouse_name'
             )
@@ -305,6 +304,7 @@ class InventoryController extends Controller
                 'supplier_name',
                 'unit_name'
             )
+            ->groupBy('itemdetail_id')
             ->where('item_details.item_quantity', '>', 0)
             ->whereNull('items.deleted_at')
             ->where($text, $id)
@@ -323,7 +323,7 @@ class InventoryController extends Controller
                 ->select(
                     DB::raw('SUM(transfer_details.item_quantity) as quantity'),
                 )
-                ->where('transfers.transfer_status', '0')
+                ->whereIn('transfers.transfer_status', [0, 1, 2, 3])
                 ->where('transfer_details.itemdetail_id', $val->itemdetail_id)
                 ->get();
             if ($exim_invalid[0]->quantity == null) {

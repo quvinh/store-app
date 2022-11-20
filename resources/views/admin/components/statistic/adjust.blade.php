@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Thống kê Nhập
+    Thống kê Điểu chỉnh
 @endsection
 
 @section('css')
@@ -84,10 +84,10 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <table id="import-datatable" class="table table-centered table-striped dt-responsive nowrap w-100">
+                        <table id="export-datatable" class="table table-centered table-striped dt-responsive nowrap w-100">
                             <thead>
                                 <tr>
-                                    <th>Mã phiếu nhập</th>
+                                    <th>Mã phiếu điều chỉnh</th>
                                     <th>Người tạo</th>
                                     <th>Trạng thái</th>
                                     <th>Thời gian tạo</th>
@@ -95,25 +95,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($im as $key => $item)
+                                @foreach ($inventories as $key => $item)
                                     <tr>
                                         @can('eim.edit')
-                                            <td><a href="{{ route('import.edit', $item->id) }}">
-                                                    <span class="text-info">{{ $item->exim_code }}</span></a></td>
+                                            <td><a href="{{ route('inventory.edit', $item->id) }}">
+                                                    <span class="text-info">{{ $item->inventory_code }}</span></a></td>
                                         @endcan
                                         @cannot('eim.edit')
-                                            <td><span class="text-info">{{ $item->exim_code }}</span></td>
+                                            <td><span class="text-info">{{ $item->inventory_code }}</span></td>
                                         @endcannot
                                         <td>{{ $item->created_by }}</td>
                                         <th>
                                             <span style="font-size: 15px"
-                                                class="badge badge-{{ $item->exim_status == '0' ? 'info-lighten' : 'success-lighten' }}">
-                                                {{ $item->exim_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</span>
+                                                class="badge badge-{{ $item->inventory_status == '0' ? 'info-lighten' : 'success-lighten' }}">
+                                                {{ $item->inventory_status == '0' ? 'Chờ duyệt' : 'Đã duyệt' }}</span>
                                         </th>
                                         <td>{{ $item->created }}</td>
                                         <td class="table-action">
                                             @can('eim.edit')
-                                                <a href="{{ route('import.edit', $item->id) }}" class="action-icon">
+                                                <a href="{{ route('inventory.edit', $item->id) }}" class="action-icon">
                                                     <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" title="Sửa phiếu"></i></a>
                                             @endcan
@@ -155,13 +155,13 @@
     <script>
         $(document).ready(function() {
             "use strict";
-            $("#import-datatable").DataTable({
+            $("#export-datatable").DataTable({
                 language: {
                     paginate: {
                         previous: "<i class='mdi mdi-chevron-left'>",
                         next: "<i class='mdi mdi-chevron-right'>"
                     },
-                    info: "Showing import _START_ to _END_ of _TOTAL_",
+                    info: "Showing export _START_ to _END_ of _TOTAL_",
                     lengthMenu: 'Display <select class="form-select form-select-sm ms-1 me-1"><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="-1">All</option></select>'
                 },
                 pageLength: 50,
@@ -182,7 +182,7 @@
                 order: true,
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded"), $(
-                        "#import-datatable_length label").addClass("form-label")
+                        "#export-datatable_length label").addClass("form-label")
                 },
             })
         });

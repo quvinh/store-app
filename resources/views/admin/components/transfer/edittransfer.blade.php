@@ -64,7 +64,7 @@
                                     <a href="{{ route('transfer.index') }}" class="btn btn-info">Quay lại</a>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <button class="btn btn-primary" type="submit">Lưu</button>
+                                    <!-- <button class="btn btn-primary" type="submit">Lưu</button> -->
                                 </div>
                             </div><br>
                             <div class="row">
@@ -103,7 +103,7 @@
                                                     name="id[]" class="form-control text-center" hidden>
                                             </td>
                                             <th><input type="number" name="quantity[]" value="{{ $item->item_quantity }}"
-                                                    class="form-control text-center"></th>
+                                                    class="form-control text-center" readonly></th>
                                             <th><input type="text" value="{{ $item->warehouse_name }}"
                                                     class="form-control text-center" readonly></th>
                                             <th>
