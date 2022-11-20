@@ -143,7 +143,7 @@ class ShelfController extends Controller
             ->leftJoin('items', 'items.id', '=', 'item_details.item_id')
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
             ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
-            ->leftJoin('units', 'units.id', '=', 'items.item_unit')
+            ->join('units', 'units.id' ,'=', 'items.item_unit')
             ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
             ->select(
                 'items.*',

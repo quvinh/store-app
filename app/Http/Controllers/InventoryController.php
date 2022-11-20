@@ -265,20 +265,12 @@ class InventoryController extends Controller
             ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
             ->join('units', 'units.id', '=', 'items.item_unit')
             ->select(
-                'items.*',
-                'item_details.id as itemdetail_id',
+                'items.*','item_details.id as itemdetail_id',
                 'item_details.item_quantity as item_detail_quantity',
-                'warehouse_id',
-                'supplier_id',
-                'shelf_id',
-                'floor_id',
-                'cell_id',
-                'item_details.id as itemdetail_id',
-                'shelf_name',
-                'warehouse_name',
-                'category_name',
-                'supplier_name',
-                'unit_name'
+                'warehouse_id','supplier_id','shelf_id',
+                'floor_id','cell_id','item_details.id as itemdetail_id',
+                'shelf_name','warehouse_name','category_name',
+                'supplier_name','unit_name'
             )
             ->where('item_details.item_quantity', '>', 0)
             ->whereNull('items.deleted_at')

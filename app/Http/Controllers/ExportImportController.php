@@ -251,7 +251,6 @@ class ExportImportController extends Controller
                 ['supplier_id', $import->supplier_id], ['shelf_id', $import->shelf_to],
                 ['floor_id', $import->floor_to], ['cell_id', $import->cell_to],
             ]);
-
             if ($item->count() > 0) {
                 $quantity = $item->first()->item_quantity;
                 $item->update(['item_quantity' => $quantity + $import->item_quantity]);
