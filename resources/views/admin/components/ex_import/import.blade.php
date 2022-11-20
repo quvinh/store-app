@@ -158,7 +158,7 @@
                                     <tr>
                                         <th width="15%">Phụ tùng/ Vật tư</th>
                                         <th width="13%" {{ count($warehouses) > 1 ? '' : 'hidden' }}>Nhập kho</th>
-                                        <th width="12%">Mã phụ tùng/ Vật tư</th>
+                                        <th width="12%">Mã Nhà cung cấp</th>
                                         <th width="15%">Nhà cung cấp</th>
                                         <th width="12%">Loại phụ tùng/ vật tư</th>
                                         <th width="8%">Đơn vị tính</th>
@@ -321,6 +321,7 @@
                     $('#list-import').html(html);
                     $('#btnSave').attr('disabled', false);
                     $("#category").attr('disabled', false);
+                    $('#warehouse').attr('disabled', true);
                     $('#unit').html('');
                     $('#item').val('');
                     $('#unit_amount').val(1);
@@ -340,6 +341,7 @@
                 $("#code").val('');
                 $("#category").val('').trigger('change');
                 $("#category").attr('disabled', false);
+                $('#warehouse').attr('disabled', false);
                 $("#unit").val('').trigger('change');
                 $("#price").val(0);
                 $("#quantity").val(0);

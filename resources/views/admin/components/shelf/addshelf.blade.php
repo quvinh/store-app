@@ -17,7 +17,7 @@
                 </div>
                 <div class="col s6">
                     <label class="form-label" for="shelf_position">Vị trí:</label>
-                    <input type="text" class="form-control" id="shelf_position" placeholder="vị trí" required=""
+                    <input type="text" class="form-control" id="shelf_position" placeholder="vị trí" required="" value="right"
                         name="shelf_position">
                     <div class="invalid-feedback">
                         Vui lòng nhập số vị trí.
@@ -27,7 +27,7 @@
             <div class="row mb-2">
                 <div class="col s6">
                     <label class="form-label" for="shelf_name">Tên giá/kệ:</label>
-                    <input type="text" class="form-control" id="shelf_name" placeholder="Tên giá/kệ" required=""
+                    <input type="text" class="form-control" id="shelf_name" placeholder="Tên giá/kệ" required="" value="Kệ {{ $maxId + 1 }}"
                         name="shelf_name">
                     <div class="invalid-feedback">
                         Vui lòng nhập tên giá/kệ.
@@ -41,7 +41,7 @@
             <div class="row mb-2">
                 <div class="col s6">
                     <label class="form-label" for="floor">Số tầng:</label>
-                    <input type="number" class="form-control" min="1" max="1000" id="floor_id" placeholder="Số tầng" required=""
+                    <input type="number" class="form-control" min="1" max="1000" id="floor_id" placeholder="Số tầng" required="" value="3"
                         name="floor">
                     <div class="invalid-feedback">
                         Vui lòng nhập số tầng.
@@ -49,7 +49,7 @@
                 </div>
                 <div class="col s6">
                     <label class="form-label" for="cell">Số ô trong tầng:</label>
-                    <input type="number" min="1" max="1000" class="form-control" id="cell" placeholder="Số ô" required=""
+                    <input type="number" min="1" max="1000" class="form-control" id="cell" placeholder="Số ô" required="" value="5"
                         name="cell">
                     <div class="invalid-feedback">
                         Vui lòng nhập số ô.
@@ -60,7 +60,7 @@
                 <div class="col s6">
                     <div class="col s6">
                         <label class="form-label" for="cell_capacity">Thể tích của ô:</label>
-                        <input type="number" min="5000" max="50000" step="1000" class="form-control" id="cell_capacity" placeholder="Thể tích ô" required=""
+                        <input type="number" min="5000" max="50000" step="1000" class="form-control" id="cell_capacity" placeholder="Thể tích ô" required="" value="10000"
                             name="cell_capacity">
                         <div class="invalid-feedback">
                             Vui lòng nhập thể tích ô.

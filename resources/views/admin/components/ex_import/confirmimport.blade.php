@@ -234,7 +234,7 @@
                             let sub = add_count.length > 0 ? add_count[0].capacity : 0;
                             let total = item.sum + sub;
                             let visible = (total + (capacity_value * quantity_value)) <= item.cell_capacity ? true : false;
-                            $('#cell' + key).append(`<option value="${item.id}" data-capacity="${total}" ${visible ? '' : 'disabled'}>${item.cell_name} (${total}/${item.cell_capacity})</option>`)
+                            $('#cell' + key).append(`<option value="${item.id}" data-capacity="${item.cell_capacity - total}" ${visible ? '' : 'disabled'}>${item.cell_name} (${total}/${item.cell_capacity})</option>`)
                         })
                         $('#cell' + key).attr('disabled', false);
                     },
@@ -254,7 +254,7 @@
                 let quantity_value = $('#quantity' + key).val();
                 let cell_capacity = $('#cell' + key).find(':selected').attr('data-capacity');
                 console.log(id, capacity_value, quantity_value, cell_capacity);
-                if(cell_capacity <= capacity_value * quantity_value) {
+                if(capacity_value * quantity_value <= cell_capacity) {
                     cell_selected.push({
                         'id' : id,
                         'capacity' : capacity_value *  quantity_value

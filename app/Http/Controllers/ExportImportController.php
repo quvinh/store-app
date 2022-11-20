@@ -202,50 +202,57 @@ class ExportImportController extends Controller
      */
     public function im_store(Request $request)
     {
-        $count = count($request->id);
-        $date = date('dmY');
-        $stt = DB::table('ex_imports')->where([
-            'warehouse_id' => $request->warehouse[0],
-            'exim_type' => 1,
-        ])->whereDate('created_at', '=', Carbon::now()->toDateString())->count();
-        $import = ExImport::create([
-            'warehouse_id' => $request->warehouse[0],
-            'exim_code' => 'IM_' . $date . '_' . ($stt + 1),
-            'exim_type' => 1,
-            'created_by' => Auth::user()->id,
-            'exim_status' => 0,
-        ]);
-        $cell_capacity = Cell::orderBy('cell_capacity')->first()->cell_capacity;
-        for ($i = 0; $i < $count; $i++) {
-            $item_capacity = Item::find($request->id[$i])->item_capacity;
-            $quantity = $request->quantity[$i];
-            $arr_count = array();
-            $count_div = intval($cell_capacity / $item_capacity);
-            $loop_quantity = $quantity;
-            $j = 0;
-            while ($loop_quantity - $count_div > 0) {
-                $loop_quantity -= $count_div;
-                array_push($arr_count, $count_div);
-                $j++;
+        try {
+            $count = count($request->id);
+            $date = date('dmY');
+            $stt = DB::table('ex_imports')->where([
+                'warehouse_id' => $request->warehouse[0],
+                'exim_type' => 1,
+            ])->whereDate('created_at', '=', Carbon::now()->toDateString())->count();
+            $import = ExImport::create([
+                'warehouse_id' => $request->warehouse[0],
+                'exim_code' => 'IM_' . $date . '_' . ($stt + 1),
+                'exim_type' => 1,
+                'created_by' => Auth::user()->id,
+                'exim_status' => 0,
+            ]);
+            $cell_capacity = Cell::orderBy('cell_capacity')->first()->cell_capacity;
+            for ($i = 0; $i < $count; $i++) {
+                $item_capacity = Item::find($request->id[$i])->item_capacity;
+                $quantity = $request->quantity[$i];
+                $arr_count = array();
+                $count_div = intval($cell_capacity / $item_capacity);
+                if($cell_capacity < $item_capacity) {
+                    return redirect()->route('ex_import.index')->withErrors(['erorr', 'Kích cỡ vật tư vượt quá sứa chứa của ô']);
+                }
+                $loop_quantity = $quantity;
+                $j = 0;
+                while ($loop_quantity - $count_div >= 0) {
+                    $loop_quantity -= $count_div;
+                    array_push($arr_count, $count_div);
+                    $j++;
+                }
+                if ($quantity % $count_div > 0) {
+                    array_push($arr_count, $quantity % $count_div);
+                }
+                foreach ($arr_count as $num) {
+                    ExImportDetail::create([
+                        'exim_id' => $import->id,
+                        'item_id' => $request->id[$i],
+                        'supplier_id' => $request->supplier[$i],
+                        'warehouse_id' => $request->warehouse[$i],
+                        'item_quantity' => $num,
+                        'item_price' => str_replace('.', '', $request->price[$i]),
+                        'item_total' => 0,
+                        'itemdetail_id' => 0,
+                        'item_vat' => 0
+                    ]);
+                }
             }
-            if ($quantity % $count_div > 0) {
-                array_push($arr_count, $quantity % $count_div);
-            }
-            foreach ($arr_count as $num) {
-                ExImportDetail::create([
-                    'exim_id' => $import->id,
-                    'item_id' => $request->id[$i],
-                    'supplier_id' => $request->supplier[$i],
-                    'warehouse_id' => $request->warehouse[$i],
-                    'item_quantity' => $num,
-                    'item_price' => str_replace('.', '', $request->price[$i]),
-                    'item_total' => 0,
-                    'itemdetail_id' => 0,
-                    'item_vat' => 0
-                ]);
-            }
+            return redirect()->route('ex_import.index')->with(['success', 'Tạo phiếu nhập thành công.']);
+        } catch (\Throwable $th) {
+            return redirect()->route('ex_import.index')->withErrors(['erorr', 'Tạo phiếu nhập thất bại.']);
         }
-        return redirect()->route('ex_import.index', ['#export'])->with(['success', 'Tạo phiếu nhập thành công.']);
     }
 
     /**

@@ -114,8 +114,8 @@
                                         <td class="table-action">
                                             @can('eim.edit')
                                                 <a href="{{ route('inventory.edit', $item->id) }}" class="action-icon">
-                                                    <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
-                                                        data-bs-placement="top" title="Sửa phiếu"></i></a>
+                                                    <i class="mdi mdi-eye" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" title="Xem phiếu"></i></a>
                                             @endcan
                                         </td>
                                     </tr>

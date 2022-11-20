@@ -110,7 +110,7 @@
                                 <div class="col">
                                     <div class="mb-3">
                                         <label for="item_quantity" class="form-label">Số lượng thực tế:</label>
-                                        <input class="form-control" id="item_quantity" data-toggle="touchspin"
+                                        <input class="form-control" id="item_quantity" data-toggle="touchspin" min="0"
                                             value="0" type="number" data-bts-button-down-class="btn btn-danger"
                                             data-bts-button-up-class="btn btn-info"><br>
                                     </div>

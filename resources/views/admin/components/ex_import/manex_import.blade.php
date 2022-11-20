@@ -170,7 +170,7 @@
                                                         @else
                                                             <a href="{{ route('import.edit', $item->id) }}"
                                                                 class="action-icon">
-                                                                <i class="mdi mdi-square-edit-outline"
+                                                                <i class="mdi mdi-eye"
                                                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                                                     title="Xem phiếu"></i></a>
                                                         @endif
@@ -304,7 +304,7 @@
                                                     @endcan
                                                     @else
                                                     <a href="{{ route('export.edit', $item->id) }}" class="action-icon">
-                                                        <i class="mdi mdi-square-edit-outline" data-bs-toggle="tooltip"
+                                                        <i class="mdi mdi-eye" data-bs-toggle="tooltip"
                                                             data-bs-placement="top" title="Xem phiếu"></i></a>
                                                     @endif
 

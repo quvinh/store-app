@@ -22,17 +22,17 @@ return [
     'import' => [
         'import' => 'Nhập vật tư',
         'importconfirm' => 'Duyệt phiếu nhập',
-        'importedit' => 'Sửa phiếu nhập',
+        'importedit' => 'Chi tiết phiếu nhập',
     ],
     'export' => [
         'export' => 'Xuất vật tư',
         'exportconfirm' => 'Duyệt phiếu xuât',
-        'exportedit' => 'Sửa phiếu xuất',
+        'exportedit' => 'Chi tiết phiếu xuất',
     ],
     'transfer' => [
         'transfer' => 'Điều chuyển vật tư',
         'add' => 'Tạo phiếu điều chuyển',
-        'edit' => 'Sửa phiếu điều chuyển',
+        'edit' => 'Chi tiết phiếu điều chuyển',
     ],
     'inventory' => [
         'inventory' => 'Tồn kho',
@@ -40,7 +40,7 @@ return [
     'adjust' => [
         'adjust' => 'Điều chỉnh vật tư',
         'create' => 'Tạo phiếu điều chỉnh',
-        'edit' => 'Sửa phiếu điều chỉnh',
+        'edit' => 'Chi tiết phiếu điều chỉnh',
     ],
     'item' => [
         'item' => 'Vật tư',

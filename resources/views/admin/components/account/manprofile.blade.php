@@ -150,10 +150,10 @@
                                     </div> <!-- end row -->
 
                                     <div class="row"></div> <!-- end row -->
-                                    <div class="text-end">
+                                    <!-- <div class="text-end">
                                         <button type="submit" class="btn btn-success mt-2"><i
                                                 class="mdi mdi-content-save"></i> @lang('components/profile.save')</button>
-                                    </div>
+                                    </div> -->
                                 </form>
 
                             </div> <!-- end tab-pane -->

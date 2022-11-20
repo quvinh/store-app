@@ -109,7 +109,7 @@
                     <div class="row mb-2">
                         <div class="col s6">
                             <label class="form-label" for="item_capacity">Thể tích:</label>
-                            <input type="text" class="form-control" id="item_capacity" placeholder="Thể tích"
+                            <input type="text" class="form-control" id="item_capacity" placeholder="Thể tích" value="500"
                                 name="item_capacity">
                         </div>
 

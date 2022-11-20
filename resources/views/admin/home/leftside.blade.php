@@ -31,13 +31,13 @@
             <li class="side-nav-item">
                 <a href="{{ route('dashboard.index') }}" class="side-nav-link">
                     <i class="uil-home-alt"></i>
-                    <span> Dashboard </span>
+                    <span> Bản tin </span>
                 </a>
             </li>
             <li class="side-nav-item">
                 <a href="{{ route('calendar.index') }}" class="side-nav-link">
                     <i class="uil-calender"></i>
-                    <span> Calendar </span>
+                    <span> Lịch và sự kiện </span>
                 </a>
             </li>
             <li class="side-nav-title side-nav-item">Chức năng</li>
