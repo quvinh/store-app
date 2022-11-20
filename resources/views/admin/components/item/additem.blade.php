@@ -113,9 +113,9 @@
                                 name="item_capacity">
                         </div>
 
-                        <div class="col s6">
+                        <div class="col s6" hidden>
                             <span class="form-label" style="font-weight:600">Vật tư lớn:</span><br><br>
-                            <input type="checkbox" id="switch_bigsize" checked data-switch="success" name="item_bigsize" />
+                            <input type="checkbox" id="switch_bigsize" data-switch="success" name="item_bigsize" />
                             <label for="switch_bigsize" data-on-label="Yes" data-off-label="No"></label>
                         </div>
                     </div>
