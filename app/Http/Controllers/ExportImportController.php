@@ -658,14 +658,14 @@ class ExportImportController extends Controller
                 $item_details->update([
                     'item_quantity' => $item_details->item_quantity - $item->item_quantity
                 ]);
-                $cell = Cell::find($item_details->cell_id);
-                $cell->update([
-                    'cell_capacity' => $cell->cell_capacity + $val->item_capacity * $item->item_quantity,
-                ]);
-                $floor = Floor::find($item_details->floor_id);
-                $floor->update([
-                    'floor_capacity' => $floor->floor_capacity + $val->item_capacity * $item->item_quantity,
-                ]);
+                // $cell = Cell::find($item_details->cell_id);
+                // $cell->update([
+                //     'cell_capacity' => $cell->cell_capacity + $val->item_capacity * $item->item_quantity,
+                // ]);
+                // $floor = Floor::find($item_details->floor_id);
+                // $floor->update([
+                //     'floor_capacity' => $floor->floor_capacity + $val->item_capacity * $item->item_quantity,
+                // ]);
             }
             ExImport::find($id)->update([
                 'exim_status' => $request->status,

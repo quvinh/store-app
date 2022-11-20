@@ -92,8 +92,8 @@
                                         <td>{{ $item->item_quantity[0] }}</td>
                                         <td>{{ $item->item_quantity[1] }}</td>
                                         <td>{{ $item->shelf_name }}</td>
-                                        <td>{{ $item->floor_id }}</td>
-                                        <td>{{ $item->cell_id }}</td>
+                                        <td>{{ $item->floor_name }}</td>
+                                        <td>{{ $item->cell_name }}</td>
                                         <td>
                                             @if ($item->item_quantity[0] > 0)
                                                 <span class="badge bg-success">Còn hàng</span>

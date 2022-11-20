@@ -7,6 +7,11 @@
             <th>Loại vật tư</th>
             <th>Số lượng</th>
             <th>Đơn vị tính</th>
+            <th>SL khả dụng</th>
+            <th>SL không khả dụng</th>
+            <th>Giá kệ</th>
+            <th>Tầng</th>
+            <th>Ô</th>
             <th>Giá nhập</th>
             <th>Giá xuất</th>
             <th>Trọng lượng</th>
@@ -14,10 +19,6 @@
             <th>Chiều dài</th>
             <th>Chiều rộng</th>
             <th>Chiều cao</th>
-            <th>SL khả dụng</th>
-            <th>SL không khả dụng</th>
-            <th>Giá kệ</th>
-            <th>Kho</th>
             <th>Trạng thái</th>
             <th>Ghi chú</th>
             <th style="width: 10%">Thao tác</th>
@@ -31,17 +32,18 @@
                 <td>{{ $item->category_name }}</td>
                 <td>{{ $item->item_detail_quantity }}</td>
                 <td>{{ $item->unit_name }}</td>
-                <td>{{ $item->item_importprice ? $item->item_importprice : '-----' }}</td>
-                <td>{{ $item->item_exportprice ? $item->item_exportprice : '-----' }}</td>
-                <td>{{ $item->item_weight ? $item->item_weight : '-----' }}</td>
-                <td>{{ $item->item_weightuint ? $item->item_weightuint : '-----'}}</td>
-                <td>{{ $item->item_long ? $item->item_long : '-----' }}</td>
-                <td>{{ $item->item_width ? $item->item_width : '-----' }}</td>
-                <td>{{ $item->item_height ? $item->item_height : '-----' }}</td>
                 <td>{{ $item->item_valid[0] }}</td>
                 <td>{{ $item->item_valid[1] }}</td>
                 <td>{{ $item->shelf_name }}</td>
-                <td>{{ $item->warehouse_name }}</td>
+                <td>{{ $item->floor_name }}</td>
+                <td>{{ $item->cell_name }}</td>
+                <td>{{ $item->item_importprice ? $item->item_importprice : '-----' }}</td>
+                <td>{{ $item->item_exportprice ? $item->item_exportprice : '-----' }}</td>
+                <td>{{ $item->item_weight ? $item->item_weight : '-----' }}</td>
+                <td>{{ $item->item_weightuint ? $item->item_weightuint : '-----' }}</td>
+                <td>{{ $item->item_long ? $item->item_long : '-----' }}</td>
+                <td>{{ $item->item_width ? $item->item_width : '-----' }}</td>
+                <td>{{ $item->item_height ? $item->item_height : '-----' }}</td>
                 <td>
                     @if ($item->item_valid[0] > 0)
                         <span class="badge bg-success">Còn hàng</span>

@@ -51,7 +51,7 @@
                                 </select>
                             </div>
                             <div class="col-3">
-                                <select data-toggle="select2" title="Status" id="status">
+                                <select data-toggle="select2" title="Status" id="sta">
                                     <option value="">Hiển thị tất cả</option>
                                     <option value="cduyet"
                                         {{ app('request')->input('status') == 'cduyet' ? 'selected' : '' }}>
@@ -183,7 +183,7 @@
                                                         @endif
                                                         @if ($transfer->transfer_status == 2)
                                                             <div class="dropdown-divider"></div>
-                                                            <a class="dropdown-item" href="{{ route('transfer.confirm', $transfer->id) }}">Hoàn thành</a>                                                       
+                                                            <a class="dropdown-item" href="{{ route('transfer.confirm', $transfer->id) }}">Hoàn thành</a>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -291,9 +291,8 @@
         var dt = $('#date_change').val();
         var dateVal = dt.replace(' - ', '_');
         dateVal = dateVal.replaceAll('/', '-');
-        var statusVal = $('#status').val();
+        var statusVal = $('#sta').val();;
         var warehouseVal = $('#warehouse').val();
-        console.log(statusVal);
         const paramsObj = {
             status: statusVal,
             warehouse: warehouseVal,

@@ -286,6 +286,8 @@ class InventoryController extends Controller
             ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
             ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
+            ->leftJoin('floors', 'floors.id', '=', 'item_details.floor_id')
+            ->leftJoin('cells', 'cells.id', '=', 'item_details.cell_id')
             ->join('unit_details', 'unit_details.item_id', '=', 'items.id')
             ->join('units', 'units.id', '=', 'unit_details.unit_id')
             ->select(
@@ -294,15 +296,16 @@ class InventoryController extends Controller
                 'item_details.item_quantity as item_detail_quantity',
                 'warehouse_id',
                 'supplier_id',
-                'shelf_id',
-                'floor_id',
-                'cell_id',
+                'item_details.shelf_id',
+                'item_details.floor_id',
+                'item_details.cell_id',
                 'item_details.id as itemdetail_id',
                 'shelf_name',
                 'warehouse_name',
                 'category_name',
                 'supplier_name',
-                'unit_name'
+                'unit_name','floor_name',
+                'cell_name',
             )
             ->groupBy('itemdetail_id')
             ->where('item_details.item_quantity', '>', 0)
