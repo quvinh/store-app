@@ -29,6 +29,20 @@
         @php
             $count = DB::table('items')->max('id');
         @endphp
+        @if (session()->has('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {{ session()->get('success') }}
+        </div>
+    @endif
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {{ $error }}
+            </div>
+        @endforeach
+    @endif
         <form class="needs-validation" novalidate action="{{ route('item.store') }}" method="POST"
             enctype="multipart/form-data">
             @csrf
