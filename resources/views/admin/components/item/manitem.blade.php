@@ -61,10 +61,7 @@
                                 @foreach ($data as $key => $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td><span class="text-info">{{ $item->item_name }}</span> <i
-                                                class="uil-check-square font-16 {{ $item->item_bigsize == 1 ? 'text-success' : '' }}"
-                                                data-bs-toggle="tooltip" data-bs-placement="top"
-                                                title="{{ $item->item_bigsize == 1 ? 'Vật tư lớn' : 'Vật tư nhỏ và vừa' }}"></i>
+                                        <td><span class="text-info">{{ $item->item_name }}</span></i>
                                         </td>
                                         <td>{{ $item->unit }}</td>
                                         <td>{{ $item->category }}</td>
@@ -121,8 +118,6 @@
                                             <td class="table-action">
                                                 <a href="{{ route('item.restore', $item->id) }}" class="action-icon">
                                                     <i class="mdi mdi-delete-restore"></i></a>
-                                                <a href="{{ route('item.destroy', $item->id) }}" class="action-icon">
-                                                    <i class="mdi mdi-delete-forever"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach

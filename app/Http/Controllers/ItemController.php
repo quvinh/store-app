@@ -53,6 +53,7 @@ class ItemController extends Controller
             ->join('categories', 'categories.id', '=', 'items.category_id')
             ->whereNotNull('items.deleted_at')
             ->select('items.*', 'units.unit_name as unit', 'categories.category_name as category')
+            ->groupBy('items.id')
             ->get();
         return view('admin.components.item.manitem', compact('data', 'dataTrash'));
     }
