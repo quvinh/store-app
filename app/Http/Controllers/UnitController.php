@@ -18,6 +18,7 @@ class UnitController extends Controller
         Route::get('unit', [UnitController::class, 'index'])->name('unit.index')->middleware(['can:uni.view']);
         Route::post('unit', [UnitController::class, 'store'])->name('unit.store')->middleware(['can:uni.add']);
         Route::group(['middleware' => ['can:uni.edit']], function () {
+            Route::get('unit/show/{name}', [UnitController::class, 'show'])->name('unit.show');
             Route::get('unit/edit/{id}', [UnitController::class, 'edit'])->name('unit.edit');
             Route::put('unit/update/{id}', [UnitController::class, 'update'])->name('unit.update');
         });
@@ -34,7 +35,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        $units = Unit::where('deleted_at', null)->get();
+        $units = Unit::where('deleted_at', null)->groupBy('unit_name')->get();
         $unitTrashed = Unit::onlyTrashed()->get();
         $items = Item::all();
         return view('admin.components.unit.manunit', compact('units', 'unitTrashed', 'items'));
@@ -81,9 +82,14 @@ class UnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($name)
     {
-        //
+        $units = DB::table('items')->join('unit_details', 'unit_details.item_id', '=', 'items.id')
+        ->join('units', 'units.id', '=', 'unit_details.unit_id')
+        ->where('unit_name','like', $name)
+        ->select('units.*', 'items.item_name')
+        ->get();
+        return view('admin.components.unit.showunit', compact('units'));
     }
 
     /**

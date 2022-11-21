@@ -54,6 +54,7 @@ return [
     'unit' => [
         'unit' => 'Unit',
         'edit' => 'Edit unit',
+        'show' => 'Show unit'
     ],
     'supplier' => [
         'supplier' => 'Supplier',

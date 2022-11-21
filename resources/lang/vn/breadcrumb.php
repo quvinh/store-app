@@ -54,6 +54,7 @@ return [
     'unit' => [
         'unit' => 'Đơn vị tính',
         'edit' => 'Sửa đơn vị tính',
+        'show' => 'Xem đơn vị tính',
     ],
     'supplier' => [
         'supplier' => 'Nhà cung cấp',

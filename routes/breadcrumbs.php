@@ -165,6 +165,8 @@ Breadcrumbs::for('unitedit', function (BreadcrumbTrail $trail, $id) {
     $trail->push(Lang::get('breadcrumb.unit.edit'), route('unit.edit', $id));
 });
 
+
+
 // Dashboard > Supplier
 Breadcrumbs::for('supplier', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');

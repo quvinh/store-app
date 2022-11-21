@@ -188,9 +188,13 @@ class WarehouseController extends Controller
      */
     public function destroy($id)
     {
-        $warehouse = Warehouse::find($id);
-        $warehouse->delete();
-        return redirect()->back()->with('success', 'xoa thành công');
+        $item = DB::table('item_details')->where('warehouse_id', $id)->sum('item_quantity');
+        if($item == 0){
+            $warehouse = Warehouse::find($id);
+            $warehouse->delete();
+            return redirect()->back()->with('success', 'Xóa thành công');
+        }
+        else return redirect()->back()->withErrors(['error' => 'Trong kho vẫn còn vật tư nên không thể xóa!'] );
     }
 
     public function warehouseById()

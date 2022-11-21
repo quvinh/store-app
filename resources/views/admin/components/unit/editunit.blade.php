@@ -41,9 +41,9 @@
                                                 </div>
                                             </div>
                                             <div class="col s6">
-                                                <label class="form-label" for="unit_amount">Mã đơn vị tính:</label>
+                                                <label class="form-label" for="unit_amount">Số lượng bóc tách:</label>
                                                 <input type="text" class="form-control" id="unit_amount"
-                                                    placeholder="Mã đơn vị tính" name="unit_amount"
+                                                    placeholder="Số lượng bóc tách" name="unit_amount"
                                                     value="{{ $unit->unit_amount }}">
                                             </div>
                                         </div>
