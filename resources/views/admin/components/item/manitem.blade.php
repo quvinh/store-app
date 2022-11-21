@@ -57,7 +57,7 @@
                             </div>
                         @endcan
 
-                        <table id="scroll-vertical-datatable" class="table dt-responsive nowrap text-center">
+                        <table id="basic-datatable" class="table dt-responsive nowrap text-center">
                             {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                             <thead>
                                 <tr>
