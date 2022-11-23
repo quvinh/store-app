@@ -82,10 +82,10 @@
                                                         $item->supplier_name .
                                                         ' - ' .
                                                         $item->shelf_name .
-                                                        ' - Tầng ' .
-                                                        $item->floor_id .
-                                                        ' - Ô ' .
-                                                        $item->cell_id .
+                                                        ' - ' .
+                                                        $item->floor_name .
+                                                        ' - ' .
+                                                        $item->cell_name .
                                                         ' - SLKD: ' .
                                                         $item->item_quantity[0] }}
                                                 </option>

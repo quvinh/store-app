@@ -101,7 +101,7 @@
                                         <select data-toggle="select2" title="Item" id="itemdetail_id" name="item_detail">
                                             @foreach ($items as $item)
                                                 <option value="{{ $item->itemdetail_id }}">
-                                                    {{ $item->item_name }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - Tằng ID:{{ $item->floor_id }} - Ô ID:{{ $item->cell_id }} - SL:{{ $item->item_detail_quantity }}
+                                                    {{ $item->item_name }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - {{ $item->floor_name }} - {{ $item->cell_name }} - SL:{{ $item->item_detail_quantity }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -215,9 +215,9 @@
                 var item_detail = $("#itemdetail_id").val();
                 var warehouse_id = $('#warehouse').val();
                 var item_name = text.split(' - ')[0];
-                var supplier_name = text.split(' - ')[2];
+                var supplier_name = text.split(' - ')[1];
                 var warehouse_name = $("#warehouse option:selected").text().split(' - ')[1];
-                var shelf_name = text.split(' - ')[3];
+                var shelf_name = text.split(' - ')[2];
                 var floor_id = b[0];
                 var cell_id = b[1];
                 var item_valid = b[2];

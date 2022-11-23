@@ -123,7 +123,7 @@
                                                     id="itemdetail_id">
                                                     <option value="">Chọn phụ tùng</option>
                                                     @foreach ($items as $item)
-                                                        <option value="{{ $item->itemdetail_id }}">{{ $item->item_name }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - Tầng {{ $item->floor_id }} - Ô {{ $item->cell_id }} - SLKD:{{ $item->item_quantity[0] }}</option>
+                                                        <option value="{{ $item->itemdetail_id }}">{{ $item->item_name }} - {{ $item->supplier_name }} - {{ $item->shelf_name }} - {{ $item->floor_name }} - {{ $item->cell_name }} - SLKD:{{ $item->item_quantity[0] }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
