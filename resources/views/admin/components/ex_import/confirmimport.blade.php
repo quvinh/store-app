@@ -79,7 +79,7 @@
                                     <input type="text" class="form-control" readonly
                                         value="{{ $import->exim_code }}"><br>
                                     <input type="text" class="form-control" readonly
-                                        value="{{ $import->exim_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}"><br>
+                                    value="{{ $import->exim_status == 1 ? 'Đã duyệt' : ($import->exim_status == 2 ? 'Đã hủy' : 'Chưa duyệt') }}"><br>
                                     <input type="text" class="form-control" readonly
                                         value="{{ $import->name }}"><br>
                                     <input type="text" class="form-control" readonly

@@ -42,22 +42,25 @@
                                     @if ($im_items[0]->exim_status == 0)
                                         <!-- <button type="submit" class="btn btn-primary">Lưu</button> -->
                                     @endif
-                                    
+
                                 </div>
                             </div><br>
                             <div class="row">
                                 <div class="col-3 text-end">
+                                    <label for="" class="form-control">Người nhận</label><br>
                                     <label for="" class="form-control">Mã phiếu</label><br>
                                     <label for="" class="form-control">Trạng thái</label><br>
                                     <label for="" class="form-control">Người tạo</label><br>
+                                    <label for="" class="form-control">Ghi chú</label><br>
                                 </div>
                                 <div class="col-9">
+                                    <input type="text" hidden value="1" name="status">
+                                    <input type="text" class="form-control" readonly value="{{ $import->receiver }}"><br>
+                                    <input type="text" class="form-control" readonly value="{{ $import->exim_code }}"><br>
                                     <input type="text" class="form-control" readonly
-                                        value="{{ $im_items[0]->exim_code }}"><br>
-                                    <input type="text" class="form-control" readonly
-                                        value="{{ $im_items[0]->exim_status == 0 ? 'Chưa duyệt' : '' }}{{ $im_items[0]->exim_status == 1 ? 'Đã duyệt' : '' }}{{ $im_items[0]->exim_status == 2 ? 'Đã hủy' : '' }}"><br>
-                                    <input type="text" class="form-control" readonly
-                                        value="{{ $im_items[0]->name }}"><br>
+                                    value="{{ $import->exim_status == 1 ? 'Đã duyệt' : ($import->exim_status == 2 ? 'Đã hủy' : 'Chưa duyệt') }}"><br>
+                                    <input type="text" class="form-control" readonly value="{{ $import->name }}"><br>
+                                    <input type="text" class="form-control" readonly value="{{ $import->note }}"><br>
                                 </div>
                             </div>
 
@@ -81,7 +84,7 @@
                                             } else {
                                                 $floor = '-';
                                                 $cell = '-';
-                                            }                                            
+                                            }
                                         @endphp
                                         <tr class="text-center">
                                             <td hidden><input type="text" name="id[]" value="{{ $item->id }}">

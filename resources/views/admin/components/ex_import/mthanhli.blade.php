@@ -115,8 +115,7 @@
                                         @foreach ($im_items as $key => $item)
                                             <tr>
                                                 @can('eim.edit')
-                                                    <td><a href="{{ route('import.edit', $item->id) }}">
-                                                            <span class="text-info">{{ $item->exim_code }}</span></a></td>
+                                                    <td><span class="text-info">{{ $item->exim_code }}</span></td>
                                                 @endcan
                                                 @cannot('eim.edit')
                                                     <td><span class="text-info">{{ $item->exim_code }}</span></td>
