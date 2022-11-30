@@ -122,6 +122,7 @@
                                             <th>Vật tư/ Phụ tùng</th>
                                             <th>Trạng thái</th>
                                             <th>Thời gian tạo</th>
+                                            <th>Ghi chú</th>
                                             <th style="width: 10%">Thao tác</th>
                                         </tr>
                                     </thead>
@@ -150,15 +151,23 @@
                                                     @endforeach
                                                 </th>
                                                 <th>
-                                                    <span style="font-size: 15px"
-                                                        class="badge badge-{{ $item->exim_status == '0' ? 'info-lighten' : 'success-lighten' }}">
-                                                        {{ $item->exim_status == '0' ? 'Chờ duyệt' : '' }}{{ $item->exim_status == '1' ? 'Đã duyệt' : '' }}</span>
+                                                    @if ($item->exim_status == '0')
+                                                        <span style="font-size: 15px" class="badge badge-info-lighten">Chờ
+                                                            duyệt</span>
+                                                    @elseif ($item->exim_status == '1')
+                                                    <span style="font-size: 15px" class="badge badge-success-lighten">Đã
+                                                        duyệt</span>
+                                                    @else
+                                                    <span style="font-size: 15px" class="badge badge-danger-lighten">Đã
+                                                        hủy</span>
+                                                    @endif
                                                 </th>
                                                 <td>{{ $item->created }}</td>
+                                                <td>{{$item->note}}</td>
                                                 <td class="table-action">
                                                     @can('eim.edit')
                                                         @if ($item->exim_status == 0)
-                                                            
+
                                                             <a href="{{ route('export.update-status', $item->id) }}" class="action-icon">
                                                                 <i class="mdi mdi-clipboard-alert-outline" data-bs-toggle="tooltip"
                                                                     data-bs-placement="top" title="Hủy phiếu"></i></a>
@@ -258,6 +267,7 @@
                                             <th>Người nhận</th>
                                             <th>Trạng thái</th>
                                             <th>Thời gian tạo</th>
+                                            <th>Ghi chú</th>
                                             <th style="width: 10%">Thao tác</th>
                                         </tr>
                                     </thead>
@@ -291,6 +301,7 @@
                                                     @endif
                                                 </th>
                                                 <td>{{ $item->created }}</td>
+                                                <td>{{$item->note}}</td>
                                                 <td class="table-action">
                                                     @if ($item->exim_status == '0')
                                                         @can('eim.edit')

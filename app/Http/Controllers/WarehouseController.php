@@ -91,8 +91,8 @@ class WarehouseController extends Controller
             'warehouse_note' => $request->warehouse_note,
             'warehouse_image' => $image,
             'warehouse_contact' => $contact,
-            'country_id' => '1',
-            'city_id' => '1',
+            // 'country_id' => '1',
+            // 'city_id' => '1',
         ];
 
         $warehouse = Warehouse::create(array_merge(

@@ -62,6 +62,9 @@
                             <li>
                                 <a href="{{ route('ex_import.index') }}">Quản lý nhập / xuất</a>
                             </li>
+                            <li>
+                                <a href="{{route('export.mthanhli')}}">Đổi trả vật tư</a>
+                            </li>
                         @endcan
                         @can('tra.view')
                             <li>

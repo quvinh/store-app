@@ -19,6 +19,7 @@ class CreateExImportsTable extends Migration
             $table->tinyInteger('exim_status');
             $table->tinyInteger('exim_type');
             // $table->bigInteger('invoice_id');
+            $table->text('note')->nullable();
             $table->bigInteger('warehouse_id');
             $table->bigInteger('created_by');
             $table->bigInteger('receiver')->nullable(); // Nguoi nhan khi xuat kho

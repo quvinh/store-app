@@ -1,7 +1,7 @@
 @extends('admin.home.master')
 
 @section('title')
-    Xuất vật tư
+    Đổi trả vật tư
 @endsection
 
 @section('css')
@@ -21,11 +21,7 @@
     <!-- Start Content-->
     <div class="container-fluid">
         <!-- start page title -->
-        @php
-            $route = preg_replace('/(admin)|\d/i', '', str_replace('/', '', Request::getPathInfo()));
-        @endphp
-        {{ Breadcrumbs::render($route) }}
-        <!-- end page title -->
+       <br><br>
         @if (session()->has('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -44,13 +40,13 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form class="needs-validation" novalidate action="{{ route('export.store') }}" method="POST"
+                        <form class="needs-validation" novalidate action="{{ route('export.sthanhli') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col">
                                     <div class="text-sm-start">
-                                        <a href="{{ route('ex_import.index') }}" class="btn btn-info mb-2 me-1">Quay
+                                        <a href="{{ route('export.mthanhli') }}" class="btn btn-info mb-2 me-1">Quay
                                             lại</a>
                                     </div>
                                 </div>
@@ -60,7 +56,7 @@
                                 <div class="col s6">
                                     <input type="text" name="id" id="id" hidden>
                                     <div class="mb-3" {{ count($warehouses) > 1 ? '' : 'hidden' }}>
-                                        <label for="warehouse">Kho:</label>
+                                        <label for="warehouse" class="form-label">Kho:</label>
                                         <select data-toggle="select2" title="Warehouse" id="warehouse" name="warehouse">
                                             @foreach ($warehouses as $warehouse)
                                                 <option value="{{ $warehouse->id }}"
@@ -73,7 +69,7 @@
                                         <input type="button" class="btn btn-success" value="Filter" id="btnFilter" hidden>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="itemdetail_id">Vật tư/Phụ tùng:</label>
+                                        <label for="itemdetail_id" class="form-label">Vật tư/Phụ tùng:</label>
                                         <select data-toggle="select2" title="Item" id="itemdetail_id" name="item_detail">
                                             @foreach ($items as $key => $item)
                                                 <option value="{{ $item->itemdetail_id }}">
@@ -97,7 +93,7 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="mb-3">
-                                                <label for="item_quantity">Số lượng</label>
+                                                <label for="item_quantity" class="form-label">Số lượng</label>
                                                 <input class="form-control" id="item_quantity" data-toggle="touchspin"
                                                     value="0" type="text"
                                                     data-bts-button-down-class="btn btn-danger"
@@ -105,11 +101,18 @@
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <div class="mb-3">
-                                                <label for="export_price">Đơn giá:</label>
-                                                <input id="export_price" type="text" value=""
+                                            <div class="mb-3" hidden>
+                                                <label for="export_price" class="form-label">Đơn giá:</label>
+                                                <input id="export_price" type="text" value="1"
                                                     data-toggle="input-mask" data-mask-format="000.000.000.000.000"
                                                     data-reverse="true" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label for="note" class="form-label">Ghi chú:</label>
+                                                <input type="text" name="note" id="note" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -117,30 +120,13 @@
                             </div>
 
                             <div class="row">
-                                <div class="col">
-                                    <label for="note">Ghi chú</label>
-                                    <textarea class="form-control" id="example-textarea" rows="3" placeholder="Nhập ghi chú..." name="note"></textarea>
-                                </div>
-                                <div class="col">
-                                    <div class="row mb-3">
-                                        <label for="receiver">Người nhận:</label>
-                                        <select data-toggle="select2" title="receiver" id="receiver" name="receiver">
-                                            @foreach ($users as $user)
-                                                <option value="{{ $user->id }}"
-                                                    {{ app('request')->input('user_id') == $user->id ? 'selected' : '' }}>
-                                                    {{ $user->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col text-sm-end">
-                                        <button class="btn btn-info" id="btnAdd" type="button"><i
-                                                class="mdi mdi-chevron-double-down"></i> Thêm vào phiếu</button>
-                                        <button type="button" class="btn btn-danger" id="destroy-list"><i
-                                                class="mdi mdi-close-circle"></i> Hủy phiếu</button>
-                                        <button type="submit" class="btn btn-success" id="save-list" disabled><i
-                                                class="mdi mdi-content-save"></i> Lưu phiếu</button>
-                                    </div>
+                                <div class="text-sm-end">
+                                    <button class="btn btn-info" id="btnAdd" type="button"><i
+                                            class="mdi mdi-chevron-double-down"></i> Thêm vào phiếu</button>
+                                    <button type="button" class="btn btn-danger" id="destroy-list"><i
+                                            class="mdi mdi-close-circle"></i> Hủy phiếu</button>
+                                    <button type="submit" class="btn btn-success" id="save-list" disabled><i
+                                            class="mdi mdi-content-save"></i> Lưu phiếu</button>
                                 </div>
                             </div>
                             <br>
@@ -156,9 +142,8 @@
                                         <th>Tầng</th>
                                         <th>Ô</th>
                                         <th>Nhà sản xuất</th>
-                                        <th>Người nhận</th>
+                                        <th>Ghi chú</th>
                                         <th>Số lượng</th>
-                                        <th>Đơn giá</th>
                                         <th>Thao tác</th>
                                     </tr>
                                 </thead>
@@ -228,9 +213,7 @@
                 var item_valid = b[2];
                 var item_quantity = $("#item_quantity").val();
                 var price = $("#export_price").val().replaceAll('.', '');
-                var receiver = $("#receiver").val();
-                var receiver_name = $("#receiver option:selected").text();
-                var note = $("#note").val();
+                var note = $("#note").val()
 
                 if (item_name !== '' && supplier_name !== '' && item_quantity > 0 && price > 0) {
                     if (list.filter(item => item.id == item_detail).length > 0) {
@@ -250,7 +233,7 @@
                                     cell_id: item.cell_id,
                                     shelf_name: item.shelf_name,
                                     item_valid: item.item_valid,
-                                    receiver_name: item.receiver_name,
+                                    note: item.note,
                                     // warehouse_id: item.warehouse_id,
                                 });
                             } else alert('Số lượng vượt quá số khả dụng.');
@@ -269,7 +252,7 @@
                                 floor_id: floor_id,
                                 cell_id: cell_id,
                                 item_valid: item_valid,
-                                receiver_name: receiver_name,
+                                note: note,
                                 // warehouse_id: warehouse_id,
                             })
                         } else alert('Số lượng vượt quá số khả dụng.');
@@ -282,7 +265,6 @@
                                         <span class="text-primary"><b>${item.name}</b></span>
                                         <input name="itemdetail_id[]" value="${item.id}" hidden>
                                         <input name="warehouse_id" value="${warehouse_id}" hidden>
-                                        <input name="receiver" value="${receiver}" hidden>
                                         <input name="note" value="${note}" hidden>
                                         <input name="item_quantity[]" value="${item.quantity}" hidden>
                                         <input name="export_price[]" value="${item.price}" hidden>
@@ -293,9 +275,8 @@
                                     <td><b>${item.floor_id}</b></td>
                                     <td><b>${item.cell_id}</b></td>
                                     <td><b>${item.supplier_name}</b></td>
-                                    <td><b>${item.receiver_name}</b></td>
+                                    <td><b>${item.note}</b></td>
                                     <td><b>${item.quantity}</b></td>
-                                    <td><b>${item.price} VND</b></td>
                                     <td class="table-action">
                                         <a type="button" class="action-icon text-warning" id="btn${item.id}" data-id="${item.id}" onclick="remove_button('btn${item.id}')"> <i
                                                 class="mdi mdi-close-circle"></i></a>
@@ -307,14 +288,13 @@
                     $('#export-datatable tbody').html(html);
                     $('#warehouse').attr('disabled', true);
                     $('#save-list').attr('disabled', false);
-                    $('#receiver').attr('disabled', true);
                 } else {
                     alert('Chọn kho, phụ tùng và số lượng lớn hơn 0');
                 }
                 $('#destroy-list').on('click', function() {
                     // $('#warehouse_from').attr('disabled', false);
                     $('#item_quantity').val(0);
-                    $('#export_price').val('');
+                    $('#export_price').val(1);
                     $('#warehouse').attr('disabled', false);
                     $('#save-list').attr('disabled', true);
                     $('#export-datatable tbody').html('');
@@ -332,7 +312,6 @@
                 // $('#warehouse_from').attr('disabled', false);
                 $('#warehouse').attr('disabled', false);
                 $('#save-list').attr('disabled', true);
-                $('$receiver').attr('disabled', false);
             }
         }
     </script>

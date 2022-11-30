@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TL;
 use App\Models\Category;
 use App\Models\Cell;
 use App\Models\ExImport;
@@ -21,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ExportImportController extends Controller
 {
@@ -44,7 +46,14 @@ class ExportImportController extends Controller
                 Route::get('/dispatch/cell/{id}', [ExportImportController::class, 'dispatchCell']);
             });
         });
-
+        Route::group(['prefix' => 'thanhly'], function () {
+            Route::get('/', [ExportImportController::class, 'mthanhli'])->name('export.mthanhli');
+            Route::get('/add', [ExportImportController::class, 'thanhli'])->name('export.thanhli');
+            Route::post('/store', [ExportImportController::class, 'sthanhli'])->name('export.sthanhli');
+            Route::get('/confirm/{id}', [ExportImportController::class, 'cthanhli'])->name('export.cthanhli');
+            Route::get('/cancel/{id}', [ExportImportController::class, 'ccthanhli'])->name('export.ccthanhli');
+            Route::get('/excel', [ExportImportController::class, 'exporttl'])->name('export.tl');
+        });
         Route::group(['prefix' => 'export'], function () {
             Route::group(['middleware' => ['can:eim.add']], function () {
                 Route::get('/', [ExportImportController::class, 'export'])->name('export.index');
@@ -165,15 +174,9 @@ class ExportImportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function import()
+    public function import(Request $request)
     {
         $shelves = DB::table('shelves')->whereNull('deleted_at')->get();
-        $warehouses = DB::table('warehouse_managers')
-            ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
-            ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
-            ->select('warehouses.*')
-            ->where('user_id', '=', Auth::user()->id)
-            ->get();
         $categories = Category::all();
         $suppliers = Supplier::all();
         $units = Unit::all();
@@ -182,6 +185,9 @@ class ExportImportController extends Controller
             ->join('warehouses', 'warehouse_managers.warehouse_id', '=', 'warehouses.id')
             ->where('warehouse_managers.user_id', Auth::user()->id)
             ->select('warehouses.*')->get();
+        if (isset($request->warehouse_id)) {
+            $warehouse_id = $request->warehouse_id;
+        } else $warehouse_id = $warehouses[0]->id;
         foreach ($items as $item) {
             $units = UnitDetail::join('units', 'unit_details.unit_id', '=', 'units.id')->select('units.*')->where('unit_details.item_id', $item->id)->orderBy('units.unit_amount')->get();
             $item->value = $item->item_name;
@@ -190,8 +196,12 @@ class ExportImportController extends Controller
                 $item->unit[$key] = [$value->unit_name, $value->unit_amount];
             }
         }
+        $users = DB::table('users')->join('warehouse_managers', 'warehouse_managers.user_id', '=', 'users.id')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->where('warehouse_managers.warehouse_id', $warehouse_id)
+            ->select('users.*')->get();
         // dd($items);
-        return view('admin.components.ex_import.import', compact('shelves', 'categories', 'suppliers', 'units', 'items', 'warehouses'));
+        return view('admin.components.ex_import.import', compact('shelves', 'categories', 'suppliers', 'units', 'items', 'warehouses', 'users'));
     }
 
     /**
@@ -215,6 +225,8 @@ class ExportImportController extends Controller
                 'exim_type' => 1,
                 'created_by' => Auth::user()->id,
                 'exim_status' => 0,
+                'note' => ($request->note !== 'undefined') ? $request->note : '',
+                'receiver' => $request->receiver,
             ]);
             $cell_capacity = Cell::orderBy('cell_capacity')->first()->cell_capacity;
             for ($i = 0; $i < $count; $i++) {
@@ -222,7 +234,7 @@ class ExportImportController extends Controller
                 $quantity = $request->quantity[$i];
                 $arr_count = array();
                 $count_div = intval($cell_capacity / $item_capacity);
-                if($cell_capacity < $item_capacity) {
+                if ($cell_capacity < $item_capacity) {
                     return redirect()->route('ex_import.index')->withErrors(['erorr', 'Kích cỡ vật tư vượt quá sứa chứa của ô']);
                 }
                 $loop_quantity = $quantity;
@@ -251,7 +263,7 @@ class ExportImportController extends Controller
             }
             return redirect()->route('ex_import.index')->with(['success', 'Tạo phiếu nhập thành công.']);
         } catch (\Throwable $th) {
-            return redirect()->route('ex_import.index')->withErrors(['erorr', 'Tạo phiếu nhập thất bại.']);
+            return redirect()->route('ex_import.index')->withErrors(['error', 'Tạo phiếu nhập thất bại.']);
         }
     }
 
@@ -305,6 +317,14 @@ class ExportImportController extends Controller
     }
     public function im_confirm($id)
     {
+        $import = DB::table('ex_imports')
+            ->join('users', 'users.id', '=', 'ex_imports.created_by')
+            ->where('ex_imports.id', $id)
+            ->select('ex_imports.*', 'name')
+            ->first();
+        $import->receiver = DB::table('ex_imports')
+            ->join('users', 'users.id', '=', 'ex_imports.receiver')
+            ->where('ex_imports.id', $id)->first()->name;
         $im_items = DB::table('items')
             ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
             ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
@@ -318,6 +338,7 @@ class ExportImportController extends Controller
                 'ex_imports.exim_code',
                 'ex_imports.exim_status',
                 'ex_imports.warehouse_id',
+                'ex_imports.note',
                 'suppliers.supplier_name',
                 'users.name',
             )
@@ -327,7 +348,7 @@ class ExportImportController extends Controller
             ->select('shelves.*')
             ->where('warehouse_details.warehouse_id', $im_items->first()->warehouse_id)->get();
 
-        return view('admin.components.ex_import.confirmimport', compact('im_items', 'shelves'));
+        return view('admin.components.ex_import.confirmimport', compact('import', 'im_items', 'shelves'));
     }
 
     public function im_update_status(Request $request, $id)
@@ -476,6 +497,7 @@ class ExportImportController extends Controller
             'created_by' => Auth::user()->id,
             'exim_status' => 0,
             'receiver' => $request->receiver,
+            'note' => $request->note ? $request->note : '',
         ]);
         for ($i = 0; $i < $count; $i++) {
             $items = DB::table('item_details')
@@ -733,5 +755,204 @@ class ExportImportController extends Controller
             'cell' => $cell,
             'message' => 'Get cell detail',
         ]);
+    }
+    public function thanhli(Request $request)
+    {
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouses.id', '=', 'warehouse_managers.warehouse_id')
+            ->join('users', 'users.id', '=', 'warehouse_managers.user_id')
+            ->select('warehouses.*')
+            ->where('user_id', '=', Auth::user()->id)
+            ->get();
+        if (isset($request->warehouse_id)) {
+            $warehouse_id = $request->warehouse_id;
+        } else $warehouse_id = $warehouses[0]->id;
+        $items = DB::table('item_details')
+            ->join('items', 'items.id', '=', 'item_details.item_id')
+            ->join('shelves', 'shelves.id', '=', 'item_details.shelf_id')
+            ->join('floors', 'floors.id', '=', 'item_details.floor_id')
+            ->join('cells', 'cells.id', '=', 'item_details.cell_id')
+            ->join('warehouses', 'warehouses.id', '=', 'item_details.warehouse_id')
+            ->leftJoin('categories', 'categories.id', '=', 'items.category_id')
+            ->leftJoin('suppliers', 'suppliers.id', '=', 'item_details.supplier_id')
+            ->select(
+                'items.*',
+                'item_details.id as itemdetail_id',
+                'item_details.*',
+                'shelf_name',
+                'floor_name',
+                'cell_name',
+                'warehouse_name',
+                'category_name',
+                'supplier_name'
+            )
+
+            ->whereNull('items.deleted_at')
+            ->where('item_details.item_quantity', '>', 0)
+            ->where('item_details.warehouse_id', $warehouse_id)
+            ->get();
+        foreach ($items as $val) {
+            $exim_invalid = DB::table('ex_import_details')
+                ->join('item_details', 'item_details.id', '=', 'ex_import_details.itemdetail_id')
+                ->select(
+                    DB::raw('SUM(ex_import_details.item_quantity) as quantity'),
+                )
+                ->where('ex_import_details.exim_detail_status', '0')
+                ->where('item_details.id', $val->itemdetail_id)
+                ->get();
+            $trans_invalid = DB::table('transfer_details')
+                ->join('transfers', 'transfers.id', '=', 'transfer_details.transfer_id')
+                ->select(
+                    DB::raw('SUM(transfer_details.item_quantity) as quantity'),
+                )
+                ->whereIn('transfers.transfer_status', [0, 1, 2, 3])
+                ->where('transfer_details.itemdetail_id', $val->itemdetail_id)
+                ->get();
+            if ($exim_invalid[0]->quantity == null) {
+                $exim_invalid[0]->quantity = 0;
+            }
+            if ($trans_invalid[0]->quantity == null) {
+                $trans_invalid[0]->quantity = 0;
+            }
+            $val->item_quantity = [
+                $val->item_quantity - $exim_invalid[0]->quantity - $trans_invalid[0]->quantity,
+                $exim_invalid[0]->quantity +  $trans_invalid[0]->quantity
+            ];
+        }
+        $users = DB::table('users')->join('warehouse_managers', 'warehouse_managers.user_id', '=', 'users.id')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->where('warehouse_managers.warehouse_id', $warehouse_id)
+            ->select('users.*')->get();
+        // dd($users);
+        return view('admin.components.ex_import.thanhli', compact('warehouses', 'items', 'users'));
+    }
+    public function sthanhli(Request $request)
+    {
+        $count = count($request->itemdetail_id);
+        $date = date('dmY');
+        $stt = DB::table('ex_imports')->where('exim_type', '2')->whereDate('created_at', '=', Carbon::now()->toDateString())->count();
+        $export = ExImport::create([
+            'warehouse_id' => $request->warehouse_id,
+            'exim_code' => 'TL_' . $date . '_' . ($stt + 1),
+            'exim_type' => 2,
+            'created_by' => Auth::user()->id,
+            'exim_status' => 0,
+            'note' => $request->note,
+        ]);
+        for ($i = 0; $i < $count; $i++) {
+            $items = DB::table('item_details')
+                ->where('item_details.id', $request->itemdetail_id[$i])
+                ->select('item_details.*')
+                ->get();
+
+            ExImportDetail::create([
+                'exim_id' => $export->id,
+                'item_id' => $items[0]->item_id,
+                'supplier_id' => $items[0]->supplier_id,
+                'warehouse_id' => $items[0]->warehouse_id,
+                'item_quantity' => $request->item_quantity[$i],
+                'item_price' => str_replace('.', '', $request->export_price[$i]),
+                'item_total' => 0,
+                'itemdetail_id' => $items[0]->id,
+                'item_vat' => 0
+            ]);
+        }
+
+        return redirect()->route('export.thanhli')->with(['success', 'Tạo phiếu nhập thành công.']);
+    }
+    public function mthanhli(Request $request)
+    {
+        $warehouses = DB::table('warehouse_managers')
+            ->join('warehouses', 'warehouse_managers.warehouse_id', '=', 'warehouses.id')
+            ->where('warehouse_managers.user_id', Auth::user()->id)
+            ->select('warehouses.*')->get();
+
+        if (isset($request->warehouse)) {
+            $warehouse_id = $request->warehouse;
+        } else {
+            $warehouse_id = $warehouses[0]->id;
+        }
+        $im_items = DB::table('items')
+            ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
+            ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
+            ->join('users', 'users.id', '=', 'ex_imports.created_by')
+            ->where([['ex_imports.exim_type', 2], ['ex_imports.deleted_at', null], ['ex_imports.warehouse_id', $warehouse_id]])
+            ->select('ex_imports.*', 'items.item_name as item', 'users.name as created_by', DB::raw('date_format(ex_imports.created_at, "%d-%m-%Y %H:%i:%s") as created'))
+            ->groupBy('exim_code')
+            ->orderByDesc('created_at')
+            ->orderBy('exim_status', 'asc');
+
+        if (isset($request->status)) {
+            if ($request->type == 2 && $request->status == 'duyet') $im_items->where('ex_imports.exim_status', 1);
+            if ($request->type == 2 && $request->status == 'cduyet') $im_items->where('ex_imports.exim_status', 0);
+            if ($request->type == 2 && $request->status == 'huy') $im_items->where('ex_imports.exim_status', 2);
+        }
+        if (isset($request->date)) {
+            $date = explode('_', $request->date);
+            try {
+                $from = DateTime::createFromFormat('m-d-Y', $date[0])->format('Y-m-d');
+                $to = DateTime::createFromFormat('m-d-Y', $date[1])->format('Y-m-d');
+                if ($request->type == 2) {
+                    $im_items->whereDate('ex_imports.created_at', '>=', $from)
+                        ->whereDate('ex_imports.created_at', '<=', $to);
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+        $im_items = $im_items->get();
+        foreach ($im_items as $val) {
+            $val->item = DB::table('items')
+                ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
+                ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
+                ->where([
+                    'ex_imports.exim_type' => 1,
+                    'ex_imports.exim_code' => $val->exim_code,
+                    'ex_imports.warehouse_id' => $warehouse_id,
+                ])
+                ->select('items.item_name as item')
+                ->get();
+        }
+
+        return view('admin.components.ex_import.mthanhli', compact('im_items', 'warehouses'));
+    }
+    public function exporttl()
+    {
+        return Excel::download(new TL(), 'BaoCaoTL.xlsx');
+    }
+    public function cthanhli($id)
+    {
+        try {
+            $ex_item_details = ExImportDetail::where('exim_id', $id)
+                ->select('id', 'itemdetail_id', 'item_quantity')->get();
+
+            foreach ($ex_item_details as $item) {
+                ExImportDetail::find($item->id)->update([
+                    'exim_detail_status' => '1'
+                ]);
+                // dd($ex_item_details);
+                $item_details = ItemDetail::find($item->itemdetail_id);
+                $val = Item::find($item_details->item_id);
+                $item_details->update([
+                    'item_quantity' => $item_details->item_quantity - $item->item_quantity
+                ]);
+            }
+            ExImport::find($id)->update([
+                'exim_status' => 1,
+            ]);
+            return redirect()->back()->with('success', 'Duyệt thành công');
+        } catch (\Throwable $th) {
+            return redirect()->back()->withErrors(['error' => 'Lỗi lưu phiếu']);
+        }
+    }
+    public function ccthanhli($id)
+    {
+        try {
+            ExImport::find($id)->update(['exim_status' => '2']);
+            ExImportDetail::where('exim_id', $id)->update(['exim_detail_status' => '2']);
+            return redirect()->back()->with('success', 'Hủy phiếu thành công');
+        } catch (\Throwable $th) {
+            return redirect()->back()->withErrors(['error' => 'Lỗi lưu phiếu']);
+        }
     }
 }

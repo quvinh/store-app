@@ -72,14 +72,20 @@
                                     <label for="" class="form-control">Mã phiếu</label><br>
                                     <label for="" class="form-control">Trạng thái</label><br>
                                     <label for="" class="form-control">Người tạo</label><br>
+                                    <label for="" class="form-control">Người nhận</label><br>
+                                    <label for="" class="form-control">Ghi chú</label><br>
                                 </div>
                                 <div class="col-9">
                                     <input type="text" class="form-control" readonly
-                                        value="{{ $im_items[0]->exim_code }}"><br>
+                                        value="{{ $import->exim_code }}"><br>
                                     <input type="text" class="form-control" readonly
-                                        value="{{ $im_items[0]->exim_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}"><br>
+                                        value="{{ $import->exim_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}"><br>
                                     <input type="text" class="form-control" readonly
-                                        value="{{ $im_items[0]->name }}"><br>
+                                        value="{{ $import->name }}"><br>
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ $import->receiver }}"><br>
+                                    <input type="text" class="form-control" readonly
+                                        value="{{ $import->note }}"><br>
                                 </div>
                             </div>
                             <table class="table dt-responsive nowrap text-center">
@@ -169,7 +175,7 @@
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
 
     <!-- third party js -->
-    
+
     <script src="{{ asset('assets/js/vendor/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.responsive.min.js') }}"></script>
@@ -181,7 +187,7 @@
     <script src="{{ asset('assets/js/vendor/buttons.print.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/dataTables.select.min.js') }}"></script>
-    
+
     <!-- third party js ends -->
     {{-- <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.10/jquery.autocomplete.min.js">

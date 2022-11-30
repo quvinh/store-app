@@ -65,12 +65,14 @@
                                         <label for="warehouse">Kho</label>
                                         <select data-toggle="select2" title="Warehouse" id="warehouse">
                                             @foreach ($warehouses as $warehouse)
-                                                <option value="{{ $warehouse->id }}">
+                                                <option value="{{ $warehouse->id }}"
+                                                    {{ app('request')->input('warehouse_id') == $warehouse->id ? 'selected' : '' }}>
                                                     {{ $warehouse->warehouse_name }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <br><br>
+                                        <br><input type="button" class="btn btn-success" value="Filter" id="btnFilter"
+                                            hidden><br>
                                     </div>
                                     <label for="item">Tên vật tư</label>
                                     <input id="item" class="form-control"><br>
@@ -138,20 +140,37 @@
                                             <input type="number" min="1" max="1000000" value=""
                                                 class="form-control" id="unit_amount">
                                         </div>
-                                    </div>
-                                    <br>
-
+                                    </div><br>
                                 </div>
                             </div>
-                            <div class="text-end">
-                                <button class="btn btn-info mb-2" id="btnAdd" type="button"><i
-                                        class="mdi mdi-chevron-double-down"></i> Thêm vào phiếu</button>
-                                <button class="btn btn-danger mb-2" id="btnDelete" type="button"><i
-                                        class="mdi mdi-close-circle"></i> Hủy phiếu</button>
-                                <button class="btn btn-success mb-2" id="btnSave" type="submit" disabled><i
-                                        class="mdi mdi-content-save"></i> Lưu phiếu</button>
-
+                            <div class="row">
+                                <div class="col">
+                                    <label for="note">Ghi chú</label>
+                                    <textarea class="form-control" id="example-textarea" rows="3" placeholder="Nhập ghi chú..." name="note"></textarea>
+                                </div>
+                                <div class="col">
+                                    <div class="row mb-3">
+                                        <label for="receiver">Người nhận:</label>
+                                        <select data-toggle="select2" title="receiver" id="receiver" name="receiver">
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->id }}"
+                                                    {{ app('request')->input('user_id') == $user->id ? 'selected' : '' }}>
+                                                    {{ $user->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col text-sm-end">
+                                        <button class="btn btn-info" id="btnAdd" type="button"><i
+                                                class="mdi mdi-chevron-double-down"></i> Thêm vào phiếu</button>
+                                        <button type="button" class="btn btn-danger" id="destroy-list"><i
+                                                class="mdi mdi-close-circle"></i> Hủy phiếu</button>
+                                        <button type="submit" class="btn btn-success" id="save-list" disabled><i
+                                                class="mdi mdi-content-save"></i> Lưu phiếu</button>
+                                    </div>
+                                </div>
                             </div>
+
                             <table class="table dt-responsive nowrap text-center">
                                 {{-- <table id="basic-datatable" class="table dt-responsive nowrap w-100"> --}}
                                 <thead>
@@ -209,6 +228,13 @@
         let list = [];
         var i = 1;
         $(document).ready(function() {
+            $('#warehouse').on('change', function() {
+                document.getElementById("btnFilter").click();
+            })
+            $('#btnFilter').on('click', function() {
+                var warehouse = $('#warehouse').val();
+                window.location.href = (warehouse) ? ('?warehouse_id=' + warehouse) : '';
+            })
             var items = <?php echo json_encode($items); ?>;
             $('#item').autocomplete({
                 lookup: items,
@@ -250,6 +276,9 @@
                 var supplier = $("#supplier option:selected").text();
                 var warehouse_id = parseInt($("#warehouse").val());
                 var warehouse = $("#warehouse option:selected").text();
+                var receiver = $("#receiver").val();
+                var receiver_name = $("#receiver option:selected").text();
+                var note = $("#note").val();
                 if (name !== '' && unit_id !== '' && supplier_id !== '' && price > 0 && quantity > 0) {
                     // if (list.filter(item => item.id === id && item.supplier_id === supplier_id).length > 0)
                     // {
@@ -301,10 +330,13 @@
                     });
                     // }
                     list.map((item, index) => {
+                        console.log('re', receiver);
                         html += `<tr>
                                         <th><input type="text" name="id[]" value="${item.id}" hidden>${item.name}</th>
                                         <th {{ count($warehouses) > 1 ? '' : 'hidden' }}><input type="text"
                                                 name="warehouse[]" value="${item.warehouse_id}" hidden>${item.warehouse}</th>
+                                        <th hidden><input name="receiver" value="${receiver}" hidden>
+                                            <input name="note" value="${note}" hidden></th>
                                         <th><input type="text" name="code[]" value="${item.supplier_code}" hidden>${item.supplier_code}</th>
                                         <th><input type="text" name="supplier[]" value="${item.supplier_id}" hidden>${item.supplier}</th>
                                         <th><input type="text" name="category[]" value="${item.category_id}" hidden>${item.category}</th>
@@ -319,19 +351,20 @@
                     $('#quantity').val(0);
                     $('#supplier').val('').trigger('change');
                     $('#list-import').html(html);
-                    $('#btnSave').attr('disabled', false);
+                    $('#save-list').attr('disabled', false);
                     $("#category").attr('disabled', false);
                     $('#warehouse').attr('disabled', true);
                     $('#unit').html('');
                     $('#item').val('');
                     $('#unit_amount').val(1);
                     $('#unit_nameamount').text('');
+                    $('#receiver').attr('disabled', true)
                     i++;
                 } else {
                     alert('Chọn tên, ĐVT, nhà cung cấp và số lượng, giá nhập lớn hơn 0');
                 }
             })
-            $('#btnDelete').on('click', function() {
+            $('#destroy-list').on('click', function() {
                 $('#save-list').attr('disabled', true);
                 $('#list-import').html('');
                 i = 1;
@@ -359,6 +392,9 @@
             list = [...data];
             if (list.length === 0) {
                 $('#save-list').attr('disabled', true);
+                $('$receiver').attr('readonly', false);
+                $("#category").attr('disabled', false);
+                $('#warehouse').attr('disabled', false);
             }
         }
 
