@@ -61,15 +61,16 @@
                                     <label for="" class="form-control">Mã phiếu</label><br>
                                     <label for="" class="form-control">Trạng thái</label><br>
                                     <label for="" class="form-control">Người tạo</label><br>
+                                    <label for="" class="form-control">Ghi chú</label><br>
                                 </div>
                                 <div class="col-9">
+                                    <input type="text" hidden value="1" name="status">
+                                    <input type="text" class="form-control" readonly value="{{ $export->receiver }}"><br>
+                                    <input type="text" class="form-control" readonly value="{{ $export->exim_code }}"><br>
                                     <input type="text" class="form-control" readonly
-                                        value="{{ $export->receiver }}"><br>
-                                    <input type="text" class="form-control" readonly
-                                        value="{{ $export->exim_code }}"><br>
-                                    <input type="text" class="form-control" readonly
-                                        value="{{ $export->exim_status == 1 ? 'Đã duyệt' : 'Chưa duyệt' }}"><br>
+                                    value="{{ $export->exim_status == 1 ? 'Đã duyệt' : ($export->exim_status == 2 ? 'Đã hủy' : 'Chưa duyệt') }}"><br>
                                     <input type="text" class="form-control" readonly value="{{ $export->name }}"><br>
+                                    <input type="text" class="form-control" readonly value="{{ $export->note }}"><br>
                                 </div>
                             </div>
                         </div>

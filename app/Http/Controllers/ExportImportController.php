@@ -276,6 +276,14 @@ class ExportImportController extends Controller
 
     public function im_edit($id)
     {
+        $import = DB::table('ex_imports')
+            ->join('users', 'users.id', '=', 'ex_imports.created_by')
+            ->where('ex_imports.id', $id)
+            ->select('ex_imports.*', 'name')
+            ->first();
+        $import->receiver = DB::table('ex_imports')
+            ->join('users', 'users.id', '=', 'ex_imports.receiver')
+            ->where('ex_imports.id', $id)->first()->name;
         $im_items = DB::table('items')
             ->join('ex_import_details', 'ex_import_details.item_id', '=', 'items.id')
             ->join('ex_imports', 'ex_imports.id', '=', 'ex_import_details.exim_id')
@@ -293,7 +301,7 @@ class ExportImportController extends Controller
                 'users.name',
             )
             ->get();
-        return view('admin.components.ex_import.editimport', compact('im_items'));
+        return view('admin.components.ex_import.editimport', compact('import','im_items'));
     }
 
     public function im_update(Request $request, $id)
@@ -535,6 +543,10 @@ class ExportImportController extends Controller
             ->where('ex_imports.id', $id)
             ->select('ex_imports.*', 'name')
             ->first();
+        $export->receiver = DB::table('ex_imports')
+            ->join('users', 'users.id', '=', 'ex_imports.receiver')
+            ->where('ex_imports.id', $id)->first()->name;
+        // dd($export);
         $export->receiver = DB::table('ex_imports')
             ->join('users', 'users.id', '=', 'ex_imports.receiver')
             ->where('ex_imports.id', $id)->first()->name;
